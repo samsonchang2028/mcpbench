@@ -7,3 +7,6 @@ bin/
 .aws/
 .codex/
 .agents/
+
+# Orchestrator-managed task worktrees
+.worktrees/

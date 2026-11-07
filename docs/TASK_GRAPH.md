@@ -1,3 +1,4 @@
+<!-- Current access refresh supersedes historical snapshot/status prose below. -->
 # MCPBench task graph
 
 Snapshot: 2026-11-07. Planning only; no implementation dispatched. This graph
@@ -62,12 +63,12 @@ claims that workers are currently running.
 
 | ID | Task / implementer | Depends on | Priority | Status | Objective acceptance / evidence |
 | --- | --- | --- | --- | --- | --- |
-| T001 | Finish read-only host audit / H | — | P0 | BLOCKED | Authorized host evidence for Docker workloads/limits/health, published ports, networks/volumes, storage roots/free space, Ollama listener/server/tag/digest/quantization/capabilities and residency; no service changes. Current sandbox denies access. |
-| T002 | Enable normal Git metadata / H,O | — | P0 | BLOCKED | Host makes project `.git` writable without bypass; `git rev-parse --show-toplevel` resolves this path and clean initial planning commit recorded; no unrelated files staged. Protected mount currently prevents initialization. |
-| T003 | Reconcile product/architecture specification / C | — | P0 | DONE | PROJECT_CONTEXT and ARCHITECTURE specify Go agent versus Python evaluator, three-tool smoke versus ten-tool baseline, native Ollama, scope and all four unchanged strategies; record decisions and remaining measured assumptions. |
-| T004 | Define evaluation contract before code / E | — | P0 | DONE | EVALUATION_PLAN defines fixture/task/trace/result schemas, reset lifecycle, database oracle, exact success/failure labels, required-tool sets, metric formulas and missing-data handling; fixed invoice oracle retained. |
-| T005 | Define security/resource contract / I | — | P0 | DONE | Written principal/permission matrix, credential and network boundaries, scoped reset, timeout/retry budgets, host-network tradeoff, resource admission/stop policy and negative tests; agent has no grader/admin credentials or Docker socket. |
-| T006 | Freeze cross-component contracts / C,O | T003,T004,T005 | P0 | READY | Versioned JSON schemas in contracts/ for catalog/tools, task fixtures, agent request/result, trusted principal/run-context routing, trace and grading; three smoke tools and ten baseline tools have input/output/error/authorization definitions; ambiguity resolved and R/V sign off. |
+| T001 | Finish read-only host audit / H | — | P0 | BLOCKED | Authorized host evidence for Docker workloads/limits/health, published ports, networks/volumes, storage roots/free space, Ollama listener/server/tag/digest/quantization/capabilities and residency; no service changes. Docker/Ollama/socket access now verified; BLOCKED only on actual service-account model-storage path/symlink/filesystem verification. See refreshed NODE1_AUDIT.md; do not bypass Unix permissions. |
+| T002 | Enable normal Git metadata / H,O | — | P0 | CANDIDATE | Host makes project `.git` writable without bypass; `git rev-parse --show-toplevel` resolves this path and clean initial planning commit recorded; no unrelated files staged. Normal initialization and baseline commit e0ce746 succeeded; independent review/testing pending. No remote/push. |
+| T003 | Reconcile product/architecture specification / C | — | P0 | IMPLEMENTING | PROJECT_CONTEXT and ARCHITECTURE specify Go agent versus Python evaluator, three-tool smoke versus ten-tool baseline, native Ollama, scope and all four unchanged strategies; record decisions and remaining measured assumptions. |
+| T004 | Define evaluation contract before code / E | — | P0 | IMPLEMENTING | EVALUATION_PLAN defines fixture/task/trace/result schemas, reset lifecycle, database oracle, exact success/failure labels, required-tool sets, metric formulas and missing-data handling; fixed invoice oracle retained. |
+| T005 | Define security/resource contract / I | — | P0 | IMPLEMENTING | Written principal/permission matrix, credential and network boundaries, scoped reset, timeout/retry budgets, host-network tradeoff, resource admission/stop policy and negative tests; agent has no grader/admin credentials or Docker socket. |
+| T006 | Freeze cross-component contracts / C,O | T003,T004,T005 | P0 | WAITING | Versioned JSON schemas in contracts/ for catalog/tools, task fixtures, agent request/result, trusted principal/run-context routing, trace and grading; three smoke tools and ten baseline tools have input/output/error/authorization definitions; ambiguity resolved and R/V sign off. |
 | T007 | Runtime admission evidence / H,I | T001,T006 | P0 | WAITING | IMPLEMENTATION_PLAN admission met: 60-second resource sample, >=20 GiB available RAM and >=20 GiB free on relevant filesystems, no sustained swapping/regression; unused project/subnet/ports, model residency/shared use known. Recalculate model budget if >12 GiB. Metadata capability check only; T040 verifies basic tool output early and T023 verifies the real MCP invoice later. |
 | T040 | Early Ollama capability probe / H,A,V | T007 | P1 | WAITING | Separate future approval required; exact installed model/digest, one bounded native chat request with harmless `probe_echo` tool, validate returned name/JSON args and locally computed echo; no billing/MCP writes, config changes, pulls or forced unload; resource observations and model response saved; no call or malformed call is failure, not metadata-only success. Output: artifacts/probes/<probe-id>/. |
 | T008 | Repository skeleton and pinned dependencies / O | T002,T006,T007,T040 | P0 | WAITING | Go module, Python project/lock, chosen SDK/protocol and image digests pinned; empty package boundaries and check commands agree with contracts; dependency resolution/build is admitted by explicit T007 dependency. |
@@ -160,3 +161,14 @@ state/reviews/wave1-tester-v2.md. Cross-document late-write lifecycle finding wa
 fixed before acceptance. No Git commit/merge or runtime verification is claimed.
 T006 is READY but unstarted/unapproved; T001/T002 remain BLOCKED. All other nodes
 remain WAITING; no runtime or application implementation is approved.
+
+## Permission refresh wave — 2026-11-07
+
+Current facts: see NODE1_AUDIT.md. T002 is CANDIDATE with normal Git baseline
+e0ce746; T001 remains BLOCKED on actual model-storage filesystem verification,
+not Docker/Ollama sockets. Reopen T003–T005 only for bounded documentation refresh
+against these observations; their earlier v2 approval remains historical evidence.
+Use separate Git worktrees and exclusive files. T006 waits for refreshed candidates;
+no application, Docker mutation or live Ollama call is authorized. Metadata tool
+capabilities do not complete T040. Python evaluator, Go server/agent, four strategies
+and JSONL-only v1 remain unchanged. OpenTelemetry and Jaeger remain v2.

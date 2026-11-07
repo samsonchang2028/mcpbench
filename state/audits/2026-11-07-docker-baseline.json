@@ -1,0 +1,211 @@
+[
+  {
+    "name": "okc-postgres",
+    "image": "postgres:16",
+    "status": "running",
+    "health": "none",
+    "oom": false,
+    "project": null,
+    "memory_limit": 0,
+    "nano_cpus": 0,
+    "cpu_quota": 0
+  },
+  {
+    "name": "qbittorrent",
+    "image": "lscr.io/linuxserver/qbittorrent:latest",
+    "status": "running",
+    "health": "healthy",
+    "oom": false,
+    "project": "arrstack",
+    "memory_limit": 0,
+    "nano_cpus": 0,
+    "cpu_quota": 0
+  },
+  {
+    "name": "flaresolverr",
+    "image": "ghcr.io/flaresolverr/flaresolverr:latest",
+    "status": "running",
+    "health": "none",
+    "oom": false,
+    "project": "arrstack",
+    "memory_limit": 0,
+    "nano_cpus": 0,
+    "cpu_quota": 0
+  },
+  {
+    "name": "prowlarr",
+    "image": "lscr.io/linuxserver/prowlarr:latest",
+    "status": "running",
+    "health": "none",
+    "oom": false,
+    "project": "arrstack",
+    "memory_limit": 0,
+    "nano_cpus": 0,
+    "cpu_quota": 0
+  },
+  {
+    "name": "gluetun",
+    "image": "qmcgaw/gluetun:latest",
+    "status": "running",
+    "health": "healthy",
+    "oom": false,
+    "project": "arrstack",
+    "memory_limit": 0,
+    "nano_cpus": 0,
+    "cpu_quota": 0
+  },
+  {
+    "name": "bazarr",
+    "image": "lscr.io/linuxserver/bazarr:latest",
+    "status": "running",
+    "health": "none",
+    "oom": false,
+    "project": "arrstack",
+    "memory_limit": 0,
+    "nano_cpus": 0,
+    "cpu_quota": 0
+  },
+  {
+    "name": "jellyfin",
+    "image": "lscr.io/linuxserver/jellyfin:latest",
+    "status": "running",
+    "health": "none",
+    "oom": false,
+    "project": "arrstack",
+    "memory_limit": 0,
+    "nano_cpus": 0,
+    "cpu_quota": 0
+  },
+  {
+    "name": "sonarr",
+    "image": "lscr.io/linuxserver/sonarr:latest",
+    "status": "running",
+    "health": "none",
+    "oom": false,
+    "project": "arrstack",
+    "memory_limit": 0,
+    "nano_cpus": 0,
+    "cpu_quota": 0
+  },
+  {
+    "name": "radarr",
+    "image": "lscr.io/linuxserver/radarr:latest",
+    "status": "running",
+    "health": "none",
+    "oom": false,
+    "project": "arrstack",
+    "memory_limit": 0,
+    "nano_cpus": 0,
+    "cpu_quota": 0
+  },
+  {
+    "name": "lidarr",
+    "image": "lscr.io/linuxserver/lidarr:latest",
+    "status": "exited",
+    "health": "none",
+    "oom": false,
+    "project": "arrstack",
+    "memory_limit": 0,
+    "nano_cpus": 0,
+    "cpu_quota": 0
+  },
+  {
+    "name": "seerr",
+    "image": "ghcr.io/seerr-team/seerr:v3.0.1",
+    "status": "running",
+    "health": "healthy",
+    "oom": false,
+    "project": "arrstack",
+    "memory_limit": 0,
+    "nano_cpus": 0,
+    "cpu_quota": 0
+  },
+  {
+    "name": "deunhealth",
+    "image": "qmcgaw/deunhealth",
+    "status": "running",
+    "health": "healthy",
+    "oom": false,
+    "project": "arrstack",
+    "memory_limit": 0,
+    "nano_cpus": 0,
+    "cpu_quota": 0
+  },
+  {
+    "name": "immich_server",
+    "image": "ghcr.io/immich-app/immich-server:v2",
+    "status": "running",
+    "health": "healthy",
+    "oom": false,
+    "project": "immich",
+    "memory_limit": 0,
+    "nano_cpus": 0,
+    "cpu_quota": 0
+  },
+  {
+    "name": "immich_postgres",
+    "image": "ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0",
+    "status": "running",
+    "health": "healthy",
+    "oom": false,
+    "project": "immich",
+    "memory_limit": 0,
+    "nano_cpus": 0,
+    "cpu_quota": 0
+  },
+  {
+    "name": "immich_machine_learning",
+    "image": "ghcr.io/immich-app/immich-machine-learning:v2",
+    "status": "running",
+    "health": "unhealthy",
+    "oom": false,
+    "project": "immich",
+    "memory_limit": 0,
+    "nano_cpus": 0,
+    "cpu_quota": 0
+  },
+  {
+    "name": "immich_redis",
+    "image": "valkey/valkey:9",
+    "status": "running",
+    "health": "healthy",
+    "oom": false,
+    "project": "immich",
+    "memory_limit": 0,
+    "nano_cpus": 0,
+    "cpu_quota": 0
+  },
+  {
+    "name": "wonderful_thompson",
+    "image": "hello-world",
+    "status": "exited",
+    "health": "none",
+    "oom": false,
+    "project": null,
+    "memory_limit": 0,
+    "nano_cpus": 0,
+    "cpu_quota": 0
+  },
+  {
+    "name": "clever_hamilton",
+    "image": "nginx",
+    "status": "exited",
+    "health": "none",
+    "oom": false,
+    "project": null,
+    "memory_limit": 0,
+    "nano_cpus": 0,
+    "cpu_quota": 0
+  },
+  {
+    "name": "sad_wright",
+    "image": "hello-world",
+    "status": "exited",
+    "health": "none",
+    "oom": false,
+    "project": null,
+    "memory_limit": 0,
+    "nano_cpus": 0,
+    "cpu_quota": 0
+  }
+]

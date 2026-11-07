@@ -99,3 +99,21 @@ Post-agent verification is capped at 30 seconds total, 5 seconds per settlement/
 verification or DB operation, two verifier calls and no retries. It never extends
 the agent task deadline; all lifecycle costs remain recorded for every strategy.
 Exact fencing and capability transport remain T006 work.
+
+## Permission-refresh facts — 2026-11-07
+
+This update supersedes earlier access claims, not product/behavior contracts.
+Read NODE1_AUDIT.md and curated state/audits evidence. Normal Git metadata/index/
+commit writes succeeded (baseline e0ce746), Docker read-only inspection works and
+Ollama API metadata works. Installed qwen3.5:9b is Q4_K_M with advertised tools;
+no model was loaded at inspection. T040 still requires observed live behavior.
+Actual model storage target remains inaccessible to sfkim; noninteractive sudo
+requires authentication. T001 stays narrowly BLOCKED and no boundary is bypassed.
+GPU driver/library mismatch and baseline unhealthy Immich ML are real existing
+issues; do not fix them. Numeric 60-second sample showed 90–94% idle CPU and no
+swap activity, about 25 GiB available RAM; this alone does not pass T007.
+
+Documentation refresh only, in separate Git worktrees. Author/commit only the
+reserved files; no package installation, build, Docker mutation or live calls.
+Preserve all reviewed terminal-write settlement, two-snapshot/no-repair replay,
+credential separation, 30-second verification bounds and JSONL contracts.

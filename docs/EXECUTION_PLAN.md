@@ -228,3 +228,19 @@ metadata remains untouched/read-only and no commit or merge is claimed. Status-o
 DAG/plan integration follows the frozen-candidate checks. T006 is READY but needs
 next-wave approval and its own schema/review/tests before DONE. T001/T002 remain
 BLOCKED; T007/T040 and application work remain WAITING and unapproved.
+
+## Permission refresh execution wave — 2026-11-07
+
+This section supersedes old access/status statements above. Docker/Ollama metadata
+and Git writes now work; T001 is narrowly BLOCKED on the actual model-storage
+filesystem, not sockets. T002 baseline e0ce746 is awaiting independent validation.
+T003–T005 are reopened for bounded parallel documentation refresh, preserving their
+prior contracts and v2 evidence. They have no host/runtime prerequisite, so this
+wave does not waive T001/T007/T040. No application work or live probe is authorized.
+
+O owns NODE1_AUDIT, DAG, execution/state/assumption records and Git integration.
+Normal task branches/worktrees replace the earlier blocked-Git exception. Each
+implementer changes only the same exclusive source paths; candidate commits freeze
+before read-only reviewer/tester checks. O cherry-picks only approved candidates.
+Known host baseline: Immich ML unhealthy, NVIDIA driver/library mismatch; preserve
+both. JSONL-only v1; OpenTelemetry/Jaeger v2. Recalculate all statuses after review.
