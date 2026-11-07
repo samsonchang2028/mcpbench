@@ -29,6 +29,25 @@ states, DB credentials and grader/control files never enter the agent's mounts,
 environment, request, prompt or logs. The launcher supplies allowlisted arguments,
 sanitized environment and trusted run-scoped synthetic auth/routing metadata.
 
+## Readiness evidence — 2026-11-07 permission refresh
+
+The refreshed [Node 1 audit](NODE1_AUDIT.md) verifies normal Git writes, read-only
+Docker inspection and native Ollama metadata connectivity. Installed model
+`qwen3.5:9b` is Q4_K_M, served by Ollama 0.40.13, with digest
+`56671c2ab9385f9cfcb404638e32cd62d88e3501d44822208363c010179a3c90`.
+The API advertises tool support, and `/api/ps` returned no loaded models at that
+inspection. These observations establish installed identity and sampled residency,
+not valid tool calls, future exclusive availability or a completed T040 probe.
+
+About 25 GiB available RAM and the retained 60-second zero-swap sample satisfy
+only numeric observations. As of the audit, T001 remains blocked on verifying the
+actual protected model-storage target/filesystem; T007 admission is incomplete.
+The existing NVIDIA driver/library mismatch and unhealthy Immich ML container
+are baseline constraints, not evaluation failures produced by MCPBench. Preserve
+those services, record their baseline and recheck for regressions before any trial.
+No GPU acceleration is established. T006 machine-readable contracts and both
+live gates remain future work; no application or inference ran in this refresh.
+
 ## Fixture and task contract
 
 All contract objects carry `schema_version` (initial value `1`). Unknown major
