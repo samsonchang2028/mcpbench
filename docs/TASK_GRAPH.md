@@ -1,6 +1,13 @@
 <!-- Current access refresh supersedes historical snapshot/status prose below. -->
 # MCPBench task graph
 
+Current permission refresh: Git works normally and read-only Docker/Ollama access
+is verified. T001 is narrowly BLOCKED on actual model-storage target verification;
+T002 is CANDIDATE pending independent evidence review. T003–T005 have no host
+dependencies and are refreshing documentation in isolated worktrees. T006 waits
+for those candidates; all runtime/application gates remain uncompleted. The
+14:23 access observations below are historical, not the current environment.
+
 Snapshot: 2026-11-07. Planning only; no implementation dispatched. This graph
 supersedes the coarse P0–P7 task sequence in IMPLEMENTATION_PLAN.md; that file's
 resource admission and stop conditions still apply. Its P0 labels are old phase
@@ -65,9 +72,9 @@ claims that workers are currently running.
 | --- | --- | --- | --- | --- | --- |
 | T001 | Finish read-only host audit / H | — | P0 | BLOCKED | Authorized host evidence for Docker workloads/limits/health, published ports, networks/volumes, storage roots/free space, Ollama listener/server/tag/digest/quantization/capabilities and residency; no service changes. Docker/Ollama/socket access now verified; BLOCKED only on actual service-account model-storage path/symlink/filesystem verification. See refreshed NODE1_AUDIT.md; do not bypass Unix permissions. |
 | T002 | Enable normal Git metadata / H,O | — | P0 | CANDIDATE | Host makes project `.git` writable without bypass; `git rev-parse --show-toplevel` resolves this path and clean initial planning commit recorded; no unrelated files staged. Normal initialization and baseline commit e0ce746 succeeded; independent review/testing pending. No remote/push. |
-| T003 | Reconcile product/architecture specification / C | — | P0 | IMPLEMENTING | PROJECT_CONTEXT and ARCHITECTURE specify Go agent versus Python evaluator, three-tool smoke versus ten-tool baseline, native Ollama, scope and all four unchanged strategies; record decisions and remaining measured assumptions. |
-| T004 | Define evaluation contract before code / E | — | P0 | IMPLEMENTING | EVALUATION_PLAN defines fixture/task/trace/result schemas, reset lifecycle, database oracle, exact success/failure labels, required-tool sets, metric formulas and missing-data handling; fixed invoice oracle retained. |
-| T005 | Define security/resource contract / I | — | P0 | IMPLEMENTING | Written principal/permission matrix, credential and network boundaries, scoped reset, timeout/retry budgets, host-network tradeoff, resource admission/stop policy and negative tests; agent has no grader/admin credentials or Docker socket. |
+| T003 | Reconcile product/architecture specification / C | — | P0 | CANDIDATE | PROJECT_CONTEXT and ARCHITECTURE specify Go agent versus Python evaluator, three-tool smoke versus ten-tool baseline, native Ollama, scope and all four unchanged strategies; record decisions and remaining measured assumptions. |
+| T004 | Define evaluation contract before code / E | — | P0 | CANDIDATE | EVALUATION_PLAN defines fixture/task/trace/result schemas, reset lifecycle, database oracle, exact success/failure labels, required-tool sets, metric formulas and missing-data handling; fixed invoice oracle retained. |
+| T005 | Define security/resource contract / I | — | P0 | CANDIDATE | Written principal/permission matrix, credential and network boundaries, scoped reset, timeout/retry budgets, host-network tradeoff, resource admission/stop policy and negative tests; agent has no grader/admin credentials or Docker socket. |
 | T006 | Freeze cross-component contracts / C,O | T003,T004,T005 | P0 | WAITING | Versioned JSON schemas in contracts/ for catalog/tools, task fixtures, agent request/result, trusted principal/run-context routing, trace and grading; three smoke tools and ten baseline tools have input/output/error/authorization definitions; ambiguity resolved and R/V sign off. |
 | T007 | Runtime admission evidence / H,I | T001,T006 | P0 | WAITING | IMPLEMENTATION_PLAN admission met: 60-second resource sample, >=20 GiB available RAM and >=20 GiB free on relevant filesystems, no sustained swapping/regression; unused project/subnet/ports, model residency/shared use known. Recalculate model budget if >12 GiB. Metadata capability check only; T040 verifies basic tool output early and T023 verifies the real MCP invoice later. |
 | T040 | Early Ollama capability probe / H,A,V | T007 | P1 | WAITING | Separate future approval required; exact installed model/digest, one bounded native chat request with harmless `probe_echo` tool, validate returned name/JSON args and locally computed echo; no billing/MCP writes, config changes, pulls or forced unload; resource observations and model response saved; no call or malformed call is failure, not metadata-only success. Output: artifacts/probes/<probe-id>/. |

@@ -11,8 +11,10 @@ exception authorizes no application implementation or runtime operations. V1 use
 JSONL artifacts; OpenTelemetry and Jaeger are deferred to v2. T040 is the future
 early capability probe after admission and before T008, requiring separate approval.
 
-Status: planning documents complete; Git metadata and runtime audit remain
-blocked by session access. Rows below are future implementation, not performed work.
+Current permission refresh: normal Git initialization/commit and read-only Docker/
+Ollama inspection now work. T001 remains narrowly blocked on the actual model-store
+filesystem under the ollama account; T006/T007/T040 are incomplete. The coarse rows
+below are historical future-work planning, not completed application work.
 
 ```text
 P0 host audit + Git access

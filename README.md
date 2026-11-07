@@ -9,5 +9,6 @@ Start with [project context](docs/PROJECT_CONTEXT.md), the [Node 1 audit](docs/N
 and the [implementation plan](docs/IMPLEMENTATION_PLAN.md). Architecture and
 evaluation details are linked from the project context.
 
-Git initialization is blocked by the session's read-only `.git` mount. No services
-or native Ollama configuration have been changed.
+Git is initialized normally; host access was rechecked in [the audit](docs/NODE1_AUDIT.md).
+The service-account model-storage target and full admission remain unresolved.
+No services or native Ollama configuration have been changed.

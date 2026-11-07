@@ -2,7 +2,7 @@
 
 This document schedules [TASK_GRAPH.md](TASK_GRAPH.md), which owns IDs, edges,
 priorities, statuses and acceptance criteria. The user approved documentation-only T003–T005 execution. Application
-implementation, Docker operations and live Ollama execution remain blocked pending
+implementation, Docker mutations and live Ollama execution remain blocked pending
 a later approved wave and all relevant admission gates. DAG waves express dependencies, not elapsed-time estimates.
 
 ## Gates and milestones
@@ -17,8 +17,9 @@ a later approved wave and all relevant admission gates. DAG waves express depend
 | M5: controlled campaign | T033,T039,T034 | Validated 10/100/1000 catalogs, admitted pilot, frozen repeat counts/order; all planned attempts recorded with state and config hashes |
 | M6: reliability and report | T035–T038 | Scoped fault/concurrency experiments, reproducible analysis, independent reproduction and report tied to immutable evidence |
 
-M0 is incomplete today: host and Git evidence are blocked; the approved design
-wave is complete but machine contracts and the early live probe remain uncompleted.
+M0 is incomplete: actual model-storage verification is blocked and machine
+contracts/full admission/live probe are unfinished. Git initialization and commit
+now work; T003–T005 are receiving a bounded documentation refresh.
 No runtime probe is authorized. M1/M2 are deliberately separate so fake-model
 success cannot be presented as live Qwen success. No later milestone can waive a
 failed earlier gate. T035 may proceed alongside the campaign after M4; M6 joins it.
@@ -27,7 +28,7 @@ failed earlier gate. T035 may proceed alongside the campaign after M4; M6 joins 
 
 | Wave | Eligible work after dependencies | Parallelism / join |
 | --- | --- | --- |
-| W0 | T001, T002, T003, T004, T005 | T003–T005 documentation complete; host/Git work remains blocked in this session. O owns host evidence and graph updates. |
+| W0 | T001, T002, T003, T004, T005 | T003–T005 documentation refresh; Git works, model-store audit remains blocked. O owns host evidence and graph updates. |
 | W1 | T006 after design tasks; T009 after T006 | Freeze interfaces before implementation; fixtures can be authored while waiting for host access. |
 | W2 | T007, then T040, then T008 | The early probe needs separate runtime approval after admission; resolve pinned dependencies only after probe success; T009 fixture work does not require runtime access. |
 | W3 | T010, T011, T015, T017 | Oracle/fixtures, DB migrations, infrastructure and telemetry have disjoint files; cap at available worker slots. Tests authored before billing code. |
@@ -166,18 +167,19 @@ presumed. Resource estimates and model speed remain experimental assumptions.
 
 ## Approved first documentation tasks versus blocked tasks
 
-1. **T003 (DONE):** reconcile the existing product/architecture documents with the
+1. **T003 (IMPLEMENTING refresh):** reconcile the existing product/architecture documents with the
    kickoff. Small documentation change only; preserve the research question.
-2. **T004 (DONE):** draft the Python evaluator, fixture/reset/oracle and measurement
+2. **T004 (IMPLEMENTING refresh):** draft the Python evaluator, fixture/reset/oracle and measurement
    contracts against the kickoff, in its separate documentation file.
-3. **T005 (DONE):** document security principals, network choices, resource budgets
+3. **T005 (IMPLEMENTING refresh):** document security principals, network choices, resource budgets
    and their exact negative tests, in its separate file.
 
 These completed in parallel with disjoint writes and independent review/testing;
 their join makes T006 READY, not complete or authorized for dispatch. Shared assumptions are in WAVE1_CONTRACT_ASSUMPTIONS.md; the
 orchestrator owns state/context packs. T006 is not included in this approval and
-remains incomplete until its actual contracts and acceptance evidence exist. **T001 and T002 are externally
-BLOCKED**; an authorized host shell and writable Git metadata are needed.
+remains incomplete until its actual contracts and acceptance evidence exist. **T001 remains BLOCKED** on the service-account model-storage target;
+**T002 is CANDIDATE** with working Git and baseline e0ce746, pending independent
+validation. No broader privilege or model-file access is inferred from Docker access.
 T007 onward are WAITING on declared prerequisites, not READY merely because RAM
 looks sufficient. No builds, downloads, inference or startup occur now. The
 user's environment-verification success condition is not yet satisfied.

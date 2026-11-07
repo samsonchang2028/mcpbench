@@ -1,0 +1,54 @@
+{
+  "baseline_commit": "e0ce746b1e91bbed5afc6e950ff2d516ff7c8883",
+  "prep_commit": "0116054764a4506151820df73225b7869433d74d",
+  "main_files": {
+    "AGENTS.md": "f9d9549604ceeb6c009953d6c34463fc3fcc96d43da5a06fe86f4a8ba82e276a",
+    "README.md": "1d4c09ddcf743f53e030c8fa8fcc442a385a47521294019320910f43d520b814",
+    "agents/orchestrator.md": "41b69232e1151d5eb20c71f698f6be4401cfd27adec19bffa89364635162ac1a",
+    "agents/implementer.md": "6c289738aa91732f1472031863c80a0c39ddcc28d7f55facfae6782adcbd8627",
+    "agents/tester.md": "c313d52579eea4a004ce72c71eeccba022643efa4a49820145afb5f2bf34e6d3",
+    "agents/reviewer.md": "56d90a1f9ff987458fcfad505a02daf23ac8ba22f0e7a79970b4bac7c3704ba8",
+    "docs/NODE1_AUDIT.md": "1f0fedea9ea509d3f68efd129c1acdbbc150fe1b0ac32788b5a29dfe44ad497a",
+    "docs/TASK_GRAPH.md": "0c4e0aa32cf61d613e94d052d0e5b6435d611942460ce426a0e910f10f9b2baf",
+    "docs/EXECUTION_PLAN.md": "a29ff9e3d04b84d94ca231d870162ddfc9c71dac89208f9156a30766e7c405f9",
+    "docs/IMPLEMENTATION_PLAN.md": "16931fd517908206ef45945f2848d1a1338227e1448147193387f0b2c07b6cd6",
+    "docs/WAVE1_CONTRACT_ASSUMPTIONS.md": "6858501be484575d4a2c8631e16dc216668e65b8312b77737cf3bea324016eaa",
+    "state/audits/2026-11-07-docker-baseline.json": "19afe3823c98b1c25c2a3bdaa1d974d2106f842149cf73de54caacbfd2ebd096",
+    "state/audits/2026-11-07-resource-refresh.json": "a937d274fa25b3235a24640532643bfdec11a7cfa6a3085e73120407402a1de9",
+    "state/audits/2026-11-07-ollama-metadata.json": "375fe346acc03eb64de3f6ee224fcb361cd12ed897bccdff2d7cb99d2f0fa706"
+  },
+  "tasks": {
+    "T003": {
+      "worktree": "/home/sfkim/projects/mcpbench/.worktrees/T003",
+      "commit": "45256c86b7c06d8ef2cf7fd950aa7a0e991816bb",
+      "paths": [
+        "docs/PROJECT_CONTEXT.md",
+        "docs/ARCHITECTURE.md"
+      ],
+      "hashes": {
+        "docs/PROJECT_CONTEXT.md": "878bf7c22a14cf7da7b7f2b60a270b441302b5102ae237510b73a0e35fcd51ac",
+        "docs/ARCHITECTURE.md": "f26c1f7d2eb4f0b2b2669c3964eec3660beb747bec23687488a1198489c584d3"
+      }
+    },
+    "T004": {
+      "worktree": "/home/sfkim/projects/mcpbench/.worktrees/T004",
+      "commit": "fdc6f6209b9b5e0a0456296b6c83589eb5ab82b1",
+      "paths": [
+        "docs/EVALUATION_PLAN.md"
+      ],
+      "hashes": {
+        "docs/EVALUATION_PLAN.md": "f3aa61859a234d48aabcef651a41d8d6c5dc503e4f575acfa2cba20205a7dc5c"
+      }
+    },
+    "T005": {
+      "worktree": "/home/sfkim/projects/mcpbench/.worktrees/T005",
+      "commit": "49db92c9008bf0192f6830ce336c01c7830da566",
+      "paths": [
+        "docs/SECURITY_RESOURCE_CONTRACT.md"
+      ],
+      "hashes": {
+        "docs/SECURITY_RESOURCE_CONTRACT.md": "b18d7b679faf19fa4a005807b51440b7075dea30819ae15f4692891df8d28a5b"
+      }
+    }
+  }
+}
