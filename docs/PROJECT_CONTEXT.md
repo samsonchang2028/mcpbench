@@ -36,27 +36,46 @@ and other retrieval implementations follow the DAG's baseline/fairness gates.
   deferred to v2 and are not baseline dependencies.
 
 See [architecture](ARCHITECTURE.md) for topology, trust boundaries and tradeoffs.
-All service names, ports and budgets there are proposals pending admission.
+MCPBench deployment names, bindings and budgets remain proposals pending admission;
+the audit's existing-host observations are time-stamped evidence, not reservations.
 
 ## Current status — 2026-11-07
 
-This is a documentation scaffold. The user authorized parallel documentation-only
-T003/T004/T005 despite blocked Git and host runtime access. No application code,
-Compose implementation, dependency installation, model pull or inference is
-included in this wave. The orchestrator records review/test evidence and task
-status; these documents do not imply the tasks or milestones have passed.
+This remains a documentation scaffold, with no application or Compose
+implementation. The user authorized a parallel T003/T004/T005 documentation refresh
+after changing permissions. Each task uses an isolated Git worktree and exclusive
+files; the orchestrator owns independent review/testing and task integration.
+No dependency installation, model pull, build, startup or inference is included.
 
-The [audit](NODE1_AUDIT.md) records a Dell Precision 5520, i7-7820HQ and Quadro M1200
-PCI device; GPU usability is unverified. Immich, Jellyfin and other workloads were
-reported by the user; Docker inventory, ports, Ollama server/model identity and
-residency remain unverified because session access was denied. Permission errors
-are not evidence that services are absent or unhealthy.
+The refreshed [audit](NODE1_AUDIT.md) verifies normal Git, Docker daemon and native
+Ollama metadata access. Git was initialized normally on `main`, with baseline
+commit `e0ce746`; no remote or push was configured. The earlier read-only metadata
+projection was not bypassed. T002 awaits independent validation of that evidence.
 
-Git initialization previously failed because `.git` is read-only; no valid Git
-repository or commit is claimed. Do not relocate metadata to bypass restrictions.
+The host is a Dell Precision 5520 with i7-7820HQ and Quadro M1200 PCI device.
+About 25 GiB RAM and 229 GiB on the project/Docker/parent-model filesystem were
+available at inspection; a retained 60-second sample showed zero swap activity
+and 90–94% idle CPU. Docker inventory found 15 running and four exited containers,
+including Immich and Jellyfin. `immich_machine_learning` was already unhealthy.
+NVIDIA reports a loaded-driver/NVML-library version mismatch; GPU offload is not
+established. Preserve these existing services and drivers without repair.
+
+Ollama client/server version 0.40.13 exposes installed `qwen3.5:9b`, Q4_K_M,
+digest `56671c2ab9385f9cfcb404638e32cd62d88e3501d44822208363c010179a3c90`.
+Tools are advertised in metadata, while `/api/ps` reported no loaded models at
+inspection. Neither observation proves live tool-calling or future exclusive use.
+Loopback 11434 is verified; candidate 18081 had no listener but must be rechecked.
+
+T001 remains narrowly BLOCKED on the actual Ollama model-storage path/symlink
+target and its filesystem/free space. The service-account directory cannot be
+traversed by the current user; parent-directory space is insufficient evidence.
+Do not alter permissions or use a privilege workaround. T006 schemas, full T007
+resource/connectivity admission and T040 live capability verification remain
+incomplete. The numeric resource sample does not waive any of these gates.
+
 The shared ChatGPT URL supplied no readable conversation; the kickoff and latest
-explicit instructions are the product authority. Missing runtime evidence and
-resource admission remain blockers, even if a short resource sample looks idle.
+explicit instructions remain the product authority. Earlier access failures are
+historical evidence, not current claims that Git, Docker or Ollama are absent.
 
 ## Smallest vertical slice and proof
 

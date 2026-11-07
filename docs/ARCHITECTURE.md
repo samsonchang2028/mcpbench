@@ -1,8 +1,9 @@
 # MCPBench v1 architecture
 
-Status: reviewed-design candidate for documentation task T003, not an implemented
-or runtime-validated system. The [shared assumptions](WAVE1_CONTRACT_ASSUMPTIONS.md)
+Status: design candidate for T003's permission-refresh documentation wave, not an
+implemented or runtime-validated system. The [shared assumptions](WAVE1_CONTRACT_ASSUMPTIONS.md)
 govern this wave; T006 freezes versioned schemas and exact launch/auth transport.
+Recorded host/API metadata is distinguished from proposed deployment below.
 
 ## Components and trust boundaries
 
@@ -41,10 +42,14 @@ allowlists before implementation.
 ## Deployment and connectivity
 
 Propose a dedicated Compose project `mcpbench`, with names/subnets/ports checked
-unused before startup. MCP and Python evaluator join the project-scoped internal
-DB network. PostgreSQL has a project-owned data volume and **no host publication**.
+unused before startup. The refreshed audit found no existing MCPBench project;
+that snapshot does not reserve its names or network. MCP and Python evaluator
+join the project-scoped internal DB network. PostgreSQL has a project-owned data
+volume and **no host publication**.
 MCP listens on container port 8080 and publishes only `127.0.0.1:18081`; this is a
-candidate port, not a verified free one. Preserve all existing networks/volumes.
+candidate port with no listener at inspection, not a reserved binding. Existing
+host ports 5432 and 8080 are occupied; container-only 8080 does not conflict with
+host 8080. Recheck bindings before startup and preserve existing networks/volumes.
 
 The Go agent uses Linux host networking to call native Ollama at loopback 11434
 and MCP at loopback 18081 without rebinding Ollama. It opens no listener, has no
@@ -74,7 +79,8 @@ packages. Python evaluation lives under `eval/` with fixture, grading, reset and
 runner modules; SQL migrations/seeds live under `db/`. These are planned paths.
 The independent Python oracle and adversarial expected-state tests precede billing
 implementation. Pin Go/Python dependencies, MCP SDK/protocol and images when the
-relevant admitted implementation tasks run; no versions are selected by this prose.
+relevant admitted implementation tasks run; no SDK, dependency or image versions
+are selected by this prose. Observed Ollama/model versions below are audit evidence.
 
 Each attempt has a distinct run ID and benchmark-owned database/schema with a
 canonical seed fingerprint. The evaluator prepares it and verifies the fingerprint
@@ -126,8 +132,24 @@ a draft, and neither may send/pay or cross tenant/run boundaries.
 The Go agent translates authorized MCP schemas to native Ollama function tools,
 validates returned names/JSON before dispatch, preserves call/result correlation
 and appends assistant calls/tool results to chat history. Use native `/api/chat`
-with `stream:false`. Verify the exact installed tag/digest, capabilities and
-residency; do not infer support from “Qwen 3.5 9B” or client version alone.
+with `stream:false`. Refresh the exact installed tag/digest, capabilities and
+residency at admission; do not infer live behavior from a model name or metadata.
+
+The [permission-refresh audit](NODE1_AUDIT.md) records Ollama client/server
+0.40.13 and installed `qwen3.5:9b`, Q4_K_M, digest
+`56671c2ab9385f9cfcb404638e32cd62d88e3501d44822208363c010179a3c90`.
+Metadata advertises tool support and context capacity 262144; neither authorizes
+larger request budgets nor proves valid tool calls. `/api/ps` returned no loaded
+models at inspection, not a guarantee against other clients later. Native
+loopback 11434 is reachable; no generation request was made by the audit.
+
+Actual model storage remains inaccessible under the service-account directory;
+its target filesystem/free space still blocks T001. NVIDIA kernel module
+580.173.02 and NVML library 580.178 mismatch, so GPU readiness is not established.
+Plan conservatively for CPU feasibility, to be measured after gates, without
+changing drivers or Ollama configuration. Existing Immich ML was unhealthy before
+MCPBench execution; compare future health against the recorded baseline rather
+than repairing it or treating it as a benchmark-induced regression.
 
 T040 is a future one-request harmless `probe_echo` capability test after T007 and
 separate approval, without a billing server or writes. Strict returned-name/argument
@@ -186,10 +208,14 @@ infrastructure. OpenTelemetry, Jaeger and collectors are deferred to v2.
 | Admission/reserve | At least 20 GiB available before trial; keep 8 GiB available while running |
 | Storage | At least 20 GiB free on relevant filesystems; 100 MiB smoke artifact cap |
 
-These are design assumptions, not measured capacity. Native Ollama is outside
-Compose limits. Apply [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) admission
-and abort rules, including the 60-second sample and fresh host health/loading
-checks; current access blockers mean the gate has not passed.
+These are design bounds, not measured inference requirements. The refreshed audit
+observed about 25 GiB available RAM and a 60-second interval with no swap activity,
+90–94% CPU idle; that is evidence of sampled headroom, not admission or peak-load
+capacity. Native Ollama is outside Compose limits. Apply the admission and abort
+rules in [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md), including the 60-second
+sample and fresh host health/loading
+checks. Git and Docker/Ollama metadata access now work; actual model-storage
+verification, T006 contracts and complete T007 admission remain unresolved.
 
 Request-local defaults, if supported: context 4096, output 512, temperature zero,
 recorded seed/thinking/keep-alive. Never silently truncate schemas or change global
