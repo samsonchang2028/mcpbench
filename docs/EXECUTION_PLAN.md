@@ -262,3 +262,15 @@ T007 additionally requires T001 and fresh admission. T040 follows T007 plus sepa
 runtime approval; T008 follows T002/T006/T007/T040. No application implementation
 task is currently READY. Normal runtime/service behavior remains unmodified.
 Evidence: state/reviews/access-refresh-reviewer.md and access-refresh-tester.md.
+
+## Active goal-directed execution
+
+The latest user instruction authorizes routine eligible implementation/test/review/
+integration transitions without per-wave approval, including T040 after all admission
+prerequisites. This supersedes older "next-wave approval" wording only within the
+existing approved architecture and security/resource contracts. Stop for sensitive
+security changes, architecture changes, unresolved P0/P1 or genuine blockers.
+T006 is the first active task, owned exclusively under contracts/. T001 remains
+BLOCKED after fresh read-only Git/Docker/Ollama checks; no sudo or file-permission
+workaround is authorized. Static contracts and later T009 fixtures can proceed
+without runtime admission; builds/downloads/startup/inference cannot.

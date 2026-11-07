@@ -82,3 +82,10 @@ Required documentation and a reviewable plan are present. No heavy workloads hav
 launched. The audit is explicitly partial, and a valid Git repository cannot be
 claimed until the protected `.git` mount is writable. These host-access blockers
 must remain visible in the handoff rather than being silently bypassed.
+
+## Goal-directed execution authorization
+
+The user now authorizes routine admitted DAG transitions without further per-wave
+approval. Earlier separate-approval wording for T040 is superseded for the approved
+probe only when T007 passes. All admission/abort rules above remain unchanged.
+No architecture or security-boundary change is covered by this routine authority.
