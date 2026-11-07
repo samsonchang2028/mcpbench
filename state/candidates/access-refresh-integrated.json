@@ -1,0 +1,26 @@
+{
+  "tasks": {
+    "T003": {
+      "candidate_commit": "45256c86b7c06d8ef2cf7fd950aa7a0e991816bb",
+      "integrated_commit": "317a46e923bf1297a6c90c0803aa1f90dbb166f3",
+      "source_hashes": {
+        "docs/PROJECT_CONTEXT.md": "878bf7c22a14cf7da7b7f2b60a270b441302b5102ae237510b73a0e35fcd51ac",
+        "docs/ARCHITECTURE.md": "f26c1f7d2eb4f0b2b2669c3964eec3660beb747bec23687488a1198489c584d3"
+      }
+    },
+    "T004": {
+      "candidate_commit": "fdc6f6209b9b5e0a0456296b6c83589eb5ab82b1",
+      "integrated_commit": "3571af17dab97222fcbb9416d78098457d83b4ed",
+      "source_hashes": {
+        "docs/EVALUATION_PLAN.md": "f3aa61859a234d48aabcef651a41d8d6c5dc503e4f575acfa2cba20205a7dc5c"
+      }
+    },
+    "T005": {
+      "candidate_commit": "49db92c9008bf0192f6830ce336c01c7830da566",
+      "integrated_commit": "0cc1a13093253948c0c80d2437afe73b93aff8af",
+      "source_hashes": {
+        "docs/SECURITY_RESOURCE_CONTRACT.md": "b18d7b679faf19fa4a005807b51440b7075dea30819ae15f4692891df8d28a5b"
+      }
+    }
+  }
+}

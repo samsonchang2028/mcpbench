@@ -87,7 +87,7 @@ Curated evidence (no container environment dumps or secrets):
 `state/audits/2026-11-07-resource-refresh.json`.
 
 T001 remains BLOCKED only on actual model-storage target verification. T002 has
-normal Git evidence, pending independent documentation-wave validation. T003–T005
+normal Git evidence and is DONE after independent reviewer APPROVE/tester PASS. T003–T005
 can refresh documentation in disjoint files; their earlier accepted contracts stay
 valid. T006 contracts, T007 full admission and T040 live capability are not complete.
 All startup/build/inference gates must be refreshed at point of execution. T040
