@@ -1,12 +1,44 @@
 # Security and resource contract — v1
 
 Status: T005 documentation candidate. These are required design/test behaviors,
-not claims that containers, authorization or host capacity have been verified.
+not claims that benchmark containers, authorization or full admission have passed.
 Follow [AGENTS.md](../AGENTS.md), the shared
 [wave assumptions](WAVE1_CONTRACT_ASSUMPTIONS.md) and the admission/stop policy in
 [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md). The current wave permits only
-documentation. Application implementation, Docker operations, dependency installs,
+documentation. Application implementation, Docker mutations, dependency installs,
 model pulls and live Ollama calls remain blocked.
+
+## Permission-refresh evidence and remaining boundary
+
+The [2026-11-07 audit](NODE1_AUDIT.md) supersedes the earlier broad access blockers.
+Normal Git initialization/index/commit writes succeeded (baseline `e0ce746`),
+Docker inspection works through sfkim's existing docker-group membership, and
+native Ollama metadata is reachable. These are control-plane capabilities only;
+they grant no additional permission to a future benchmark agent.
+
+The installed `qwen3.5:9b` is Q4_K_M and advertises tool support; the inspected
+loaded-model list was empty. Metadata and an idle snapshot do not prove valid tool
+calls, exclusive access during a future trial, or T040 success. Model-storage
+target/symlink/filesystem verification remains blocked: sfkim cannot traverse the
+service-account model directory and noninteractive sudo requires authentication.
+Parent-directory free space does not prove the actual model target's free space.
+
+Preserve that ordinary Unix boundary. Do not change ownership, permissions, groups
+or sudo policy, mount protected host files into a container, or use Docker/privileged
+execution as a workaround. An authorized service-account check must supply the
+missing storage evidence. T001 therefore remains narrowly BLOCKED even though
+the former sandbox/socket restrictions have been lifted. Historical evidence
+supports sandbox restrictions as the main earlier cause, without proving that
+every Unix permission was unchanged.
+
+The audit also records NVIDIA kernel driver 580.173.02 versus NVML 580.178
+(`driver/library version mismatch`) and an existing unhealthy
+`immich_machine_learning` container. Neither is repaired by this project. GPU
+offload is unverified; any CPU feasibility claim needs the later admitted probe.
+Compare service health against the recorded baseline, distinguishing an existing
+unhealthy state from a new regression; do not conceal deterioration or restart the
+service to obtain a cleaner baseline. Existing workloads have no inspected hard
+CPU/memory quotas, so low current usage does not reserve future capacity.
 
 ## Principals and separation of authority
 
@@ -120,7 +152,8 @@ enforce these rules before implementation.
 
 The Python evaluator resides on the private project network with direct benchmark
 DB access. PostgreSQL publishes no host port. The MCP server uses that network
-for DB access and publishes only `127.0.0.1:18081` (candidate, not yet verified).
+for DB access and publishes only `127.0.0.1:18081` (candidate, observed free during
+the audit but requiring a fresh ownership/listener check before startup).
 The agent uses host networking to reach loopback Ollama `127.0.0.1:11434` and MCP;
 it opens no listener. No endpoint is publicly published, and no existing network
 or application volume is attached. Validate Host/Origin and bounded MCP bodies;
@@ -169,7 +202,14 @@ available and >=20 GiB free on the project, Docker and model filesystems, plus
 a 60-second sample with no sustained swapping and no existing-service health
 regression. Treat any three consecutive sampling intervals with swap-in or
 swap-out as sustained activity; exclude vmstat's cumulative first row. The short
-historical audit does not satisfy this gate. Confirm model sharing/residency can
+historical audit did not satisfy this gate. The refreshed 60-second sample has
+30 two-second intervals, no swap-in/out and 90–94% idle CPU; about 25 GiB RAM was
+available. This meets only the sampled no-sustained-swap/resource components,
+not T007 as a whole. Actual model-storage free space, T006 contracts and fresh
+point-of-execution ownership/health/loading checks are still prerequisites.
+The observed 229 GiB free on the project, Docker-root and model-parent filesystem
+cannot substitute for the inaccessible model target's verification.
+Confirm model sharing/residency can
 accept the request without displacing another active workload, or leave it blocked.
 
 | Component | Proposed memory cap | Proposed CPU quota |
@@ -243,4 +283,5 @@ T005 can be reviewed as documentation when the policy, matrix, budgets and expec
 tests agree with T003/T004 and shared assumptions. T006 must still freeze executable
 schemas, auth/run mapping, request/result transport, launch/mount allowlists and
 error/event definitions. Its absence blocks implementation and all runtime claims.
-No host checks, application tests, probes or services have been run for this file.
+This refresh uses the recorded audit; the documentation implementer performed no
+host checks, application tests, probes, Docker operations or service changes.
