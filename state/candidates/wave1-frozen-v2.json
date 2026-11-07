@@ -1,0 +1,15 @@
+{
+  "AGENTS.md": "f9d9549604ceeb6c009953d6c34463fc3fcc96d43da5a06fe86f4a8ba82e276a",
+  "agents/implementer.md": "6c289738aa91732f1472031863c80a0c39ddcc28d7f55facfae6782adcbd8627",
+  "agents/orchestrator.md": "41b69232e1151d5eb20c71f698f6be4401cfd27adec19bffa89364635162ac1a",
+  "agents/reviewer.md": "56d90a1f9ff987458fcfad505a02daf23ac8ba22f0e7a79970b4bac7c3704ba8",
+  "agents/tester.md": "c313d52579eea4a004ce72c71eeccba022643efa4a49820145afb5f2bf34e6d3",
+  "docs/TASK_GRAPH.md": "5339d1882fd8b332a1f8fdda637fdd1935904dda6e1d0602e55b1fcd4c52595b",
+  "docs/EXECUTION_PLAN.md": "5a0546eae40e48537770636f51e14edf171f30a30adc3fdb9f49590ac15b2081",
+  "docs/IMPLEMENTATION_PLAN.md": "6db5cc4d7599ce96ffc0d7ad0902d91e3f32e1e193a59d1224e7f56fc1eed59e",
+  "docs/WAVE1_CONTRACT_ASSUMPTIONS.md": "d767aa1ac64c39b0ce0e700e2daa4dde4f430b24cffddf0d97b72c0213a9a4a7",
+  "docs/PROJECT_CONTEXT.md": "4df52bccf1d3e072a8199276657a3716c9677ff3ec448fe13f88d0378770e887",
+  "docs/ARCHITECTURE.md": "942ae8a5dfaec759a45f61d088808d2b2d4fafffeb1c30fa8a9e9c8f07790a25",
+  "docs/EVALUATION_PLAN.md": "e219f6b1cf57779626cfe56a585ce31d77c7a35846c6948ee1dcb43848048c12",
+  "docs/SECURITY_RESOURCE_CONTRACT.md": "692774b633dfd618601e59a96cf460a17f96bbfb31ba506e2a4a8fca90d8d4f2"
+}

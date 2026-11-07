@@ -1,0 +1,9 @@
+.env
+.env.*
+!.env.example
+artifacts/
+bin/
+*.log
+.aws/
+.codex/
+.agents/
