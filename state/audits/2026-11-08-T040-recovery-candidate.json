@@ -5,9 +5,9 @@
   "difference_from_attempt_01": "Adds raw CPU ticks and host load to resource samples; all safety controls unchanged",
   "independent_review": "state/reviews/T040-recovery-reviewer.md",
   "independent_test": "state/reviews/T040-recovery-tester.md",
-  "runtime_authorization": "PENDING explicit decision; async question unanswered",
-  "executed": false,
-  "new_request_count": 0,
+  "runtime_authorization": "User explicitly approved: Approve one gated retry",
+  "executed": true,
+  "new_request_count": 1,
   "post_abort_resource_summary": {
     "elapsed_seconds": 60.101369488984346,
     "min_available_bytes": 27238293504,
@@ -17,5 +17,14 @@
     "cgroup_oom_events_unchanged": true,
     "native_ollama_max_and_high_unlimited": true
   },
-  "scope_limit": "Quiet post-abort observation does not explain prior swap or establish safe model-load behavior; fresh admission remains mandatory"
+  "scope_limit": "Quiet post-abort observation does not explain prior swap or establish safe model-load behavior; fresh admission remains mandatory",
+  "authorization_recorded_utc": "2026-11-08T19:22:08.486694+00:00",
+  "generation_attempt_limit": 1,
+  "authorization_consumed": true,
+  "remaining_gates": "Fresh60sec admission plus immediate reviewed-controller preflight; unchanged stop thresholds",
+  "launch_utc": "2026-11-08T19:23:51.504250+00:00",
+  "completed_utc": "2026-11-08T19:27:20.063994+00:00",
+  "outcome": "PASS",
+  "independent_result_review": "state/reviews/T040-retry-reviewer.md",
+  "independent_result_test": "state/reviews/T040-retry-tester.md"
 }

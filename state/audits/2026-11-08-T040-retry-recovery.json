@@ -1,0 +1,161 @@
+{
+  "utc": "2026-11-08T19:25:21.314312+00:00",
+  "monotonic": 6069980.114405246,
+  "mem_available_bytes": 26312007680,
+  "cpu_ticks": [
+    138531091,
+    126601,
+    67942047,
+    4557796770,
+    547562,
+    0,
+    10868392,
+    0,
+    0,
+    0
+  ],
+  "load": [
+    1.30810546875,
+    1.17333984375,
+    0.7197265625
+  ],
+  "swapin_pages": 586452,
+  "swapout_pages": 2264483,
+  "ollama_memory_current_bytes": 6801412096,
+  "containers": {
+    "bcdeb2f37986185a559396c3e90a2be41260d0b8ac71b77e5660d09929c04017": {
+      "name": "/okc-postgres",
+      "status": "running",
+      "started_at": "2026-09-29T19:59:38.54835241Z",
+      "oom": false,
+      "health": null
+    },
+    "671e4768a7f3574d594711d7dcdca843b5e1a4637d6917fc5baa63ac925ff93c": {
+      "name": "/qbittorrent",
+      "status": "running",
+      "started_at": "2026-08-29T17:39:45.2744453Z",
+      "oom": false,
+      "health": "healthy"
+    },
+    "0fa5d9a69c99e841f6f69c6fa157c50f76a72a2deb7644d3b8180f7c4084129f": {
+      "name": "/flaresolverr",
+      "status": "running",
+      "started_at": "2026-08-29T17:39:45.287016892Z",
+      "oom": false,
+      "health": null
+    },
+    "919839159a8bd5142998468131bc9ab07fcd538626b4d9d3779b6ff214f0f312": {
+      "name": "/prowlarr",
+      "status": "running",
+      "started_at": "2026-08-29T17:39:45.272876156Z",
+      "oom": false,
+      "health": null
+    },
+    "5954fffeb11454453af7ccf7eeb5ea38b06a9b5ef6f16f05f58b12c732aa624f": {
+      "name": "/gluetun",
+      "status": "running",
+      "started_at": "2026-08-29T17:39:44.423519911Z",
+      "oom": false,
+      "health": "healthy"
+    },
+    "be7238654926dfea8a13cb1b0059a62e27fdd96e5c8efb87dd25f55a5826c522": {
+      "name": "/bazarr",
+      "status": "running",
+      "started_at": "2026-08-29T17:39:44.427879966Z",
+      "oom": false,
+      "health": null
+    },
+    "eb2f21ab995e33f7d01b5e243fb9a2358336b720218c4b70248c6f0daa1db57e": {
+      "name": "/jellyfin",
+      "status": "running",
+      "started_at": "2026-08-29T17:39:44.431117231Z",
+      "oom": false,
+      "health": null
+    },
+    "108b33100355ce38bfeebdf939462b2a0d1a5a7a56ae301283e3850305f2bac3": {
+      "name": "/sonarr",
+      "status": "running",
+      "started_at": "2026-08-29T17:39:44.425472153Z",
+      "oom": false,
+      "health": null
+    },
+    "18abf5fb7489c7644f423e52a17066100345a7148177e4bb3c5caa443124d34b": {
+      "name": "/radarr",
+      "status": "running",
+      "started_at": "2026-08-29T17:39:44.428631722Z",
+      "oom": false,
+      "health": null
+    },
+    "a7409a82b53119f882fd0c802c16506e8f3c43df96addc3c4e195e8bd3e6a8c1": {
+      "name": "/lidarr",
+      "status": "exited",
+      "started_at": "2026-08-14T22:02:13.22699214Z",
+      "oom": false,
+      "health": null
+    },
+    "9b882985fbbb75c19d237af4df4c4d2617e5e67e5c240b27d3512821c66e76e7": {
+      "name": "/seerr",
+      "status": "running",
+      "started_at": "2026-08-29T17:39:44.431610941Z",
+      "oom": false,
+      "health": "healthy"
+    },
+    "f88542f6ffe4c2bd44871dce4a450495267494f1368a4e74a7ab28b48c61f1fc": {
+      "name": "/deunhealth",
+      "status": "running",
+      "started_at": "2026-08-29T17:39:44.427264907Z",
+      "oom": false,
+      "health": "healthy"
+    },
+    "051e70b77c7088544ea2204af4fde54a0d2295991aa3973ba0a673164a68266d": {
+      "name": "/immich_server",
+      "status": "running",
+      "started_at": "2026-08-29T17:39:44.43535444Z",
+      "oom": false,
+      "health": "healthy"
+    },
+    "59726e03cbb3a690db7633cb0529a144040bbc53d3bffc7b510d2805e91d8b3a": {
+      "name": "/immich_postgres",
+      "status": "running",
+      "started_at": "2026-08-29T17:39:44.433607343Z",
+      "oom": false,
+      "health": "healthy"
+    },
+    "b943c172223a8c9759a52306a993265f53af948b67caeb13f4ec49b9f39b8a0f": {
+      "name": "/immich_machine_learning",
+      "status": "running",
+      "started_at": "2026-08-29T17:39:44.435409492Z",
+      "oom": false,
+      "health": "unhealthy"
+    },
+    "51ac4fa635668509d3564536fdddaa7064e2b30095c3973274d156b6c40df812": {
+      "name": "/immich_redis",
+      "status": "running",
+      "started_at": "2026-08-29T17:39:44.422343977Z",
+      "oom": false,
+      "health": "healthy"
+    },
+    "5733101a9f86251f24bdd1c3debc87bffe510b57f1b7fb7156d95802f1e48c5b": {
+      "name": "/wonderful_thompson",
+      "status": "exited",
+      "started_at": "2026-06-30T22:17:35.371138871Z",
+      "oom": false,
+      "health": null
+    },
+    "41719cce4f9b69feafa2be71c917a942c5a196316978db1b36f34578f15515a4": {
+      "name": "/clever_hamilton",
+      "status": "exited",
+      "started_at": "2026-06-28T23:03:46.700110168Z",
+      "oom": false,
+      "health": null
+    },
+    "ac862b1a6c71fd2020ffb200862e58a51dc8088681586299bfeb99350500a79a": {
+      "name": "/sad_wright",
+      "status": "exited",
+      "started_at": "2026-06-28T23:03:29.512683913Z",
+      "oom": false,
+      "health": null
+    }
+  },
+  "models": []
+}

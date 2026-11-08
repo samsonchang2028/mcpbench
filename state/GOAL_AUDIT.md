@@ -6,7 +6,7 @@ completion. Authoritative file/process evidence was checked after integration.
 | Requirement | Current authoritative evidence | Verdict |
 | --- | --- | --- |
 | Go fictional-billing MCP server | No cmd/billing-mcp, go.mod, db or Compose implementation | Incomplete |
-| Real Qwen benchmark workflows | One actual probe safety-aborted; frozen failure artifacts, no tool-call response | Incomplete |
+| Real Qwen benchmark workflows | First probe aborted; explicitly approved retry proves native probe_echo only, no billing workflow | Incomplete |
 | All four retrieval implementations | Strategy identifiers reserved; internal/retrieval absent | Incomplete |
 | Python DB-state evaluation runner | Static fixture checker exists; runner/grading/DB code absent | Incomplete |
 | Runtime structured logs | Typed event examples/validators only; no real benchmark trace | Incomplete |
@@ -15,9 +15,9 @@ completion. Authoritative file/process evidence was checked after integration.
 | Relevant independent gates | Static T006/T009 PASS; runtime gates UNRUN | Incomplete |
 | Existing homelab/native Ollama preserved | No runtime/container/config mutations; no project containers | Preserved |
 
-DAG recomputation: 8 DONE; T040 BLOCKED;31 WAITING; zero READY.
-T001/T007 admission independently accepted, then real probe triggered sustained
-swap stop rule at36.204sec. Safety abort validated; capability not proven.
-State/audits/2026-11-08-T040-result.json and R/V reports retain failed evidence.
-No app runtime/build/container implementation exists; all v1 functionality and
-results above remain incomplete. Resource gates/thresholds remain unchanged.
+DAG recomputation:9 DONE;T008 READY;30 WAITING;zero BLOCKED.
+T040 approved retry independently accepted (R APPROVE,V14-check PASS); actual
+native tool call and local echo proven. Prior failure retained,not rewritten.
+All end-to-end v1 requirements above remain incomplete; no actual Go server,
+MCP invoice workflow,DB evaluator,retrieval engines or measured campaign exists.
+No resource/security threshold changed; refresh admission before costly work.

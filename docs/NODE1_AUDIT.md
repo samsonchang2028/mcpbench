@@ -137,3 +137,28 @@ to independent review/testing and immediate pre-call refresh. T040 retains a
 execution may time out; timeout is recorded honestly and cannot be waived.
 No service, configuration, permission, container, model residency or volume was
 modified. T001/T007 are candidates until R/V approval and O integration.
+
+## T040 approved retry — 2026-11-08T19:27:20.063994+00:00
+
+The first probe was correctly safety-aborted for sustained swapping at36.204s;
+its original artifacts and independent failure review remain intact. User then
+explicitly approved one gated retry. Fresh60.034s admission retained minimum
+24.38GiB available RAM,3 swap-in pages,zero swap-out,longest activity streak1,
+unchanged19-container baseline,empty model residency and no naming/port conflicts.
+
+The approved retry t040-20261108-02 returned a valid probe_echo call in20.174s;
+arguments and locally computed echo matched exactly. Native API counts290 prompt
+and32 generated tokens. Raw CPU ticks now retained; host aggregate busy was
+25.81% across the request observation interval, not attributed solely to Ollama.
+Minimum RAM across before/during/after was23.83GiB; during-call18 swap-in pages,
+zero swap-out,no three-sample activity streak. Existing container states/health
+were unchanged. Sampled native service memory peaked at6.87GiB (service/caches,
+not proven model-only peak). Later read-only api/ps showed no model loaded after
+request-local30s expiry. No forced unload,threshold/config/driver/service changes.
+No causal explanation for the earlier swapping or GPU execution split is claimed.
+
+Frozen artifact manifest artifacts/probes/t040-20261108-02/hashes.json and
+state/audits/2026-11-08-T040-retry-result.json retain evidence. Independent reviewer
+APPROVE and tester14-check PASS in state/reviews/T040-retry-*.md complete T040.
+This proves a harmless native tool call, not MCP invoice/benchmark functionality.
+All future costly operations still require fresh admission and their DAG gates.

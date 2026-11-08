@@ -1,0 +1,60 @@
+{
+  "probe_id": "t040-20261108-02",
+  "status": {
+    "finished_utc": "2026-11-08T19:24:11.932663+00:00",
+    "elapsed_seconds": 20.174285922199488,
+    "curl_returncode": 0,
+    "abort_reason": null,
+    "outcome": "PASS",
+    "validated_call": {
+      "name": "probe_echo",
+      "arguments": {
+        "text": "mcpbench-probe-v1"
+      }
+    },
+    "local_tool_result": {
+      "text": "mcpbench-probe-v1"
+    }
+  },
+  "manifest_sha256": "8fca943ea13c9ab00278f9f5da681a7076d376022598d5c2d4957007e4d8f0f8",
+  "artifact_hashes": {
+    "admission.json": "8a38c6035529f8855e581f8b3f9fe6963251e490f784f26fa95b0437e454470a",
+    "after.json": "8ab735ba9f5caeb6341f0754ca1dbccfb6c8adac9f63e098ae0ad5c4d1433bb5",
+    "before.json": "88b65bc982d81fbcdce92d35e59ec12de4ea7f1de134f6d450920b43573357a1",
+    "controller.py": "c9809246f788daa3f118c17de44f1a59e28ba2861af3a2f30de41e7ed29ba3b9",
+    "curl-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "metadata.json": "0b01e76af30d5c12fd6030eecb4e3d5b1f8450c2302f0694531bacb7da2d7727",
+    "model-tags-before.json": "5635c9ab3a87e05d365e36c35f0071dba9a0e8a507c0ebf633d69f118431900f",
+    "request.json": "b81fb74304337e3ae8489c2ce8d8acc167b91ec082aa15049326333f699714a8",
+    "resources.jsonl": "99d155aea2feeb63d6ddbeacb97e5f87051695a616086bbe864b32e7e4ecd7c4",
+    "response.json": "02ec140ee3bbf2774f987229608d4176981f2d1f7855ae130e33a6fd8da07762",
+    "status.json": "a40095df6122c076129bed7b28f4cdb9b3b23d92697535e39b939f3669c71602"
+  },
+  "user_authorization": "Approve one gated retry",
+  "generation_requests": 1,
+  "admission_summary": {
+    "elapsed_seconds": 60.03442323021591,
+    "min_available_GiB": 24.378570556640625,
+    "swap_in_pages": 3,
+    "swap_out_pages": 0,
+    "longest_swap_streak": 1
+  },
+  "runtime": {
+    "min_available_bytes": 25591705600,
+    "swap_in_pages": 18,
+    "swap_out_pages": 0,
+    "container_state_unchanged": true,
+    "cpu_ticks_present": true,
+    "tokens": {
+      "prompt_eval_count": 290,
+      "eval_count": 32
+    },
+    "duration_nanoseconds": {
+      "total_duration": 19992424515,
+      "load_duration": 5870140081,
+      "prompt_eval_duration": 6509494000,
+      "eval_duration": 7608075000
+    }
+  },
+  "claims_limit": "Harmless native tool call only; no MCP billing workflow, invoice grading or benchmark functionality proven. First failed attempt remains retained; no policy/service/config changes."
+}

@@ -1,10 +1,12 @@
 <!-- Current access refresh supersedes historical snapshot/status prose below. -->
 # MCPBench task graph
 
-Current active-goal status: T002–T006 are DONE with independent evidence. T009
-fixture data/static validation is DONE after independent review/testing. T001 and T007 are DONE with authenticated storage evidence and fresh admission
-approved independently. T040 is BLOCKED after a monitored swapping safety abort; T008 and app runtime work remain WAITING. Routine admitted DAG transitions are authorized;
-security/architecture changes and unresolved P0/P1 still require stopping.
+Current status: T001–T007, T009 and T040 are DONE with independent evidence.
+The explicitly approved T040 retry returned a valid native tool call; the earlier
+swap-aborted attempt is retained. T008 is READY. Application/runtime tasks remain
+WAITING on the graph. Routine admitted DAG transitions remain authorized; every
+costly action still needs fresh admission, and security/architecture changes or
+unresolved P0/P1 still require stopping.
 The older access observations below are historical.
 
 Snapshot: 2026-11-07. Planning only; no implementation dispatched. This graph
@@ -80,8 +82,8 @@ claims that workers are currently running.
 | T005 | Define security/resource contract / I | — | P0 | DONE | Written principal/permission matrix, credential and network boundaries, scoped reset, timeout/retry budgets, host-network tradeoff, resource admission/stop policy and negative tests; agent has no grader/admin credentials or Docker socket. |
 | T006 | Freeze cross-component contracts / C,O | T003,T004,T005 | P0 | DONE | Versioned JSON schemas in contracts/ for catalog/tools, task fixtures, agent request/result, trusted principal/run-context routing, trace and grading; three smoke tools and ten baseline tools have input/output/error/authorization definitions; ambiguity resolved and R/V sign off. |
 | T007 | Runtime admission evidence / H,I | T001,T006 | P0 | DONE | IMPLEMENTATION_PLAN admission met: 60-second resource sample, >=20 GiB available RAM and >=20 GiB free on relevant filesystems, no sustained swapping/regression; unused project/subnet/ports, model residency/shared use known. Recalculate model budget if >12 GiB. Metadata capability check only; T040 verifies basic tool output early and T023 verifies the real MCP invoice later. Evidence: state/audits/2026-11-08-admission.json, candidate 8ca7669, R APPROVE/V PASS; immediate pre-call refresh still required. |
-| T040 | Early Ollama capability probe / H,A,V | T007 | P1 | BLOCKED | Goal-directed authorization covers this routine probe only after T007 and no open P0/P1; exact installed model/digest, one bounded native chat request with harmless `probe_echo` tool, validate returned name/JSON args and locally computed echo; no billing/MCP writes, config changes, pulls or forced unload; resource observations and model response saved; no call or malformed call is failure, not metadata-only success. Output: artifacts/probes/<probe-id>/. Attempt t040-20261108-01 safety-aborted after36.204s, no tool response. R approves failure evidence, V confirms capability FAIL/safety PASS; fresh admission and reviewed retry decision required. Evidence state/audits/2026-11-08-T040-result.json. |
-| T008 | Repository skeleton and pinned dependencies / O | T002,T006,T007,T040 | P0 | WAITING | Go module, Python project/lock, chosen SDK/protocol and image digests pinned; empty package boundaries and check commands agree with contracts; dependency resolution/build is admitted by explicit T007 dependency. |
+| T040 | Early Ollama capability probe / H,A,V | T007 | P1 | DONE | Exact installed Qwen/digest, one bounded native chat with harmless probe_echo, strict name/JSON args and local echo verified. Attempt01 safety-aborted and retained; user explicitly approved one gated retry. Attempt02 passed in20.174s after fresh60.034s admission, 4096/512 limits and2sec monitoring; no sustained swap or service regression. R APPROVE/V14-check PASS: state/reviews/T040-retry-*.md. Immutable artifacts/probes/t040-20261108-02/hashes.json; summary state/audits/2026-11-08-T040-retry-result.json. Native tool capability only; no billing/MCP success claim. No further inference request authorized by this one-retry approval. |
+| T008 | Repository skeleton and pinned dependencies / O | T002,T006,T007,T040 | P0 | READY | Go module, Python project/lock, chosen SDK/protocol and image digests pinned; empty package boundaries and check commands agree with contracts; dependency resolution/build is admitted by explicit T007 dependency. |
 | T009 | Versioned fixtures and expected states / E | T006 | P0 | DONE | eval/fixtures contains three-tool invoice fixture, baseline fictional customers/projects/items/timesheets and expected states; valid/invalid fixture contract checks; no runtime/model dependencies. |
 | T010 | Independent grader and reset tests first / E | T008,T009 | P0 | WAITING | eval/grading and eval/reset tests cover correct and deliberately wrong customer/price/status/date, extra writes, stale state and failed reset; grader consumes database snapshots, not model prose; unimplemented DB path explicitly unrun until T018. |
 | T011 | Migrations and seed / D | T008,T009 | P0 | WAITING | db/ versioned schema and repeatable seed match contracts, foreign keys, money and idempotency constraints; tests authored for seed twice, migrate existing volume and rollback; live validation at T018. |

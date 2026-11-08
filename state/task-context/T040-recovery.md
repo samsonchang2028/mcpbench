@@ -11,3 +11,7 @@ budgets,2sec monitoring and stop thresholds. Test helper offline without main or
 live inference. R/V assess implementation readiness only, not runtime approval.
 Pending user decision on one gated retry; full fresh60sec admission and immediate
 health/model/residency refresh remain mandatory before any second request.
+
+User now explicitly approved one gated retry. Historical unauthorized labels
+above describe candidate review time. Fresh admission still required; no automatic
+further request and no threshold/config changes. Root holds resource lease.
