@@ -15,12 +15,8 @@ completion. Authoritative file/process evidence was checked after integration.
 | Relevant independent gates | Static T006/T009 PASS; runtime gates UNRUN | Incomplete |
 | Existing homelab/native Ollama preserved | No runtime/container/config mutations; no project containers | Preserved |
 
-DAG recomputation: DONE T002/T003/T004/T005/T006/T009; BLOCKED T001;
-33 WAITING; zero READY. Main46 tests+corpus CLI PASS, source hashes match reviewed
-candidates. No open static P0/P1. Goal remains full v1, not contracts/fixtures only.
-
-The same T001 service-account metadata restriction persists from the user-triggered
-goal turn and this continuation. Actual20:00 checks confirm it. Protected service
-files are not accessed through Docker/sudo/permission workarounds. The authenticated
-host's readlink/df output is required to clear T001; parent free space/metadata
-advertised tool support is not sufficient. No other DAG task can advance safely.
+DAG recomputation after authenticated model-store evidence and independent
+admission review/testing: 8 DONE; T040 READY; 31 WAITING. T001/T007 are now
+integrated at b845082; R/V evidence in state/reviews/T001-T007-*.md. Previous
+protected model-store evidence blocker is resolved without changing access.
+All runtime requirements above remain incomplete; no actual probe run yet.

@@ -1,26 +1,16 @@
-# Current state — full v1 goal, admission-blocked
+# Current state — admission passed; early tool probe READY
 
-UTC: 2026-11-08T15:16:52.078373+00:00
-DONE: T002/T003/T004/T005/T006/T009. Independent static review/test
-and integration evidence remains in state/handoffs/T006.md and T009.md.
-Workflow maintenance da33d24 adds LIGHT routing; core DAG tasks remain FULL.
+UTC: 2026-11-08T15:30:56.115811+00:00
+DONE T001/T002/T003/T004/T005/T006/T007/T009 (8 tasks).
+T001/T007 candidate 8ca7669 integrated as b845082. Authenticated user model
+readlink/df evidence retained; sfkim permissions were not changed/bypassed.
+R APPROVE: state/reviews/T001-T007-reviewer.md.
+V PASS: state/reviews/T001-T007-tester.md (18 checks plus freshness).
+60.06sec sample min25.10GiB RAM, no sustained swap, no health regression;
+unused project names/subnet/port and exact installed-model identity verified.
 
-Resumed-goal read-only refresh: Git metadata is writable, Docker daemon and
-Ollama metadata APIs work. Qwen3.5:9b digest unchanged; no models loaded.
-15 containers running; existing Immich ML remains unhealthy. About 25 GiB RAM
-available and 229 GiB on project/Docker filesystem. No runtime admission claimed.
-Evidence: state/audits/2026-11-08-goal-resume.json.
-
-BLOCKED T001: actual Ollama model-store target and filesystem/free-space.
-Direct traversal still denied; both narrow service-account sudo checks require
-interactive authentication. No permissions or service configurations changed.
-Requested authenticated readlink/df output from user; no password requested.
-DAG verified acyclic with no missing prerequisites: 6 DONE, 1 BLOCKED,
-33 WAITING, zero eligible unfinished tasks. T007 -> T040 -> T008 remains gated.
-No new runtime implementation, builds, containers, model loads or inference.
-
-Full v1 remains incomplete; see state/GOAL_AUDIT.md. No requirement was waived.
-Third confirmed blocker audit since goal resumed (3 of 3), 2026-11-08T15:17:27.791880+00:00.
-Both narrow sudo checks still require interactive authentication; no new host
-evidence received. DAG recomputed: no eligible unfinished task. Blocked threshold
-met; goal to be marked BLOCKED pending authenticated model-store readlink/df output.
+T040 READY; root owns one resource lease, no runtime request sent yet.
+T008 and all application tasks remain WAITING until the probe passes.
+No containers, model loads, config changes or inference have occurred.
+No new P0/P1. Existing Immich ML unhealthy and NVML mismatch preserved.
+Full v1 is incomplete; runtime requirements in GOAL_AUDIT remain unfulfilled.

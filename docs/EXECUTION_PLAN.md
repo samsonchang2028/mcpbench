@@ -1,7 +1,7 @@
 # MCPBench execution plan
 
-Current milestone: T006 static contracts DONE after independent review/testing;
-T009 fixtures now DONE. T001 model-store evidence remains BLOCKED. The
+Current milestone: T001/T007 admission, T006 contracts and T009 fixtures DONE
+with independent review/testing. T040 is READY for a bounded tool-call probe. The
 active-goal authorization section supersedes historical per-wave approval stops.
 
 This document schedules [TASK_GRAPH.md](TASK_GRAPH.md), which owns IDs, edges,
