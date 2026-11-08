@@ -1,0 +1,39 @@
+{
+  "observed_utc": "2026-11-07T23:20:05Z",
+  "git": {
+    "root": "/home/sfkim/projects/mcpbench",
+    "head": "c1c5731",
+    "initial_working_tree": "clean",
+    "metadata_writable": true
+  },
+  "docker": {
+    "client": "29.7.2",
+    "server": "29.7.2",
+    "running_containers": 15,
+    "mutations_performed": false
+  },
+  "ollama": {
+    "version": "0.40.13",
+    "model": "qwen3.5:9b",
+    "quantization": "Q4_K_M",
+    "digest": "56671c2ab9385f9cfcb404638e32cd62d88e3501d44822208363c010179a3c90",
+    "advertised_tools": true,
+    "loaded_models": [],
+    "generation_performed": false
+  },
+  "resources": {
+    "available_ram_GiB_approx": 25,
+    "project_docker_parent_disk_free_GiB_approx": 229,
+    "load_average": [
+      0.1,
+      0.35,
+      0.46
+    ],
+    "fresh_full_admission": false
+  },
+  "blocked": {
+    "task": "T001",
+    "reason": "Actual model-store resolution/filesystem cannot be traversed by sfkim; sudo -n -u ollama readlink/df both require interactive authentication",
+    "bypass_attempted": false
+  }
+}

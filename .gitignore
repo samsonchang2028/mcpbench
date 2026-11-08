@@ -10,3 +10,8 @@ bin/
 
 # Orchestrator-managed task worktrees
 .worktrees/
+
+# Local Python validation caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
