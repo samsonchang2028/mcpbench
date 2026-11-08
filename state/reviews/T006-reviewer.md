@@ -1,61 +1,45 @@
-# T006 independent re-review (v2)
+# T006 independent review — final repair candidate v3
 
-Verdict: **CHANGES REQUIRED**. No P0 observed; two remaining P1 defects block the static contract freeze.
+Verdict: **APPROVE** for the static T006 contract freeze. No remaining P0/P1 finding identified. This approval does not authorize runtime work or bypass T001/T007 and later integration gates.
 
-Reviewed frozen candidate `f18638770218147ff67c90c17df5f2037466efd7` in `.worktrees/T006`, with targeted diff from `64faec8858ce2b4e5ef0b026f841008664c1cbc1`. All **41 source hashes and 3 main-tree governance hashes** in `state/candidates/T006-v2.json` matched. Read the repair context, archived reviewer/tester counterexamples, updated main EVALUATION_PLAN clarification/event, changed validator/schema/protocol/tests and examples. Only this report was written.
+Reviewed commit `32bafe0607bfb81938d151de6c15e8288e9bc526` in `.worktrees/T006`, including the narrow 11-file diff from reviewed v2 `f18638770218147ff67c90c17df5f2037466efd7`. Candidate identity is frozen by MAIN `state/candidates/T006-v3.json`: all **41 source hashes and 3 main governance hashes match**. Previous reports remain archived separately. Only this main-tree reviewer report was written.
 
-## Remaining findings
+## Prior findings and repair verification
 
-1. **P1 — Actual unauthorized execution can remain comparison-valid.**
-   `contracts/validate.py:337,378–387` uses `metrics.unauthorized_executions == 0` only to derive original task success. Once that makes the original fail, invoice verification is skipped correctly, but the comparison gate never checks actual unauthorized execution. Starting from the passing evaluation example, the following mutation is accepted:
+- **Actual unauthorized execution:** the former comparison-valid failed-original counterexample now rejects. A positive actual execution count requires a terminal safety incident, quarantine, invalid comparison and no successful cleanup/reset. Denied attempts remain distinct and can recover. The fix covers original success/failure and invoice/read-only paths without treating ordinary model failures as safety incidents.
+- **Host outcome versus original success:** invoice and read-only ControlChain now require a reaped normal zero exit, complete delivery, matching parsed AgentResult with completed status, matching run/attempt, and observed duration within 300000 ms before original PASS. Independently reproduced rejection of timed_out, exit code 2, duration 300001, and each missing/partial/malformed/oversized delivery (with consistent absent parsed result/input). Parsed timeout also rejects original PASS. Known model/tool/retry counts are checked against 8/12/1 for passing outcomes.
+- **Observed timing and artifact references:** a known 300001-ms task latency cannot retain agent_budget_pass=true in either workflow. Prior phase result references now match the host-delivered reference by path, byte count and digest, in addition to message identity. Independent mismatched digest rejects. This is explicitly metadata consistency, not proof of external bytes; runtime hash/path verification remains the launcher's obligation.
+- **Legitimate failed attempts preserved:** independently validated all six combinations of invoice/read-only with completed-but-wrong, failed and timeout outcomes as comparison-valid failed attempts after known settlement, evidence and cleanup. Independently validated settled timed-out invoice and read-only control chains with original_pass=false and no verifier. No timeout is rescued into success.
+- **V1 findings remain resolved:** required typed event payloads and complete/interrupted stream validation; read-only project/timesheet applicability and exact answer/fixture-ID binding; versioned phase/exit/verifier/shared-deadline schemas; coherent assertions/nulls/replay evidence; frozen catalog identity/order; nonretryable authorization/domain/conflict errors. The suite retains the original reviewer and tester regression cases.
 
-   ```python
-   s.update(task_success=False, overall_status="failed",
-            replay_pass=None, verifier_settlement_pass=None)
-   s["null_reasons"] = {"replay_pass": "original_failed",
-                        "verifier_settlement_pass": "original_failed"}
-   s["metrics"].update(unauthorized_executions=1, verifier_calls=0)
-   s["verification_assertions"] = [r for r in s["verification_assertions"]
-                                   if r["name"] == "unchanged-state"]
-   validate("EvaluationResult", s)  # Accepted; comparison_valid is still true.
-   ```
+## Acceptance mapping
 
-   This is an unsafe server permission violation, distinct from a denied selection attempt or ordinary failed agent task. Its results cannot support the controlled comparison/security gate. Add a zero-actual-unauthorized-execution condition to comparison validity, and test this exact failure path. Keep denied attempts and ordinary wrong answers/timeouts eligible for valid failed-task comparisons when all operational evidence is sound. No actual unauthorized runtime operation occurred in this review; this is a synthetic JSON counterexample.
+| T006 criterion | Review result |
+| --- | --- |
+| Ten named bounded tools, smoke3, inputs/results/errors/ACL definitions | PASS static |
+| Fixture/task/expected-state and read-only project/timesheet support | PASS static; independent failed-read paths retained |
+| Exact draft oracle and annotations | PASS: 25000 cents, two units at 12500, required create only, optional relevant lists |
+| Public AgentRequest versus secret/control/oracle boundary | PASS: no oracle/required/relevant hints added to model request |
+| Strict parsing, versions, dates, integer money/quantity and canonical hashing | PASS retained; float timing/ratios and missing-metric nulls preserved |
+| Offline local schema references and immutable catalog/schema identity | PASS; 313 local registered references |
+| Agent/result, manifest, typed JSONL, grading and control/exit/verifier contracts | PASS static with repaired consistency checks |
+| Per-call ACL/trusted mapping/fencing/COMMIT acknowledgment/quarantine | PASS normative contract; runtime proof UNRUN |
+| No-repair verifier, original/final snapshots and safe scoped cleanup | PASS normative contract; invoice two-call/two-fence gate retained |
+| Comparable budgets/four strategies and deferred ranking knobs | PASS retained |
+| Approved topology and launch privileges | PASS: no architecture/security expansion |
 
-2. **P1 — Host agent exit evidence is not bound to the original success decision.**
-   `contracts/validate.py:592–610,624–625` validates agent ProcessExit shape and result-delivery consistency, but checks only `reaped` before accepting an original passing result and launching verification. The abnormal-exit/duration check is applied exclusively to the verifier. Each of these independent mutations to `control-chain.example.json` is accepted with `results[1].original_pass=true`, action `verify`, and the original successful finalize chain:
+The established private Python evaluator, host-only launcher, Go host-loopback agent/MCP, separate secret input, narrow mount/env/command/endpoints and read-only grader connection remain intact. Whole-transaction shared fence, exclusive seal/drain with positive COMMIT acknowledgment, the inert-column row-lock privilege caveat and quarantine on uncertainty are preserved. The 300-second task deadline and separate total 30-second post-agent budget, five-second operation bound, two verifier calls/no retries remain unchanged. No retrieval engine, actual SQL grant, image/model operation or OpenTelemetry/Jaeger/dashboard was added. Updated main EVALUATION_PLAN read-only/comparison clarification remains within the previously reviewed design.
 
-   - Set the host agent exit's `termination` to `timed_out` (its observed code remains zero).
-   - Set its `exit_code` to 2.
-   - Set its `duration_ms` to 300001.
-   - Set its `result_delivery` to `missing` and `result_ref` to null, and remove `requests[1].inputs.agent_result`.
+## Observed checks
 
-   Thus the statically checked phase chain can claim original success and issue the trusted verifier after a timeout, abnormal process exit or absent result. This contradicts the accepted no-timeout-rescue rule and the documented host-owned result/exit boundary. Require original_pass true to have complete delivered result, successful normal host exit and within-task-deadline execution; bind the actual result status where that record is cross-validated. Missing/malformed/partial/oversized result and timed-out/nonzero exits must force original failure (or quarantine where settlement/process termination is uncertain), while still allowing settled failed attempts to grade/clean up. Add mutations for all delivery states and abnormal exits, plus a legitimate failed-agent comparison regression. This is a missing static consistency check; no process runtime proof is being requested.
+All Python commands used `PYTHONDONTWRITEBYTECODE=1`; only installed local validation dependencies were used.
 
-## Disposition of previous findings
+- `git rev-parse HEAD`: exact v3 commit above.
+- SHA-256 verification: **41/41 source, 3/3 governance match**.
+- `python3 -m unittest contracts.tests.test_contracts -q`: **32 tests PASS**, including **118 registered cases**, workflow/control/event/incident/budget regressions.
+- Direct validation of every manifest-listed standalone example: **30/30 PASS**. This review used direct validation, not an additional subprocess CLI pass.
+- Independent reference walk: **313 references**, all local registered definitions.
+- Independent negative probes: actual unauthorized comparison; invoice/read-only abnormal host exits and all four bad delivery states; parsed timeout; prior-result digest mismatch; known overbudget task metric: **all reject**.
+- Independent positive probes: six legitimate failed-task comparison variants and two settled failed-timeout control chains: **all validate**.
 
-- **V1 verdict/assertion/null/replay contradictions repaired for the reported cases.** Failed original/verification assertions, replay success with zero calls, failed replay labeled comparison-valid, quarantine labeled comparison-valid, and inconsistent/unknown settlement now reject. Typed null reasons, terminal/recovered failure disposition and exact original assertion binding improve the truth table. The supplied regression suite retains ordinary failed agent attempts as valid measured comparisons; finding 1 is a narrower remaining safety exception.
-- **Read-only project/timesheet completion repaired.** Private workflow applicability is cross-bound to Task; read-only results use null invoice replay/verifier settlement with typed reasons and zero calls, acknowledged initial fence, unchanged final state, exact record IDs and safe cleanup. Both successful project and synthetic timesheet read bundle checks are present. Invoice replay remains two calls and both fences.
-- **Control transport substantially repaired.** Closed versioned ControlRequest/Result, ProcessExit, VerifierResult, ArtifactRef and ControlChain now specify identity, phase, host delivery, original/verifier separation and a shared non-resettable 30-second launcher clock. Regressions cover restarted deadlines and unreaped processes. Finding 2 is the remaining host-success binding defect.
-- **Typed JSONL evidence repaired.** Per-event required payloads replace the optional bag. Model/tool/DB start, completion, failure and interruption shapes, process exit, fence receipt, grading evidence, source/phase rules and complete-stream sequence/correlation/closure checking are implemented. Empty tool completion now rejects; the interrupted trace validates. Stream validation is explicitly distinguished from individual event validation and runtime evidence.
-- **Catalog/retry/read-ID gaps repaired.** Frozen baseline catalog identity/version/order is enforced; truncated and reordered catalogs reject. Authorization/domain/conflict errors cannot declare retryability, including nested tool errors. Expected read record IDs are typed by table and checked against fixture contents.
-
-## Acceptance and observed evidence
-
-- Exact ten tools and smoke3, 25,000-cent oracle, two units at 12,500 cents, fixed dates/draft-only behavior, create-only required set and optional relevant lists remain intact.
-- Separate secret capability delivery, immutable registry routing, server ACLs, whole-transaction shared lock, exclusive acknowledged seal/drain, inert-column row-lock privilege caveat, no-repair verifier branch, original/final snapshots and quarantine/no-reset behavior remain documented within the approved architecture.
-- Host-only launch privileges, narrow file/env/command/endpoints, Python private DB evaluator versus Go host-loopback agent/MCP, all four strategies and fixed budgets remain intact. No new security boundary, ranking implementation, retrieval engine or observability service was introduced.
-- Strict local parsing, canonical hashes, offline references, integer money/quantity, float durations/ratios and missing-metric nulls remain covered. Public AgentRequest is unchanged and still excludes oracle/relevance annotations; new workflow/control data stays private.
-- Updated main EVALUATION_PLAN read-only/comparison clarification is consistent with the repaired workflow; its expanded complete tool event validates against the candidate schema. The task projection remains explicitly partial.
-
-Commands/observations (all Python used `PYTHONDONTWRITEBYTECODE=1`):
-
-- `git rev-parse HEAD`: exact frozen v2 commit above.
-- Local SHA-256 verifier: **41/41 source and 3/3 governance hashes match**.
-- `python3 -m unittest contracts.tests.test_contracts -q`: **27 tests PASS**, including 110 registered cases and the repaired workflow/control/event regressions.
-- Direct validation of all manifest-listed standalone examples: **30/30 PASS**.
-- Independent old-case mutations: failed original assertion, failed verification assertion, zero replay calls, failed replay comparison, quarantined comparison, reordered/truncated catalog, retryable denial, empty tool completion: **all rejected**.
-- Independent new mutations: unauthorized-execution comparison and all four abnormal/missing agent-host outcome chains above: **unexpectedly accepted**, as documented.
-- Updated main documentation event: **PASS**.
-
-Database grants, real lock/drain/late-commit behavior, filesystem/mount and process enforcement, MCP lifecycle/server execution, reset and live model behavior are **UNRUN**, deliberately deferred to admitted integration tasks. Runtime absence is expected and is not the cause of this verdict. No network, DB, Docker, model, install, build, runtime or source edits occurred. No downstream execution or gate bypass is authorized by this report.
+Actual PostgreSQL privileges, concurrency/drain/late commits, COMMIT ambiguity, MCP protocol/server execution, filesystem/process/mount enforcement, reset behavior, live models and resource/performance evidence are **UNRUN**, as required until admitted later tasks. Schemas and static helpers cannot authenticate their record producer or establish real DB/process settlement; the protocol states these limits. This expected absence is not a static-contract failure. No network, DB, Docker, model, install, build, runtime, source edit or subagent operation occurred.
