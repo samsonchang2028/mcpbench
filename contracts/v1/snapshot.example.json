@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "run_id": "run-example-001",
+  "attempt_id": "attempt-example-001",
+  "stage": "agent_only",
+  "captured_at": "2026-11-07T23:00:00Z",
+  "settlement_generation": 1,
+  "tables": {
+    "customers": [
+      {
+        "customer_id": "CUST-001",
+        "name": "Example Studio",
+        "active": true
+      },
+      {
+        "customer_id": "CUST-002",
+        "name": "Decoy Workshop",
+        "active": true
+      }
+    ],
+    "items": [
+      {
+        "item_id": "SVC-CONSULT",
+        "name": "Consulting",
+        "unit": "hour",
+        "currency": "USD",
+        "unit_price_cents": 12500,
+        "active": true
+      },
+      {
+        "item_id": "ITEM-DECOY",
+        "name": "Decoy Supply",
+        "unit": "unit",
+        "currency": "USD",
+        "unit_price_cents": 700,
+        "active": true
+      }
+    ],
+    "projects": [
+      {
+        "project_id": "PROJ-001",
+        "customer_id": "CUST-001",
+        "name": "Example Launch",
+        "active": true
+      }
+    ],
+    "timesheets": [
+      {
+        "timesheet_id": "TIME-001",
+        "project_id": "PROJ-001",
+        "item_id": "SVC-CONSULT",
+        "work_date": "2026-11-06",
+        "minutes": 120,
+        "billable": true
+      }
+    ],
+    "invoices": [
+      {
+        "invoice_id": "INV-EXAMPLE-001",
+        "customer_id": "CUST-001",
+        "invoice_date": "2026-11-07",
+        "due_date": "2026-11-21",
+        "currency": "USD",
+        "status": "draft",
+        "subtotal_cents": 25000,
+        "tax_cents": 0,
+        "total_cents": 25000,
+        "created_at": "2026-11-07T23:00:00Z"
+      }
+    ],
+    "invoice_lines": [
+      {
+        "line_id": "LINE-EXAMPLE-001",
+        "invoice_id": "INV-EXAMPLE-001",
+        "item_id": "SVC-CONSULT",
+        "quantity": 2,
+        "unit_price_cents": 12500,
+        "line_total_cents": 25000,
+        "line_number": 1
+      }
+    ],
+    "idempotency_records": [
+      {
+        "idempotency_key": "idem-example-001",
+        "request_hash": "4afcbfba5ba2a4d075601bc2080ec33d122cc23369b4812c97dd42ad2a8ea8b6",
+        "invoice_id": "INV-EXAMPLE-001"
+      }
+    ]
+  }
+}

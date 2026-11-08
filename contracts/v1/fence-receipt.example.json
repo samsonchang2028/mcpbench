@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "run_id": "run-example-001",
+  "attempt_id": "attempt-example-001",
+  "fence": "agent",
+  "status": "settled",
+  "generation": 1,
+  "phase": "agent_sealed",
+  "commit_acknowledged": true,
+  "committed_at": "2026-11-07T23:00:00Z",
+  "remaining_inflight": 0,
+  "elapsed_ms": 12
+}

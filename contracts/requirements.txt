@@ -1,0 +1,6 @@
+# Already installed on Node 1; no dependency installation performed for T006.
+jsonschema==4.19.2
+referencing==0.36.2
+jsonschema-specifications==2023.12.1
+rpds-py==0.27.1
+attrs==25.4.0

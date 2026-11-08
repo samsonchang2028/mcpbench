@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "fixture_id": "billing-smoke-001",
+  "fixture_version": "1",
+  "migration_version": "1",
+  "tenant_id": "TENANT-001",
+  "seed_hash": "0c0ddf953ec896c53fa68c3229c76e9fc23d15c3edd197a5bd2503b8b02cc41c",
+  "seed": {
+    "customers": [
+      {
+        "customer_id": "CUST-001",
+        "name": "Example Studio",
+        "active": true
+      },
+      {
+        "customer_id": "CUST-002",
+        "name": "Decoy Workshop",
+        "active": true
+      }
+    ],
+    "items": [
+      {
+        "item_id": "SVC-CONSULT",
+        "name": "Consulting",
+        "unit": "hour",
+        "currency": "USD",
+        "unit_price_cents": 12500,
+        "active": true
+      },
+      {
+        "item_id": "ITEM-DECOY",
+        "name": "Decoy Supply",
+        "unit": "unit",
+        "currency": "USD",
+        "unit_price_cents": 700,
+        "active": true
+      }
+    ],
+    "projects": [
+      {
+        "project_id": "PROJ-001",
+        "customer_id": "CUST-001",
+        "name": "Example Launch",
+        "active": true
+      }
+    ],
+    "timesheets": [
+      {
+        "timesheet_id": "TIME-001",
+        "project_id": "PROJ-001",
+        "item_id": "SVC-CONSULT",
+        "work_date": "2026-11-06",
+        "minutes": 120,
+        "billable": true
+      }
+    ],
+    "invoices": [],
+    "invoice_lines": [],
+    "idempotency_records": []
+  },
+  "expected_state_rules": {
+    "currency": "USD",
+    "draft_only": true,
+    "integer_cents": true
+  }
+}

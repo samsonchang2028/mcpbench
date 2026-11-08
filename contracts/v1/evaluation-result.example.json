@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "run_id": "run-example-001",
+  "attempt_id": "attempt-example-001",
+  "task_id": "draft-invoice-001",
+  "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+  "fixture_hash": "46d3d72ab3ff923a191505e19eba96a643edc24afd1b8e23ef5a9ce92f820a07",
+  "catalog_hash": "ba4fd63a813139a67c1ff960dbb29589f11fa12b821875f0ad73172482d2137b",
+  "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+  "agent_status": "completed",
+  "agent_budget_pass": true,
+  "agent_settlement_pass": true,
+  "verifier_settlement_pass": true,
+  "db_oracle_pass": true,
+  "answer_pass": true,
+  "replay_pass": true,
+  "cleanup_pass": true,
+  "null_reasons": {},
+  "artifact_complete": true,
+  "comparison_valid": true,
+  "task_success": true,
+  "overall_status": "passed",
+  "quarantined": false,
+  "failures": [],
+  "original_assertions": [
+    {
+      "name": "db-oracle",
+      "pass": true,
+      "reason": "Synthetic contract example only."
+    },
+    {
+      "name": "answer",
+      "pass": true,
+      "reason": "Synthetic contract example only."
+    }
+  ],
+  "verification_assertions": [
+    {
+      "name": "same-payload-replay",
+      "pass": true,
+      "reason": "Synthetic contract example only."
+    },
+    {
+      "name": "changed-payload-conflict",
+      "pass": true,
+      "reason": "Synthetic contract example only."
+    },
+    {
+      "name": "unchanged-state",
+      "pass": true,
+      "reason": "Synthetic contract example only."
+    }
+  ],
+  "metrics": {
+    "task_latency_ms": 1250,
+    "lifecycle_latency_ms": 1500,
+    "post_agent_ms": 200,
+    "cpu_ms": null,
+    "prompt_tokens": null,
+    "output_tokens": null,
+    "known_prompt_tokens": 0,
+    "known_output_tokens": 0,
+    "missing_token_components": 2,
+    "retrieval_precision": 1,
+    "required_tool_recall": 1,
+    "unauthorized_executions": 0,
+    "verifier_calls": 2,
+    "cost_usd": null,
+    "energy_joules": null,
+    "cost_basis": null,
+    "energy_basis": null
+  },
+  "workflow_kind": "draft_invoice",
+  "setup_pass": true,
+  "final_state_unchanged": true
+}

@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "run_id": "run-example-001",
+  "attempt_id": "attempt-example-001",
+  "task_id": "draft-invoice-001",
+  "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+  "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+  "workflow_kind": "draft_invoice",
+  "phase": "finalize",
+  "budget": {
+    "anchor_id": "post-example-001",
+    "started_at": "2026-11-07T23:00:00Z",
+    "deadline_at": "2026-11-07T23:00:30Z",
+    "elapsed_ms": 210,
+    "remaining_ms": 29790,
+    "operation_timeout_ms": 5000
+  },
+  "status": "completed",
+  "action": "complete",
+  "original_pass": true,
+  "fence_receipt": {
+    "schema_version": 1,
+    "run_id": "run-example-001",
+    "attempt_id": "attempt-example-001",
+    "fence": "verifier",
+    "status": "settled",
+    "generation": 2,
+    "phase": "final_sealed",
+    "commit_acknowledged": true,
+    "committed_at": "2026-11-07T23:00:00Z",
+    "remaining_inflight": 0,
+    "elapsed_ms": 12
+  },
+  "outputs": {
+    "evaluation": {
+      "path": "control/evaluation.json",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "bytes": 100
+    },
+    "final_snapshot": {
+      "path": "control/final-snapshot.json",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "bytes": 100
+    }
+  },
+  "message_id": "finalize-result-001",
+  "request_id": "finalize-request-001",
+  "failure": null,
+  "verifier_skip_reason": null
+}

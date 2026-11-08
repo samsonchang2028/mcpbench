@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "run_id": "run-example-001",
+  "attempt_id": "attempt-example-001",
+  "task_id": "draft-invoice-001",
+  "fixture_id": "billing-smoke-001",
+  "catalog_id": "billing-baseline",
+  "strategy": "full_context",
+  "principal_id": "billing-drafter",
+  "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+  "fixture_hash": "46d3d72ab3ff923a191505e19eba96a643edc24afd1b8e23ef5a9ce92f820a07",
+  "catalog_hash": "ba4fd63a813139a67c1ff960dbb29589f11fa12b821875f0ad73172482d2137b",
+  "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+  "model": {
+    "tag": "qwen3.5:9b",
+    "digest": "56671c2ab9385f9cfcb404638e32cd62d88e3501d44822208363c010179a3c90",
+    "context_tokens": 4096,
+    "output_tokens": 512,
+    "temperature": 0,
+    "seed": null,
+    "think": null,
+    "keep_alive": null
+  },
+  "budgets": {
+    "context_tokens": 4096,
+    "output_tokens": 512,
+    "model_turns": 8,
+    "tool_calls": 12,
+    "tool_timeout_ms": 5000,
+    "db_timeout_ms": 5000,
+    "model_timeout_ms": 120000,
+    "task_timeout_ms": 300000,
+    "transient_retries": 1,
+    "post_agent_timeout_ms": 30000,
+    "verification_operation_ms": 5000,
+    "verification_calls": 2,
+    "verification_retries": 0,
+    "artifact_bytes": 104857600,
+    "document_bytes": 1048576
+  },
+  "versions": {
+    "go": null,
+    "python": "3.14.4",
+    "mcp_sdk": null,
+    "ollama": "0.40.13",
+    "postgres_image": null,
+    "agent_image": null,
+    "evaluator_image": null,
+    "mcp_image": null
+  },
+  "unavailable_versions": [
+    "go",
+    "mcp_sdk",
+    "postgres_image",
+    "agent_image",
+    "evaluator_image",
+    "mcp_image"
+  ]
+}
