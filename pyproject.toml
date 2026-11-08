@@ -1,0 +1,18 @@
+[project]
+name = "mcpbench-eval"
+version = "0.1.0"
+description = "Private synthetic MCPBench evaluation scaffold"
+requires-python = "==3.14.4"
+dependencies = [
+  "attrs==25.4.0",
+  "jsonschema==4.19.2",
+  "jsonschema-specifications==2023.12.1",
+  "referencing==0.36.2",
+  "rpds-py==0.27.1",
+  "psycopg[binary]==3.3.8",
+]
+
+[tool.uv]
+package = false
+required-version = "==0.13.4"
+environments = ["sys_platform == 'linux' and platform_machine == 'x86_64'"]

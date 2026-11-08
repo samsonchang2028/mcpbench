@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "resolved_utc": "2026-11-08T19:33:58.489536+00:00",
+  "platform": "linux/amd64",
+  "source": "https://registry-1.docker.io/v2/",
+  "images": {
+    "go_builder": {
+      "tag": "docker.io/library/golang:1.26.8-bookworm",
+      "index_digest": "sha256:dc9ad6c05acc7a88e5b71bde60a5fe3bd4b9f0db209011711b464107438a8107",
+      "manifest_digest": "sha256:26de5cf8eac40c12a1ff8de1a634971b4654fd881225eed7ace643b8c769f2f5",
+      "config_digest": "sha256:88ba8b18811a0f702d91d49eac4c1fe310eee93fbe427540cab6ba75ac064540",
+      "reference": "docker.io/library/golang:1.26.8-bookworm@sha256:26de5cf8eac40c12a1ff8de1a634971b4654fd881225eed7ace643b8c769f2f5",
+      "version_metadata": {
+        "GOLANG_VERSION": "1.26.8"
+      }
+    },
+    "python_evaluator": {
+      "tag": "docker.io/library/python:3.14.4-slim-bookworm",
+      "index_digest": "sha256:fc74d22ffd0d5ac395a4b7bdda75a4539758862c49ebf3005647084631e63789",
+      "manifest_digest": "sha256:db5942d111df72110e7a67da3fc5159e83ac85cd24808b91bdc4769e166ed1b7",
+      "config_digest": "sha256:5d9e1d8aed6d5c02ffd513a13685501b342789c10f3d7595aa2151438afc2809",
+      "reference": "docker.io/library/python:3.14.4-slim-bookworm@sha256:db5942d111df72110e7a67da3fc5159e83ac85cd24808b91bdc4769e166ed1b7",
+      "version_metadata": {
+        "PYTHON_VERSION": "3.14.4"
+      }
+    },
+    "postgres": {
+      "tag": "docker.io/library/postgres:17-bookworm",
+      "index_digest": "sha256:665dc7b37ac52a17e298511414c21d23ffa4e6a6ef6225b3e5d59c7afb35e994",
+      "manifest_digest": "sha256:73bedc9eaa0121b92b9b26bb52e5141b3f6f37479c7ef913c0160455763ca80a",
+      "config_digest": "sha256:018dbecf6a31cfed1f83c218b5e428a52ac389ad46e495f72831641db49d85a9",
+      "reference": "docker.io/library/postgres:17-bookworm@sha256:73bedc9eaa0121b92b9b26bb52e5141b3f6f37479c7ef913c0160455763ca80a",
+      "version_metadata": {
+        "PG_MAJOR": "17",
+        "PG_VERSION": "17.11-1.pgdg12+2"
+      }
+    },
+    "go_runtime": {
+      "tag": "docker.io/library/debian:bookworm-slim",
+      "index_digest": "sha256:734a72b3d6142a71993b4bc580ca01d8ca687f77a2c422d96a961d3376b179bc",
+      "manifest_digest": "sha256:c67e92c8099ba22853ab4cfda7cfb494d253d6012ca82dee98ba8976772af018",
+      "config_digest": "sha256:43f84a0b210f98845ef003912981774c95efe439eaa4b1cb62cf803fd46fc82a",
+      "reference": "docker.io/library/debian:bookworm-slim@sha256:c67e92c8099ba22853ab4cfda7cfb494d253d6012ca82dee98ba8976772af018",
+      "version_metadata": {}
+    }
+  }
+}
