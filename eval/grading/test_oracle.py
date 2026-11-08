@@ -49,7 +49,78 @@ def trace(task, scope):
                        {('project' if table == 'projects' else 'timesheet'): record}}}}]
 
 
+def denied_trace(task, scope):
+    events = trace(task, scope)
+    proposal = deepcopy(events[0])
+    proposal.update(event_id='denied-start', call_id='denied-001')
+    proposal['data'] = {'tool_id': 'billing_create_draft_invoice', 'retry_index': 0,
+                        'arguments': load('contracts/v1/verification-request.example.json')['original_arguments']}
+    denial = deepcopy(proposal)
+    denial.update(event_id='denied-end', sequence=2, event_type='tool.failed', status='error')
+    denial['data'] = {'tool_id': proposal['data']['tool_id'], 'duration_ms': 1,
+                      'tool_result': {'tool_id': proposal['data']['tool_id'], 'is_error': True,
+                                      'error': {'code': 'authorization_denied',
+                                                'message': 'Denied before execution', 'retryable': False}},
+                      'failure': {
+                          'stage': 'execution', 'code': 'unauthorized_attempt',
+                          'call_id': 'denied-001', 'reason': 'Denied before execution',
+                          'attribution': 'observed', 'disposition': 'recovered'}}
+    for event in events:
+        event['sequence'] += 2
+    return [proposal, denial, *events]
+
+
 class OracleTests(unittest.TestCase):
+    def test_denied_attempt_preserved_with_later_authorized_read(self):
+        for name in ('baseline-project', 'baseline-time'):
+            task, *_, scope = case(name)
+            events = denied_trace(task, scope)
+            for with_result in (True, False):
+                if not with_result:
+                    events[1]['data']['tool_result'] = None
+                original = deepcopy(events)
+                validate('EventStream', events)
+                self.assertTrue(grade_read_trace(task, events, scope).passed)
+                self.assertEqual(events, original)
+                self.assertFalse(grade_read_trace(task, events[:2], scope).passed)
+
+    def test_successful_unauthorized_execution_cannot_recover(self):
+        task, *_, scope = case('baseline-project')
+        events = denied_trace(task, scope)
+        snapshot = case()[3]
+        events[1].update(event_type='tool.completed', status='ok')
+        events[1]['data'] = {
+            'tool_id': 'billing_create_draft_invoice', 'duration_ms': 1,
+            'tool_result': {'tool_id': 'billing_create_draft_invoice', 'is_error': False,
+                            'result': {'invoice': snapshot['tables']['invoices'][0],
+                                       'lines': snapshot['tables']['invoice_lines']}}}
+        validate('EventStream', events)
+        self.assertFalse(grade_read_trace(task, events, scope).passed)
+
+    def test_unproven_denial_or_verifier_attempt_cannot_recover(self):
+        task, *_, scope = case('baseline-project')
+        for change in ('uncertain', 'db_error', 'wrong_result', 'verifier', 'interrupted'):
+            with self.subTest(change=change):
+                events = denied_trace(task, scope)
+                if change == 'uncertain':
+                    events[1]['data']['failure']['attribution'] = 'uncertain'
+                elif change == 'db_error':
+                    events[1]['data']['failure']['code'] = 'db_error'
+                elif change == 'wrong_result':
+                    events[1]['data']['tool_result']['error']['code'] = 'db_error'
+                elif change == 'verifier':
+                    for event in events[:2]:
+                        event['phase'] = 'verification'
+                else:
+                    events[1].update(event_type='operation.interrupted', source='launcher',
+                                     sequence=1, status='interrupted', phase='operations')
+                    events[1]['data'] = {'operation_source': 'mcp', 'operation_kind': 'tool',
+                                         'operation_call_id': 'denied-001', 'reason': 'process_exit'}
+                    for event in events[2:]:
+                        event['sequence'] -= 1
+                validate('EventStream', events)
+                self.assertFalse(grade_read_trace(task, events, scope).passed)
+
     def test_literal_draft_and_baseline(self):
         for name in ('smoke-invoice', 'baseline-invoice'):
             values = case(name)

@@ -20,6 +20,9 @@ states, arbitrary schema names and wrong scope fail before reset. Reset succeeds
 only on literal `True` acknowledgment, unchanged registry and a generation-matched
 after-reset snapshot equal to the seed. Missing/false/nonboolean acknowledgment,
 backend connection exceptions or dirty output fail; do not execute or reuse state.
+Every backend call normalizes ordinary adapter/driver exceptions, including
+`psycopg.Error`, into sanitized failed evidence. No raw exception text is returned.
+`BaseException` interrupts/cancellation propagate for controller handling.
 The implementation does not retry uncertain resets. Quarantine and evidence
 persistence belong to T016; failure may require external quarantine without a DB
 write. Neither this function nor the adapter marks the run `cleaned`; T016 advances

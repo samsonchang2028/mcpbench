@@ -36,6 +36,11 @@ contract UTC strings, and contract durations are milliseconds.
   reads and successful **MCP-source** relevant results containing every expected
   record ID (including references). Agent-reported counts or agent-only completion
   events are insufficient. This does not establish real server ACL enforcement.
+  Safely denied unauthorized attempts stay in the complete stream and supply no
+  read evidence. Their correlated failure must record an observed authorization
+  denial or unauthorized attempt (and any tool error must be authorization denial).
+  Successful unauthorized execution, unproven/interrupted denials and verifier
+  tool activity fail even when a later authorized read succeeds.
 - `grade_replay(task, fixture, assertions, agent_snapshot, agent_mapping,
   agent_receipt, final_snapshot, final_mapping, final_receipt, request, result,
   scope, config_hash)`: independent replay consistency. Requires original DB state,

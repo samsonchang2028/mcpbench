@@ -1,6 +1,7 @@
 """Fake backend tests only. PostgreSQL reset/privileges/transaction proof UNRUN."""
 from copy import deepcopy
 import unittest
+import psycopg
 
 from eval.grading.test_oracle import case
 from eval.reset import check_seed, reset_and_check
@@ -35,6 +36,53 @@ class FakeBackend:
 
 
 class ResetTests(unittest.TestCase):
+    def test_backend_errors_are_sanitized_without_retry_or_reuse(self):
+        for prepared in (True, False):
+            operations = (['read_mapping', 'reset_seed', 'read_mapping', 'snapshot'] if prepared else
+                          ['read_mapping', 'snapshot', 'reset_seed', 'read_mapping', 'snapshot'])
+            for error_type in (OSError, psycopg.OperationalError, psycopg.IntegrityError):
+                for fail_at in range(1, len(operations) + 1):
+                    with self.subTest(prepared=prepared, error=error_type, fail_at=fail_at):
+                        class FailingBackend(FakeBackend):
+                            def __init__(self):
+                                super().__init__(prepared)
+                                self.operations = []
+
+                            def invoke(self, method, *args):
+                                self.operations.append(method)
+                                value = getattr(super(), method)(*args)
+                                if len(self.operations) == fail_at:
+                                    # Reset may have committed before acknowledgment was lost.
+                                    raise error_type('private connection details must not escape')
+                                return value
+
+                            def read_mapping(self, *args):
+                                return self.invoke('read_mapping', *args)
+
+                            def reset_seed(self, *args):
+                                return self.invoke('reset_seed', *args)
+
+                            def snapshot(self, *args):
+                                return self.invoke('snapshot', *args)
+
+                        backend = FailingBackend()
+                        result = reset_and_check(backend, backend.scope, backend.fixture,
+                                                 receipt=backend.receipt, evidence_persisted=True)
+                        self.assertFalse(result.passed)
+                        self.assertEqual(result.reason, 'reset_and_check_failed')
+                        self.assertEqual(backend.operations, operations[:fail_at])
+
+    def test_backend_interrupts_propagate_without_retry(self):
+        for error_type in (KeyboardInterrupt, SystemExit):
+            class InterruptedBackend(FakeBackend):
+                def reset_seed(self, *args):
+                    super().reset_seed(*args)
+                    raise error_type()
+            backend = InterruptedBackend()
+            with self.assertRaises(error_type):
+                reset_and_check(backend, backend.scope, backend.fixture)
+            self.assertEqual(len(backend.calls), 1)
+
     def test_initial_and_final_reset(self):
         for prepared in (True, False):
             backend = FakeBackend(prepared)

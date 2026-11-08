@@ -161,6 +161,12 @@ def grade_read_trace(task, events, scope):
     validate('Task', task)
     require(task['expected_state']['kind'] == 'read_only', 'not read workflow')
     validate('EventStream', events)
+    denied = {(event['source'], event['call_id']) for event in events
+              if event['event_type'] == 'tool.failed'
+              and event['data']['failure']['code'] in {'authorization_denied', 'unauthorized_attempt'}
+              and event['data']['failure']['attribution'] == 'observed'
+              and (event['data']['tool_result'] is None or
+                   event['data']['tool_result']['error']['code'] == 'authorization_denied')}
     successful = False
     observed = set()
     primary = TABLE_KEYS[task['expected_state']['record_table']]
@@ -179,8 +185,12 @@ def grade_read_trace(task, events, scope):
         identity(event, scope)
         if event['event_type'].startswith('tool.'):
             tool = event['data']['tool_id']
-            require(tool in task['permitted_tools'] and tool != 'billing_create_draft_invoice', 'unauthorized tool')
             require(event['phase'] == 'execution', 'read verifier forbidden')
+            if tool not in task['permitted_tools'] or tool == 'billing_create_draft_invoice':
+                require((event['source'], event['call_id']) in denied and
+                        event['event_type'] in {'tool.started', 'tool.failed'},
+                        'unauthorized execution or unproven denial')
+                continue
             if (event['event_type'] == 'tool.completed' and event['source'] == 'mcp'
                     and tool in task['relevant_tool_ids']):
                 successful = True
