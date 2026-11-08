@@ -15,8 +15,7 @@ completion. Authoritative file/process evidence was checked after integration.
 | Relevant independent gates | Static T006/T009 PASS; runtime gates UNRUN | Incomplete |
 | Existing homelab/native Ollama preserved | No runtime/container/config mutations; no project containers | Preserved |
 
-DAG recomputation:13DONE;T017candidate;T012/T014/T016/T018READY;22WAITING.
-Main82offline tests+fixtureCLI+staticComposePASS. SQL/seed/reset/oracle code exists,
-but liveDB/runtimeworkflow remainsunproven. Allfourretrievalengines and measured
-comparison/reproduction remainincomplete. Priorfailureevidence preserved;no
-homelab/nativeOllamamutations or additionalinference. Fullv1notachieved.
+DAG recomputation:14DONE;T012/T014/T016IMPLEMENTING;T018READY;22WAITING.
+Main93Python tests plusGotests/vet/build,lock/fixture/ComposestaticchecksPASS.
+RealDB/invoice/modelworkflow/retrieval/campaign/reproduction stillincomplete.
+No schema/fixture drift or homelab/nativeconfiguration mutations. Fullv1notdone.

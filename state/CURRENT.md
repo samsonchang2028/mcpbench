@@ -1,19 +1,16 @@
-# Current state — oracle/database/config code integrated
-UTC:2026-11-08T19:58:23.641610+00:00
-DONE T001–T011,T015,T040 (13). CANDIDATE T017;READY T012/T014/T016/T018;
-22WAITING;zeroBLOCKED. T010grader/reset fixed7ac9006 integrated0bc049f;
-T011SQL/seed fixede0ccb15 integratedfa76565;T015configa5c0096 integrated039f990.
-All3haveindependentR APPROVE/V PASS in state/reviews;failedreviews retained.
+# Current state — coreimplementation wave
+UTC:2026-11-08T20:01:23.751062+00:00
+DONE T001–T011,T015,T017,T040 (14). IMPLEMENTING T012billing,T014agent,
+T016evaluator;READY T018ownedDBgate;22WAITING;zeroBLOCKED.
+T010,T011,T015,T017 integratedwithindependentR/V;priorP1s fixedandrechecked.
+Mainmakecheck PASS:93Python tests,Gotests/vet/build,pinverification,fixtureCLI;
+Compose/static+adversarialchecksPASS. CorefailureEventStreamfixaccepted too.
 
-Main combined82 offline tests PASS(5.337sec),fixtureCLIexactseedPASS,staticCompose
-checkerPASS. CorefailureEventStreamparser fix731ab5b integrated1c013d0 after
-independentR/V47testsPASS;no schema/catalog/fixturebyteschanged. No knownopenP0/P1
-in integratedscope. Actual PostgreSQLsemantics/permissions/seed/reset/concurrency,
-imagebuilds/startup,MCP/agent/invoice/nativecalls remain UNRUN. Existinghomelab
-services/config/volumes untouched. No inference since approvedT040 retry.
-
-T017libraryd443fee frozen:rootPythoncoauthor,independentotherR/V testing.
-RequiredtrustedGo validatorcallback explicit;actualwiring/fulltrace/globalcapsT019.
-Next: billingdomainT012,agentloopT014,evaluatorlifecycleT016,andownedDBtestgateT018
-in disjointlanes. Serializecostlyoperationswithfreshadmission;reusecacheddeps.
-Fullv1notcomplete;no invoiceworkflow,retrievalengines or benchmarkcomparisonyet.
+Source code exists fororacle/resetcontract,SQL/seed,staticCompose andJSONLlibs.
+ActualSQL/permissions/reset/concurrency,images/startup,MCPserver,agentinvoice,
+retrievalengines andcampaign results remainunproven. No newnativeinference;
+lastone wasexplicitlyapprovedT040retry. Existingservices/config/volumesuntouched.
+Cachedresourcesonlythiswave;beforeT018Dockeroperations requirefresh60secgate,
+scopedownership/port/network/volumechecks andbaselinehealthcomparison.
+RootownsT018/resourcelease;workersownonlytheirlanes,nosharedmanifestedits.
+Fullv1goal remainsactive/incomplete. Do notrequest routinewaveapprovals.

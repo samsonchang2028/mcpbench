@@ -2,7 +2,8 @@
 
 Current milestone: T010 independent oracle/reset, T011 SQL/seed and T015 static
 Compose configuration are integrated with independent review/testing. T017 logging
-is a frozen candidate. T012/T014/T016/T018 are READY;runtime gates remain binding.
+is also approved for library scope. T012/T014/T016 are implementing;T018 is READY
+for admitted ownedDB validation;runtime gates remain binding.
 
 This document schedules [TASK_GRAPH.md](TASK_GRAPH.md), which owns IDs, edges,
 priorities, statuses and acceptance criteria. The user approved documentation-only T003–T005 execution. Application

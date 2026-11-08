@@ -2,8 +2,7 @@
 
 Current execution: T008 scaffold/pins,T010 independent oracle/reset,T011 DB
 helpers/migrations and T015 static Compose are approved and integrated. T040
-proved a harmless native Qwen tool call. T017 JSONL library is under independent
-testing. Runtime SQL,MCP invoice,evaluation orchestration and retrieval results
+proved a harmless native Qwen tool call. T017 JSONL library is approved;Go runtimevalidatorcallback wiring remainsT019. Runtime SQL,MCP invoice,evaluation orchestration and retrieval results
 are not yet proven. See state/CURRENT.md and TASK_GRAPH for live statuses;dated
 sections below retain historical observations rather than current access limits.
 
