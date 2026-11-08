@@ -50,3 +50,8 @@ Second blocker audit after latest resumption: no retry authorization, T040
 BLOCKED, no second request artifacts. Corrected table-only formatting so T007
 and T040 evidence stays inside their acceptance cells; dependencies/statuses
 unchanged. No runtime work authorized or attempted.
+
+Third blocker audit after latest resumption, 2026-11-08T18:52:25.578898+00:00:
+T040 retry decision still pending, prepared controller hash unchanged, no second
+request artifacts, zero eligible tasks. Three-turn threshold met; goal to be
+marked BLOCKED pending explicit retry/resource decision. No service changes.
