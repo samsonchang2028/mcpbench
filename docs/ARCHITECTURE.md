@@ -1,7 +1,9 @@
 # MCPBench v1 architecture
 
 Implementation status: the T006 static contract bundle is now approved under
-contracts/. Runtime components described here are still planned, not proven.
+contracts/. Runtime components described here are still planned, not proven. T008 now pins
+Go/Python/SDK/protocol and image identities in [DEPENDENCIES.md](DEPENDENCIES.md);
+its package boundaries compile and commands fail closed, with no billing runtime.
 The active goal authorizes routine eligible DAG work; no admission/security gate
 is waived. Older documentation-wave authorization limits below are historical.
 

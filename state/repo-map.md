@@ -9,4 +9,7 @@
 - state/CURRENT.md, GOAL.md: resumable goal/current state.
 - state/candidates/, reviews/, handoffs/, task-context/: frozen evidence and roles.
 - .worktrees/: ignored O-managed task branches.
-No Go server/agent, SQL/Compose or live evaluator implementation yet.
+- go.mod/go.sum,pyproject.toml/uv.lock,config/images.lock.json:approved T008 pins.
+- cmd/,internal/:compiling fail-closed command/package boundaries;no billing yet.
+- Makefile:admitted setup and offline-capable checks;docs/DEPENDENCIES.md versions.
+No SQL/Compose,live evaluator or working server/agent implementation yet.

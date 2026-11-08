@@ -1,0 +1,29 @@
+{
+  "evidence_file": "artifacts/admission/t008/admission.json",
+  "sha256": "c3459f7951fab77d42cc60311b61a4e3dcacaa9404856533ec29277bf003cb4e",
+  "started_utc": "2026-11-08T19:30:35.522597+00:00",
+  "finished_utc": "2026-11-08T19:31:38.267573+00:00",
+  "checks": {
+    "60sec": true,
+    "RAM20GiB": true,
+    "disk20GiB": true,
+    "no_sustained_swap": true,
+    "baseline_unchanged": true,
+    "no_model_resident": true,
+    "no_ollama_connections": true,
+    "model_digest_exact": true,
+    "port18081_free": true,
+    "ollama_loopback": true,
+    "names_unused": true,
+    "subnet_free": true
+  },
+  "summary": {
+    "elapsed_seconds": 60.32798935752362,
+    "min_available_GiB": 23.599353790283203,
+    "swap_in_pages": 0,
+    "swap_out_pages": 0,
+    "longest_swap_streak": 0
+  },
+  "passed": true,
+  "scope": "T008 bounded dependency resolution/compilation only; no images/model pulls,startup or inference"
+}
