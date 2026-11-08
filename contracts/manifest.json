@@ -19,8 +19,128 @@
     "FenceReceipt",
     "VerificationRequest",
     "Event",
-    "EvaluationResult"
+    "EvaluationResult",
+    "ControlRequest",
+    "ControlResult",
+    "ProcessExit",
+    "VerifierResult",
+    "ControlChain",
+    "EventStream"
   ],
-  "schema_sha256": "3efa86730eef48ae897c2674cbd58b7982ef70040278788677fc5d7e19f19889",
-  "catalog_sha256": "64e6b0ec54b2242747373ef1a567d9ec8c59f033f47c02afbe715d184a31ae36"
+  "schema_sha256": "4814085b2920b7fda92178a68e6e91f99e5255bb520d055cdfb3241e6980028a",
+  "catalog_sha256": "64e6b0ec54b2242747373ef1a567d9ec8c59f033f47c02afbe715d184a31ae36",
+  "examples": [
+    {
+      "contract": "Snapshot",
+      "file": "v1/snapshot.example.json"
+    },
+    {
+      "contract": "Event",
+      "file": "v1/event.example.json"
+    },
+    {
+      "contract": "FenceReceipt",
+      "file": "v1/fence-receipt.example.json"
+    },
+    {
+      "contract": "AgentRequest",
+      "file": "v1/agent-request.example.json"
+    },
+    {
+      "contract": "Fixture",
+      "file": "v1/fixture.example.json"
+    },
+    {
+      "contract": "AgentResult",
+      "file": "v1/agent-result.example.json"
+    },
+    {
+      "contract": "Task",
+      "file": "v1/task.example.json"
+    },
+    {
+      "contract": "EvaluationResult",
+      "file": "v1/evaluation-result.example.json"
+    },
+    {
+      "contract": "VerificationRequest",
+      "file": "v1/verification-request.example.json"
+    },
+    {
+      "contract": "RunManifest",
+      "file": "v1/run-manifest.example.json"
+    },
+    {
+      "contract": "RunMapping",
+      "file": "v1/run-mapping.example.json"
+    },
+    {
+      "contract": "Task",
+      "file": "v1/read-task.example.json"
+    },
+    {
+      "contract": "AgentResult",
+      "file": "v1/read-agent-result.example.json"
+    },
+    {
+      "contract": "EvaluationResult",
+      "file": "v1/read-evaluation-result.example.json"
+    },
+    {
+      "contract": "RunMapping",
+      "file": "v1/read-run-mapping.example.json"
+    },
+    {
+      "contract": "ProcessExit",
+      "file": "v1/agent-exit.example.json"
+    },
+    {
+      "contract": "ProcessExit",
+      "file": "v1/verifier-exit.example.json"
+    },
+    {
+      "contract": "VerifierResult",
+      "file": "v1/verifier-result.example.json"
+    },
+    {
+      "contract": "EventStream",
+      "file": "v1/interrupted-trace.example.json"
+    },
+    {
+      "contract": "ControlChain",
+      "file": "v1/control-chain.example.json"
+    },
+    {
+      "contract": "ControlChain",
+      "file": "v1/read-control-chain.example.json"
+    },
+    {
+      "contract": "ControlChain",
+      "file": "v1/failed-control-chain.example.json"
+    },
+    {
+      "contract": "ControlRequest",
+      "file": "v1/control-prepare-request.example.json"
+    },
+    {
+      "contract": "ControlResult",
+      "file": "v1/control-prepare-result.example.json"
+    },
+    {
+      "contract": "ControlRequest",
+      "file": "v1/control-settle-grade-request.example.json"
+    },
+    {
+      "contract": "ControlResult",
+      "file": "v1/control-settle-grade-result.example.json"
+    },
+    {
+      "contract": "ControlRequest",
+      "file": "v1/control-finalize-request.example.json"
+    },
+    {
+      "contract": "ControlResult",
+      "file": "v1/control-finalize-result.example.json"
+    }
+  ]
 }

@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "run_id": "run-example-001",
+  "attempt_id": "attempt-example-001",
+  "status": "completed",
+  "final_answer": {
+    "text": "Project PROJ-001.",
+    "invoice_id": null,
+    "record_ids": [
+      "PROJ-001"
+    ]
+  },
+  "counts": {
+    "model_calls": 2,
+    "tool_calls": 1,
+    "retries": 0
+  }
+}

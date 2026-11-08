@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "run_id": "run-example-001",
+  "attempt_id": "attempt-example-001",
+  "task_id": "draft-invoice-001",
+  "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+  "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+  "workflow_kind": "draft_invoice",
+  "phase": "settle-grade",
+  "budget": {
+    "anchor_id": "post-example-001",
+    "started_at": "2026-11-07T23:00:00Z",
+    "deadline_at": "2026-11-07T23:00:30Z",
+    "elapsed_ms": 30,
+    "remaining_ms": 29970,
+    "operation_timeout_ms": 5000
+  },
+  "status": "completed",
+  "action": "verify",
+  "original_pass": true,
+  "fence_receipt": {
+    "schema_version": 1,
+    "run_id": "run-example-001",
+    "attempt_id": "attempt-example-001",
+    "fence": "agent",
+    "status": "settled",
+    "generation": 1,
+    "phase": "agent_sealed",
+    "commit_acknowledged": true,
+    "committed_at": "2026-11-07T23:00:00Z",
+    "remaining_inflight": 0,
+    "elapsed_ms": 12
+  },
+  "outputs": {
+    "agent_snapshot": {
+      "path": "control/agent-snapshot.json",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "bytes": 100
+    },
+    "verification_request": {
+      "path": "control/verification-request.json",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "bytes": 100
+    }
+  },
+  "message_id": "settle-grade-result-001",
+  "request_id": "settle-grade-request-001"
+}

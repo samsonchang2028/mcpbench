@@ -16,5 +16,6 @@
   "agent_token_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
   "verifier_token_sha256": null,
   "verifier_scope": null,
-  "lock_marker": 0
+  "lock_marker": 0,
+  "workflow_kind": "draft_invoice"
 }

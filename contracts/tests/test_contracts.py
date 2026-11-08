@@ -182,6 +182,226 @@ class Contracts(unittest.TestCase):
         c.validate("ProbeEchoArgs", {"text": "mcpbench-v1"})
         self.reject("ProbeEchoArgs", {"text": "arbitrary command", "url": "forbidden"})
 
+    def failure(self, code, stage="verification", disposition="terminal"):
+        return {"code": code, "stage": stage, "disposition": disposition, "call_id": None, "attribution": "observed", "reason": "Synthetic regression."}
+
+    def failed_agent(self):
+        result = self.example("evaluation-result")
+        result.update(task_success=False, overall_status="failed", db_oracle_pass=False, answer_pass=False, verifier_settlement_pass=None, replay_pass=None)
+        result["original_assertions"] = [{"name": name, "pass": False, "reason": "Incorrect answer/state."} for name in ["db-oracle", "answer"]]
+        result["verification_assertions"] = [row for row in result["verification_assertions"] if row["name"] == "unchanged-state"]
+        result["null_reasons"] = {"verifier_settlement_pass": "original_failed", "replay_pass": "original_failed"}
+        result["metrics"]["verifier_calls"] = 0
+        return result
+
+    def test_independent_verdict_counterexamples(self):
+        good = self.example("evaluation-result")
+        for assertion_set in ["original_assertions", "verification_assertions"]:
+            bad = deepcopy(good)
+            bad[assertion_set][0]["pass"] = False
+            self.reject("EvaluationResult", bad)
+        for change in [{"overall_status": "failed", "replay_pass": False}, {"overall_status": "failed", "quarantined": True}]:
+            self.reject("EvaluationResult", {**good, **change})
+        for code, stage in [("verification_failed", "verification"), ("cleanup_failed", "cleanup"), ("artifact_incomplete", "operations")]:
+            bad = deepcopy(good)
+            bad["failures"] = [self.failure(code, stage)]
+            self.reject("EvaluationResult", bad)
+        bad = deepcopy(good)
+        bad["metrics"]["verifier_calls"] = 0
+        self.reject("EvaluationResult", bad)
+        bad = self.failed_agent()
+        for key in ["agent_settlement_pass", "db_oracle_pass", "answer_pass"]:
+            bad[key] = None
+            bad["null_reasons"][key] = "settlement_unknown"
+        for row in bad["original_assertions"]:
+            row["pass"] = None
+        self.reject("EvaluationResult", bad)  # Neither cleanup nor comparison may remain true.
+        bad.update(cleanup_pass=None, final_state_unchanged=None, comparison_valid=False, quarantined=True)
+        bad["null_reasons"].update(cleanup_pass="settlement_unknown", final_state_unchanged="settlement_unknown")
+        bad["verification_assertions"] = []
+        c.validate("EvaluationResult", bad)  # No redundant failure entry is necessary.
+        bad["null_reasons"]["agent_settlement_pass"] = "arbitrary escape"
+        self.reject("EvaluationResult", bad)
+
+    def test_legitimate_failed_agent_comparisons_and_recovered_errors(self):
+        for status, code in [("completed", "state_incorrect"), ("failed", "invalid_arguments"), ("timeout", "model_timeout")]:
+            value = self.failed_agent()
+            value["agent_status"] = status
+            value["agent_budget_pass"] = status != "timeout"
+            value["failures"] = [self.failure(code, "agent")]
+            c.validate("EvaluationResult", value)
+            self.assertTrue(value["comparison_valid"])
+        value = self.example("evaluation-result")
+        value["failures"] = [self.failure("invalid_arguments", "execution", "recovered")]
+        c.validate("EvaluationResult", value)
+        value["failures"] = [self.failure("verification_failed", disposition="recovered")]
+        self.reject("EvaluationResult", value)
+        # Later verification failure preserves original task success but invalidates the comparison.
+        value = self.example("evaluation-result")
+        value.update(overall_status="failed", comparison_valid=False, replay_pass=False)
+        value["verification_assertions"][0]["pass"] = False
+        value["failures"] = [self.failure("verification_failed")]
+        c.validate("EvaluationResult", value)
+        self.assertTrue(value["task_success"])
+
+    def test_read_only_terminal_bundle_and_record_binding(self):
+        names = ["read-task", "fixture", "read-run-mapping", "read-evaluation-result", "read-agent-result"]
+        bundle = [self.example(name) for name in names]
+        c.validate_run_bundle(*bundle)
+        for index, mutate in [
+            (0, lambda x: x["expected_state"].update(required_record_ids=["MISSING"])),
+            (0, lambda x: x["expected_state"].update(record_table="timesheets")),
+            (2, lambda x: x.update(workflow_kind="draft_invoice")),
+            (3, lambda x: x.update(final_state_unchanged=False)),
+            (4, lambda x: x["final_answer"].update(record_ids=["MISSING"])),
+        ]:
+            bad = deepcopy(bundle)
+            mutate(bad[index])
+            with self.assertRaises(c.ContractError):
+                c.validate_run_bundle(*bad)
+        read = self.example("read-evaluation-result")
+        read["metrics"]["verifier_calls"] = 1
+        self.reject("EvaluationResult", read)
+        self.reject("RunMapping", {**bundle[2], "phase": "verifying"})
+
+    def test_catalog_order_membership_and_nonretryable_errors(self):
+        for tools in [c.CATALOG["tools"][:3], list(reversed(c.CATALOG["tools"]))]:
+            self.reject("Catalog", {**c.CATALOG, "tools": tools})
+        for code in c.SCHEMA["$defs"]["ToolError"]["properties"]["code"]["enum"]:
+            error = {"code": code, "message": "Synthetic error.", "retryable": True}
+            result = {"tool_id": c.CREATE, "is_error": True, "error": error}
+            if code in {"db_error", "tool_timeout"}:
+                c.validate("ToolError", error)
+                c.validate("ToolResult", result)
+            else:
+                self.reject("ToolError", error)
+                self.reject("ToolResult", result)
+
+    def test_control_chain_phase_identity_and_shared_deadline(self):
+        chain = self.example("control-chain")
+        c.validate("ControlChain", chain)
+        mutations = [
+            lambda x: x["requests"][2]["budget"].update(anchor_id="new-deadline"),
+            lambda x: x["requests"][2]["budget"].update(remaining_ms=30000),
+            lambda x: x["requests"][2]["budget"].update(operation_timeout_ms=5001),
+            lambda x: x["requests"][2].update(prior_result_id="wrong-result"),
+            lambda x: x["results"][1].update(task_id="another-task"),
+            lambda x: x["results"][1].update(request_id="another-request"),
+            lambda x: x["results"][1].update(workflow_kind="read_only"),
+            lambda x: x["results"][1].update(original_pass=False),
+            lambda x: x["results"][2].update(fence_receipt=x["results"][1]["fence_receipt"]),
+            lambda x: x["exits"][1].update(result_delivery="partial", result_ref=None),
+            lambda x: x["exits"][1].update(termination="timed_out", exit_code=None, signal="SIGKILL"),
+            lambda x: x["verifier"].update(invoice_id="INV-OTHER"),
+            lambda x: x["verifier"].update(calls=0, checks=[]),
+            lambda x: x["exits"].pop(),
+        ]
+        for mutate in mutations:
+            bad = deepcopy(chain)
+            mutate(bad)
+            self.reject("ControlChain", bad)
+        for delivery in ["missing", "partial", "malformed", "oversized"]:
+            host = self.example("verifier-exit")
+            host.update(result_delivery=delivery, result_ref=None)
+            c.validate("ProcessExit", host)
+        for path in ["/etc/passwd", "control/../secret.json", "control/symlink/../../secret.json", "control/secret.txt"]:
+            bad = self.example("control-prepare-request")
+            bad["inputs"]["task"]["path"] = path
+            self.reject("ControlRequest", bad)
+        budget = deepcopy(chain["requests"][1]["budget"])
+        budget.update(elapsed_ms=29999, remaining_ms=1, operation_timeout_ms=1)
+        c.validate("PostAgentBudget", budget)
+        budget.update(elapsed_ms=30001, remaining_ms=0, operation_timeout_ms=0)
+        c.validate("PostAgentBudget", budget)  # Retain observed overrun; never clip it.
+
+    def test_event_evidence_and_complete_interrupted_stream(self):
+        event = self.example("event")
+        self.reject("Event", {**event, "data": {}})
+        for kind, source, phase in [("fence.completed", "evaluator", "grading"), ("grading.completed", "evaluator", "grading"), ("process.exited", "launcher", "operations"), ("db.completed", "mcp", "execution"), ("retrieval.completed", "agent", "retrieval")]:
+            self.reject("Event", {**event, "event_type": kind, "source": source, "phase": phase, "data": {}})
+        stream = self.example("interrupted-trace")
+        c.validate_event_stream(stream)
+        for mutate in [lambda x: x.pop(), lambda x: x[1].update(event_id=x[0]["event_id"]), lambda x: x[1].update(sequence=3), lambda x: x[1]["data"].update(operation_call_id="unknown-call")]:
+            bad = deepcopy(stream)
+            mutate(bad)
+            with self.assertRaises(c.ContractError):
+                c.validate_event_stream(bad)
+        started = deepcopy(event)
+        started.update(event_type="tool.started", sequence=1, event_id="tool-start", elapsed_ms=0, data={"tool_id":c.CREATE,"arguments":self.example("verification-request")["original_arguments"],"retry_index":0})
+        event.update(sequence=2, elapsed_ms=18)
+        c.validate_event_stream([started,event])
+        bad = deepcopy(event)
+        bad["source"] = "launcher"
+        self.reject("Event",bad)
+
+    def test_read_and_missing_agent_result_control_paths(self):
+        for name in ["read-control-chain", "failed-control-chain"]:
+            chain = self.example(name)
+            c.validate("ControlChain", chain)
+            self.assertIsNone(chain["verifier"])
+            self.assertEqual(chain["results"][2]["fence_receipt"]["generation"], 1)
+        chain = self.example("failed-control-chain")
+        chain["requests"][1]["inputs"]["agent_result"] = self.example("agent-exit")["result_ref"]
+        self.reject("ControlChain", chain)
+
+    def test_registered_standalone_examples(self):
+        manifest = c.load_file(c.ROOT / "manifest.json")
+        registered = {row["file"] for row in manifest["examples"]}
+        self.assertEqual(registered, {str(path.relative_to(c.ROOT)) for path in (c.ROOT / "v1").glob("*.example.json")})
+        for row in manifest["examples"]:
+            with self.subTest(contract=row["contract"], file=row["file"]):
+                c.validate(row["contract"], c.load_file(c.ROOT / row["file"]))
+
+    def test_typed_operation_lifecycles_and_required_evidence(self):
+        base = self.example("event")
+        for kind, source, phase, identity in [
+            ("tool", "agent", "execution", {"tool_id": c.CREATE}),
+            ("model", "agent", "agent", {"model_digest": "0" * 64, "prompt_hash": "1" * 64}),
+            ("db", "mcp", "execution", {"operation": "create_draft", "transaction_id": "tx-001"}),
+        ]:
+            start_data = deepcopy(identity)
+            if kind == "tool":
+                start_data.update(arguments=self.example("verification-request")["original_arguments"], retry_index=0)
+            start = {**base, "event_id": kind + "-started", "event_type": kind + ".started", "source": source, "phase": phase, "sequence": 1, "elapsed_ms": 0, "data": start_data}
+            for suffix in ["completed", "failed", "interrupted"]:
+                data = {**identity, "duration_ms": 1}
+                if kind == "model":
+                    if suffix != "completed":
+                        data.pop("model_digest")
+                        data.pop("prompt_hash")
+                    data.update(prompt_tokens=10 if suffix == "completed" else None, output_tokens=2 if suffix == "completed" else None, counts_unavailable_reason=None if suffix == "completed" else "missing_response")
+                if suffix == "completed":
+                    if kind == "tool": data["tool_result"] = base["data"]["tool_result"]
+                    if kind == "db": data["rows_affected"] = 3
+                if suffix == "failed":
+                    data["failure"] = self.failure("tool_error", "agent" if kind == "model" else "execution")
+                    if kind == "tool": data["tool_result"] = None
+                if suffix == "interrupted": data["reason"] = "deadline"
+                end = {**start, "event_id": kind + "-" + suffix, "event_type": kind + "." + suffix, "status": "error" if suffix == "failed" else "interrupted" if suffix == "interrupted" else "ok", "sequence": 2, "elapsed_ms": 1, "data": data}
+                c.validate_event_stream([start, end])
+                for field in data:
+                    bad = deepcopy(end)
+                    bad["data"].pop(field)
+                    self.reject("Event", bad)
+        wrong_authority = {**base, "source": "evaluator", "event_type": "db.started", "data": {"operation": "create_draft", "transaction_id": "tx-001"}}
+        self.reject("Event", wrong_authority)
+
+    def test_failed_verifier_records_and_observed_process_status(self):
+        verifier = self.example("verifier-result")
+        verifier.update(status="timeout", calls=1)
+        verifier["checks"] = [{"check": "same_payload_replay", "pass": False, "tool_result": None, "failure": self.failure("tool_timeout")}]
+        c.validate("VerifierResult", verifier)
+        verifier["checks"][0]["failure"] = None
+        self.reject("VerifierResult", verifier)
+        host = self.example("agent-exit")
+        host.update(termination="timed_out", exit_code=0)
+        c.validate("ProcessExit", host)  # Deadline hit, then observed normal exit code retained.
+        host.update(reaped=False, exit_code=None)
+        c.validate("ProcessExit", host)  # Explicitly uncertain; never settlement proof.
+        chain = self.example("failed-control-chain")
+        chain["exits"][0].update(reaped=False, signal=None)
+        self.reject("ControlChain", chain)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "run_id": "run-example-001",
+  "attempt_id": "attempt-example-001",
+  "task_id": "draft-invoice-001",
+  "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+  "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+  "status": "completed",
+  "invoice_id": "INV-EXAMPLE-001",
+  "idempotency_key": "idem-example-001",
+  "original_request_hash": "4afcbfba5ba2a4d075601bc2080ec33d122cc23369b4812c97dd42ad2a8ea8b6",
+  "budget": {
+    "anchor_id": "post-example-001",
+    "started_at": "2026-11-07T23:00:00Z",
+    "deadline_at": "2026-11-07T23:00:30Z",
+    "elapsed_ms": 170,
+    "remaining_ms": 29830,
+    "operation_timeout_ms": 5000
+  },
+  "calls": 2,
+  "retries": 0,
+  "checks": [
+    {
+      "check": "same_payload_replay",
+      "pass": true,
+      "tool_result": {
+        "tool_id": "billing_create_draft_invoice",
+        "is_error": false,
+        "result": {
+          "invoice": {
+            "invoice_id": "INV-EXAMPLE-001",
+            "customer_id": "CUST-001",
+            "invoice_date": "2026-11-07",
+            "due_date": "2026-11-21",
+            "currency": "USD",
+            "status": "draft",
+            "subtotal_cents": 25000,
+            "tax_cents": 0,
+            "total_cents": 25000,
+            "created_at": "2026-11-07T23:00:00Z"
+          },
+          "lines": [
+            {
+              "line_id": "LINE-EXAMPLE-001",
+              "invoice_id": "INV-EXAMPLE-001",
+              "item_id": "SVC-CONSULT",
+              "quantity": 2,
+              "unit_price_cents": 12500,
+              "line_total_cents": 25000,
+              "line_number": 1
+            }
+          ]
+        }
+      },
+      "failure": null
+    },
+    {
+      "check": "changed_payload_conflict",
+      "pass": true,
+      "tool_result": {
+        "tool_id": "billing_create_draft_invoice",
+        "is_error": true,
+        "error": {
+          "code": "idempotency_conflict",
+          "message": "Conflicting payload.",
+          "retryable": false
+        }
+      },
+      "failure": null
+    }
+  ]
+}

@@ -24,14 +24,29 @@
   "failures": [],
   "original_assertions": [
     {
-      "name": "invoice-total",
+      "name": "db-oracle",
+      "pass": true,
+      "reason": "Synthetic contract example only."
+    },
+    {
+      "name": "answer",
       "pass": true,
       "reason": "Synthetic contract example only."
     }
   ],
   "verification_assertions": [
     {
-      "name": "same-key-replay",
+      "name": "same-payload-replay",
+      "pass": true,
+      "reason": "Synthetic contract example only."
+    },
+    {
+      "name": "changed-payload-conflict",
+      "pass": true,
+      "reason": "Synthetic contract example only."
+    },
+    {
+      "name": "unchanged-state",
       "pass": true,
       "reason": "Synthetic contract example only."
     }
@@ -54,5 +69,8 @@
     "energy_joules": null,
     "cost_basis": null,
     "energy_basis": null
-  }
+  },
+  "workflow_kind": "draft_invoice",
+  "setup_pass": true,
+  "final_state_unchanged": true
 }

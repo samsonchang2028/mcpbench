@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "run_id": "run-example-001",
+  "attempt_id": "attempt-example-001",
+  "task_id": "draft-invoice-001",
+  "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+  "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+  "producer": "launcher",
+  "child": "verifier",
+  "phase": "verify",
+  "termination": "exited",
+  "exit_code": 0,
+  "signal": null,
+  "result_delivery": "complete",
+  "result_ref": {
+    "path": "control/verifier-result.json",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "bytes": 100
+  },
+  "duration_ms": 100,
+  "budget": {
+    "anchor_id": "post-example-001",
+    "started_at": "2026-11-07T23:00:00Z",
+    "deadline_at": "2026-11-07T23:00:30Z",
+    "elapsed_ms": 180,
+    "remaining_ms": 29820,
+    "operation_timeout_ms": 5000
+  },
+  "result_message_id": null,
+  "reaped": true
+}

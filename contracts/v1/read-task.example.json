@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "task_id": "read-project-001",
+  "task_version": "1",
+  "fixture_id": "billing-smoke-001",
+  "fixture_version": "1",
+  "prompt": "Get project PROJ-001.",
+  "split": "development",
+  "principal_id": "billing-reader",
+  "permitted_tools": [
+    "billing_get_project"
+  ],
+  "required_tool_ids": [
+    "billing_get_project"
+  ],
+  "relevant_tool_ids": [
+    "billing_get_project"
+  ],
+  "expected_state": {
+    "kind": "read_only",
+    "record_table": "projects",
+    "required_record_ids": [
+      "PROJ-001"
+    ],
+    "allowed_changed_tables": []
+  },
+  "final_answer_rule": "read_result_ids",
+  "budgets": {
+    "context_tokens": 4096,
+    "output_tokens": 512,
+    "model_turns": 8,
+    "tool_calls": 12,
+    "tool_timeout_ms": 5000,
+    "db_timeout_ms": 5000,
+    "model_timeout_ms": 120000,
+    "task_timeout_ms": 300000,
+    "transient_retries": 1,
+    "post_agent_timeout_ms": 30000,
+    "verification_operation_ms": 5000,
+    "verification_calls": 2,
+    "verification_retries": 0,
+    "artifact_bytes": 104857600,
+    "document_bytes": 1048576
+  }
+}

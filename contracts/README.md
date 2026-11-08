@@ -25,6 +25,10 @@ Run from the repository/worktree root with the already installed dependencies:
 PYTHONDONTWRITEBYTECODE=1 python3 -m unittest contracts.tests.test_contracts -v
 PYTHONDONTWRITEBYTECODE=1 python3 -m contracts.validate Catalog contracts/v1/catalog.json
 PYTHONDONTWRITEBYTECODE=1 python3 -m contracts.validate Task contracts/v1/task.example.json
+PYTHONDONTWRITEBYTECODE=1 python3 -m contracts.validate ControlChain contracts/v1/control-chain.example.json
+PYTHONDONTWRITEBYTECODE=1 python3 -m contracts.validate ControlChain contracts/v1/read-control-chain.example.json
+PYTHONDONTWRITEBYTECODE=1 python3 -m contracts.validate ControlChain contracts/v1/failed-control-chain.example.json
+PYTHONDONTWRITEBYTECODE=1 python3 -m contracts.validate EventStream contracts/v1/interrupted-trace.example.json
 ```
 
 [requirements.txt](requirements.txt) records the exact installed validator dependency
@@ -43,6 +47,23 @@ All schema references resolve inside the bundle; network retrieval is disabled.
 prices against the independently seeded items. `seed_hash`, `payload_hash` and
 `schema_name` implement the frozen canonical/identifier rules. Validation failures
 raise `ContractError` with a bounded category, without echoing argument values.
+
+The manifest registers every standalone example and its named contract; the tests
+validate the entire registry. `ControlChain` cross-validates phase messages, host
+exit/delivery records, verifier scope and one shared post-agent budget. `Event`
+requires evidence specific to its operation; `EventStream` checks a complete trace's
+sequence, identities and operation closure. Its example is a JSON array for offline
+validation; production transport remains one individually bounded Event per JSONL
+line. A single Event does not prove stream completeness.
+
+Use `validate_run_bundle(task, fixture, mapping, evaluation, agent_result)` to bind
+the private workflow kind and hashes to the actual task and agent answer. Read-only
+expected records name their table and must exist in the seed; successful answers
+contain the exact expected ID set. Grader data stays outside AgentRequest. Successful
+read-only evaluation uses the acknowledged initial fence and unchanged final state,
+with no verifier capability or calls. The draft-invoice gate still requires both
+verifier checks and both fences. Settled, fully observed agent failures remain
+eligible measured comparisons; unsafe settlement/evidence/verification cannot.
 
 ## Contract boundary
 

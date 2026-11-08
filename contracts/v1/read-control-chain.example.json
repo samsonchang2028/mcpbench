@@ -1,0 +1,329 @@
+{
+  "requests": [
+    {
+      "schema_version": 1,
+      "run_id": "run-example-001",
+      "attempt_id": "attempt-example-001",
+      "task_id": "read-project-001",
+      "task_hash": "ca0aaa1ac4ce219626dff6af1fa293cdcdb0418f742641cafdad026fde8401a7",
+      "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+      "workflow_kind": "read_only",
+      "phase": "prepare",
+      "budget": null,
+      "inputs": {
+        "task": {
+          "path": "control/task.json",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "bytes": 100
+        },
+        "fixture": {
+          "path": "control/fixture.json",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "bytes": 100
+        },
+        "config": {
+          "path": "control/config.json",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "bytes": 100
+        }
+      },
+      "message_id": "prepare-request-001",
+      "prior_result_id": null
+    },
+    {
+      "schema_version": 1,
+      "run_id": "run-example-001",
+      "attempt_id": "attempt-example-001",
+      "task_id": "read-project-001",
+      "task_hash": "ca0aaa1ac4ce219626dff6af1fa293cdcdb0418f742641cafdad026fde8401a7",
+      "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+      "workflow_kind": "read_only",
+      "phase": "settle-grade",
+      "budget": {
+        "anchor_id": "post-example-001",
+        "started_at": "2026-11-07T23:00:00Z",
+        "deadline_at": "2026-11-07T23:00:30Z",
+        "elapsed_ms": 20,
+        "remaining_ms": 29980,
+        "operation_timeout_ms": 5000
+      },
+      "inputs": {
+        "prior_phase_result": {
+          "path": "control/prepare-result.json",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "bytes": 100
+        },
+        "agent_exit": {
+          "path": "control/agent-exit.json",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "bytes": 100
+        },
+        "agent_result": {
+          "path": "control/agent-result.json",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "bytes": 100
+        }
+      },
+      "message_id": "settle-grade-request-001",
+      "prior_result_id": "prepare-result-001"
+    },
+    {
+      "schema_version": 1,
+      "run_id": "run-example-001",
+      "attempt_id": "attempt-example-001",
+      "task_id": "read-project-001",
+      "task_hash": "ca0aaa1ac4ce219626dff6af1fa293cdcdb0418f742641cafdad026fde8401a7",
+      "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+      "workflow_kind": "read_only",
+      "phase": "finalize",
+      "budget": {
+        "anchor_id": "post-example-001",
+        "started_at": "2026-11-07T23:00:00Z",
+        "deadline_at": "2026-11-07T23:00:30Z",
+        "elapsed_ms": 200,
+        "remaining_ms": 29800,
+        "operation_timeout_ms": 5000
+      },
+      "inputs": {
+        "prior_phase_result": {
+          "path": "control/grade-result.json",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "bytes": 100
+        }
+      },
+      "message_id": "finalize-request-001",
+      "prior_result_id": "settle-grade-result-001"
+    }
+  ],
+  "results": [
+    {
+      "schema_version": 1,
+      "run_id": "run-example-001",
+      "attempt_id": "attempt-example-001",
+      "task_id": "read-project-001",
+      "task_hash": "ca0aaa1ac4ce219626dff6af1fa293cdcdb0418f742641cafdad026fde8401a7",
+      "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+      "workflow_kind": "read_only",
+      "phase": "prepare",
+      "budget": null,
+      "status": "completed",
+      "action": "execute_agent",
+      "original_pass": null,
+      "fence_receipt": null,
+      "outputs": {
+        "agent_request": {
+          "path": "control/agent-request.json",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "bytes": 100
+        }
+      },
+      "message_id": "prepare-result-001",
+      "request_id": "prepare-request-001"
+    },
+    {
+      "schema_version": 1,
+      "run_id": "run-example-001",
+      "attempt_id": "attempt-example-001",
+      "task_id": "read-project-001",
+      "task_hash": "ca0aaa1ac4ce219626dff6af1fa293cdcdb0418f742641cafdad026fde8401a7",
+      "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+      "workflow_kind": "read_only",
+      "phase": "settle-grade",
+      "budget": {
+        "anchor_id": "post-example-001",
+        "started_at": "2026-11-07T23:00:00Z",
+        "deadline_at": "2026-11-07T23:00:30Z",
+        "elapsed_ms": 30,
+        "remaining_ms": 29970,
+        "operation_timeout_ms": 5000
+      },
+      "status": "completed",
+      "action": "finalize",
+      "original_pass": true,
+      "fence_receipt": {
+        "schema_version": 1,
+        "run_id": "run-example-001",
+        "attempt_id": "attempt-example-001",
+        "fence": "agent",
+        "status": "settled",
+        "generation": 1,
+        "phase": "agent_sealed",
+        "commit_acknowledged": true,
+        "committed_at": "2026-11-07T23:00:00Z",
+        "remaining_inflight": 0,
+        "elapsed_ms": 12
+      },
+      "outputs": {
+        "agent_snapshot": {
+          "path": "control/agent-snapshot.json",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "bytes": 100
+        }
+      },
+      "message_id": "settle-grade-result-001",
+      "request_id": "settle-grade-request-001"
+    },
+    {
+      "schema_version": 1,
+      "run_id": "run-example-001",
+      "attempt_id": "attempt-example-001",
+      "task_id": "read-project-001",
+      "task_hash": "ca0aaa1ac4ce219626dff6af1fa293cdcdb0418f742641cafdad026fde8401a7",
+      "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+      "workflow_kind": "read_only",
+      "phase": "finalize",
+      "budget": {
+        "anchor_id": "post-example-001",
+        "started_at": "2026-11-07T23:00:00Z",
+        "deadline_at": "2026-11-07T23:00:30Z",
+        "elapsed_ms": 210,
+        "remaining_ms": 29790,
+        "operation_timeout_ms": 5000
+      },
+      "status": "completed",
+      "action": "complete",
+      "original_pass": true,
+      "fence_receipt": {
+        "schema_version": 1,
+        "run_id": "run-example-001",
+        "attempt_id": "attempt-example-001",
+        "fence": "agent",
+        "status": "settled",
+        "generation": 1,
+        "phase": "agent_sealed",
+        "commit_acknowledged": true,
+        "committed_at": "2026-11-07T23:00:00Z",
+        "remaining_inflight": 0,
+        "elapsed_ms": 12
+      },
+      "outputs": {
+        "evaluation": {
+          "path": "control/evaluation.json",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "bytes": 100
+        },
+        "final_snapshot": {
+          "path": "control/final-snapshot.json",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "bytes": 100
+        }
+      },
+      "message_id": "finalize-result-001",
+      "request_id": "finalize-request-001"
+    }
+  ],
+  "exits": [
+    {
+      "schema_version": 1,
+      "run_id": "run-example-001",
+      "attempt_id": "attempt-example-001",
+      "task_id": "read-project-001",
+      "task_hash": "ca0aaa1ac4ce219626dff6af1fa293cdcdb0418f742641cafdad026fde8401a7",
+      "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+      "producer": "launcher",
+      "child": "agent",
+      "phase": "run",
+      "termination": "exited",
+      "exit_code": 0,
+      "signal": null,
+      "result_delivery": "complete",
+      "result_ref": {
+        "path": "control/agent-result.json",
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "bytes": 100
+      },
+      "duration_ms": 100,
+      "budget": null,
+      "result_message_id": null,
+      "reaped": true
+    },
+    {
+      "schema_version": 1,
+      "run_id": "run-example-001",
+      "attempt_id": "attempt-example-001",
+      "task_id": "read-project-001",
+      "task_hash": "ca0aaa1ac4ce219626dff6af1fa293cdcdb0418f742641cafdad026fde8401a7",
+      "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+      "producer": "launcher",
+      "child": "evaluator",
+      "phase": "prepare",
+      "termination": "exited",
+      "exit_code": 0,
+      "signal": null,
+      "result_delivery": "complete",
+      "result_ref": {
+        "path": "control/prepare-result.json",
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "bytes": 100
+      },
+      "duration_ms": 10,
+      "budget": null,
+      "result_message_id": "prepare-result-001",
+      "reaped": true
+    },
+    {
+      "schema_version": 1,
+      "run_id": "run-example-001",
+      "attempt_id": "attempt-example-001",
+      "task_id": "read-project-001",
+      "task_hash": "ca0aaa1ac4ce219626dff6af1fa293cdcdb0418f742641cafdad026fde8401a7",
+      "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+      "producer": "launcher",
+      "child": "evaluator",
+      "phase": "settle-grade",
+      "termination": "exited",
+      "exit_code": 0,
+      "signal": null,
+      "result_delivery": "complete",
+      "result_ref": {
+        "path": "control/settle-grade-result.json",
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "bytes": 100
+      },
+      "duration_ms": 10,
+      "budget": {
+        "anchor_id": "post-example-001",
+        "started_at": "2026-11-07T23:00:00Z",
+        "deadline_at": "2026-11-07T23:00:30Z",
+        "elapsed_ms": 30,
+        "remaining_ms": 29970,
+        "operation_timeout_ms": 5000
+      },
+      "result_message_id": "settle-grade-result-001",
+      "reaped": true
+    },
+    {
+      "schema_version": 1,
+      "run_id": "run-example-001",
+      "attempt_id": "attempt-example-001",
+      "task_id": "read-project-001",
+      "task_hash": "ca0aaa1ac4ce219626dff6af1fa293cdcdb0418f742641cafdad026fde8401a7",
+      "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+      "producer": "launcher",
+      "child": "evaluator",
+      "phase": "finalize",
+      "termination": "exited",
+      "exit_code": 0,
+      "signal": null,
+      "result_delivery": "complete",
+      "result_ref": {
+        "path": "control/finalize-result.json",
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "bytes": 100
+      },
+      "duration_ms": 10,
+      "budget": {
+        "anchor_id": "post-example-001",
+        "started_at": "2026-11-07T23:00:00Z",
+        "deadline_at": "2026-11-07T23:00:30Z",
+        "elapsed_ms": 210,
+        "remaining_ms": 29790,
+        "operation_timeout_ms": 5000
+      },
+      "result_message_id": "finalize-result-001",
+      "reaped": true
+    }
+  ],
+  "verifier": null,
+  "verification_request": null
+}

@@ -199,6 +199,143 @@ operation, two verifier calls and zero verifier retries. This is outside the
 both phases separately and in full-lifecycle totals identically for all strategies.
 Exceeded/unknown settlement quarantines; a failed reset never starts the next run.
 
+### Read-only applicability and terminal truth table
+
+Private RunMapping, control messages and EvaluationResult carry `workflow_kind`,
+exactly Task.expected_state.kind. This field and oracle records never enter
+AgentRequest. `ExpectedReadOnly.record_table` binds required_record_ids to one
+seeded table and its relevant read tools; IDs absent from that fixture reject.
+The read-only capability excludes create-draft and never enters verifying or
+final_sealed. After the initial acknowledged seal, grade the unchanged-state oracle
+and exact record-ID answer. Finalize saves the final unchanged snapshot under the
+same generation-1 seal, preserves artifacts, then safely cleans up. No new verifier
+capability or second fence is invented. Replay and verifier settlement are null
+with `read_only` reasons; verifier calls are zero. The same total 30 seconds applies.
+
+| Original / lifecycle evidence | Task success | Overall / comparison |
+| --- | --- | --- |
+| Settled, completed within-budget original; DB/answer assertions all pass | true | Draft additionally needs exactly two successful verifier checks, generation-2 fence and unchanged final state; read-only needs unchanged final state under generation 1; both need setup, artifacts, cleanup and post-agent budget |
+| Wrong answer/state, invalid arguments or timeout; setup, settlement, final unchanged snapshot, artifacts and cleanup complete | false | failed; comparison may remain valid; invoice verifier is skipped with `original_failed` reasons and zero calls |
+| Original passes but replay/final-state verification fails | true | failed; comparison invalid; original verdict is preserved |
+| Unknown applicable settlement (including null), quarantine, failed cleanup or incomplete artifacts | Original correctness cannot be asserted without initial settlement | failed; comparison invalid; unknown settlement and quarantine forbid reset |
+| Agent never started | false | blocked; comparison invalid; unperformed verdicts have `not_started` reasons |
+
+Original assertions have unique names and include `db-oracle` and `answer`, whose
+pass values exactly match their verdict fields. Original success requires all
+original assertions true, setup success, completed status, budget success and zero
+unauthorized execution. A terminal original-stage failure prevents original success.
+Failures explicitly distinguish terminal from recovered; only bounded reasoning/
+tool errors can be recovered. Verification, settlement, cleanup, resource and
+artifact failures cannot be relabeled recovered. Every null verdict has a closed,
+field-specific reason code; arbitrary explanatory strings cannot bypass policy.
+
+Invoice replay PASS requires exactly two calls and passing assertions named
+`same-payload-replay`, `changed-payload-conflict`, `unchanged-state`; every retained
+verification assertion must pass for a valid comparison. Skipped/read-only paths
+retain only `unchanged-state`. Overall passed is equivalent to original success
+plus a valid completed lifecycle/comparison; a valid measured original failure
+is overall failed. Quarantine always invalidates comparison and prevents reset.
+Observed verification/settlement/cleanup/evidence failures invalidate comparison
+even when aggregate flags claim otherwise. Terminal operational failures differ
+from a recorded recovered model/tool error followed by a correct original result.
+
+### Typed phase transport and the launcher clock
+
+The existing fixed commands exchange `ControlRequest` and `ControlResult` through
+private run-specific files. The launcher supplies a request file at the fixed
+trusted evaluator input path `/run/mcpbench/control/request.json`; that evaluator
+writes `/run/mcpbench/control/result.json` within its own phase-specific mount.
+These fixed paths are evaluator-only and never mounted in the agent. Only the
+already declared prepare/settle-grade/finalize CLI values are allowed; no request
+can add an executable, command-line argument, mount or environment variable.
+Each invocation gets a fresh phase directory without replacing prior evidence.
+All messages bind run/attempt/task IDs, task/config hashes, workflow and phase.
+Control message_id, result.request_id and the next request.prior_result_id bind
+the exact sequence; the host exit record repeats the delivered result message ID.
+
+`ArtifactRef` is a bounded relative path under the trusted run root plus exact
+byte count and SHA-256. It permits 2–4 bounded ASCII path segments and .json/.jsonl
+files, excluding absolute paths, dot/dotdot segments and other suffixes. Runtime
+code must additionally reject symlinks and verify actual bytes/hashes before
+opening/consuming the file. A shape-valid reference is not filesystem evidence.
+Prepare takes only task/fixture/config references; grade takes the previous phase
+result and host agent-exit reference, plus agent result only when delivered complete.
+Finalize takes its prior phase result and, only if verification was issued, the
+host verifier exit and its complete result if available. Output names are fixed:
+agent_request, agent_snapshot, verification_request, final_snapshot and evaluation.
+Actual capabilities stay exclusively in separately prepared secret AuthInput files;
+no control result, process exit or log contains their values or digests.
+
+Prepare returns execute_agent, blocked or quarantine. Grade may return verify only
+for an original passing invoice with an acknowledged initial fence and snapshot;
+otherwise it returns finalize after known initial settlement or quarantine after
+uncertainty. Finalize returns complete only with preserved final snapshot/evaluation
+and the applicable acknowledged fence; quarantine never authorizes reset. A
+ControlChain is a statically checked prefix or completed sequence, not runtime proof.
+
+`ProcessExit` is produced only by the launcher. It distinguishes child/phase,
+normal exit, timeout, termination and spawn failure; `reaped` states whether an
+actual exit was observed. Exactly one exit_code or terminating signal is retained
+for a reaped process, including a timed-out child that later exits normally. An
+unreaped process has neither. Delivery independently distinguishes complete,
+missing, partial, malformed and oversized results; only complete delivery has a
+result reference. Complete delivery does not turn nonzero exit into success.
+An unreaped agent cannot advance to authoritative grading/reset. Missing or bad
+agent output is still a measured original failure after acknowledged settlement;
+it cannot invent an AgentResult. An abnormal/missing verifier invalidates verification
+and conservatively quarantines. Failed/missing evaluator output cannot advance a
+chain: preserve the host exit record and quarantine, never fabricate its result.
+
+The launcher establishes exactly one PostAgentBudget anchor immediately when the
+agent finishes/is stopped. It alone measures elapsed time from its own monotonic
+clock. All grade, verifier and finalize requests/results/host exits carry the same
+anchor ID and UTC started_at/deadline_at (exactly 30 seconds apart for correlation).
+`remaining_ms = max(0, 30000 - elapsed_ms)`; every invoked child/operation gets
+`min(5000, remaining_ms)`. Results retain elapsed overruns, never clip observations.
+No phase resets the anchor or increases remaining time. The chain checker compares
+launcher budget observations in causal order and rejects restarted/regressing
+budgets. It does not subtract unrelated producer clocks. Child-reported budget
+echoes must be checked against the launcher's recorded deadline before acceptance.
+At zero remaining time only quarantine may advance. Launcher restart fails closed
+to quarantine in v1; restarting a phase never grants another 30 seconds.
+
+`VerifierResult` is separate from AgentResult and retains the same identity, scope
+and budget. It contains ordered attempted checks (at most two, retries zero), each
+with its pass verdict, typed ToolResult or null plus typed terminal failure when
+no valid response arrived. Same-payload success must return the bound invoice and
+original payload; changed-payload success must be idempotency_conflict. Completed
+requires both checks actually performed and passing. Finalize checks the host exit/
+delivery independently, seals the verifier, compares the final settled snapshot
+and preserves the original verdict. JSON validation does not prove those SQL acts.
+
+### Required JSONL evidence and stream validation
+
+Event payloads are closed per event_type. Model, tool and DB operations each have
+started/completed/failed/interrupted events with source/phase/call correlation and
+durations. Tool starts include validated arguments and retry index; completions
+include typed ToolResult. Failures retain typed failure plus a nullable result if
+no valid response exists. Model starts bind prompt/model hashes; terminal events
+retain token counts or typed unavailable reasons. DB starts/terminals bind operation
+and transaction ID: only MCP emits tool read/create/replay, and only evaluator emits
+snapshot/seal/reset. No DB credential, SQL text or oracle rows are logged.
+
+Retrieval completion requires exposed and authorized IDs plus catalog/query/schema
+hashes and duration. Exposed IDs must be authorized. Fence events contain typed
+receipts and matching status, grading events contain assertions/original verdict,
+and process.exited contains the host-owned ProcessExit. Launcher may emit an explicit
+operation.interrupted marker naming the producer, operation kind and call ID when
+a killed producer cannot close its own started event. Run and cleanup events have
+required outcomes/fingerprints; typed failure events retain bounded failure evidence.
+
+Validate each JSONL line with the strict loader and Event, then validate the complete
+trace with validate_event_stream (EventStream is its offline JSON-array equivalent).
+The stream helper enforces unique event IDs, source-local contiguous sequences from
+1, nondecreasing source-local elapsed time, run identity, unique operation IDs,
+matching operation/source/phase/parent identity and closure of every start. An
+explicit interruption closes that operation; a bare missing end is incomplete
+evidence. Per-line document limits and the 100 MiB artifact cap remain binding.
+No single event shape check claims the stream invariant or authenticates its source.
+
 ## Tables, tool behavior and pagination
 
 `Tables` defines all application tables: customers, items, projects, timesheets,

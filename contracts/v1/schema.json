@@ -878,7 +878,30 @@
         "message",
         "retryable"
       ],
-      "additionalProperties": false
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "code": {
+                "not": {
+                  "enum": [
+                    "db_error",
+                    "tool_timeout"
+                  ]
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "retryable": {
+                "const": false
+              }
+            }
+          }
+        }
+      ]
     },
     "ToolResult": {
       "oneOf": [
@@ -1415,12 +1438,22 @@
         },
         "allowed_changed_tables": {
           "const": []
+        },
+        "record_table": {
+          "enum": [
+            "customers",
+            "items",
+            "projects",
+            "timesheets",
+            "invoices"
+          ]
         }
       },
       "required": [
         "kind",
         "required_record_ids",
-        "allowed_changed_tables"
+        "allowed_changed_tables",
+        "record_table"
       ],
       "additionalProperties": false
     },
@@ -2241,6 +2274,12 @@
           "type": "integer",
           "minimum": 0,
           "maximum": 9007199254740991
+        },
+        "workflow_kind": {
+          "enum": [
+            "draft_invoice",
+            "read_only"
+          ]
         }
       },
       "required": [
@@ -2257,7 +2296,8 @@
         "agent_token_sha256",
         "verifier_token_sha256",
         "verifier_scope",
-        "lock_marker"
+        "lock_marker",
+        "workflow_kind"
       ],
       "additionalProperties": false
     },
@@ -2389,6 +2429,18 @@
             "same_payload_replay",
             "changed_payload_conflict"
           ]
+        },
+        "task_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "task_hash": {
+          "$ref": "#/$defs/SHA256"
+        },
+        "config_hash": {
+          "$ref": "#/$defs/SHA256"
+        },
+        "budget": {
+          "$ref": "#/$defs/PostAgentBudget"
         }
       },
       "required": [
@@ -2400,7 +2452,11 @@
         "original_arguments",
         "original_request_hash",
         "conflict_arguments",
-        "checks"
+        "checks",
+        "task_id",
+        "task_hash",
+        "config_hash",
+        "budget"
       ],
       "additionalProperties": false
     },
@@ -2475,6 +2531,12 @@
             "observed",
             "uncertain"
           ]
+        },
+        "disposition": {
+          "enum": [
+            "terminal",
+            "recovered"
+          ]
         }
       },
       "required": [
@@ -2482,169 +2544,9 @@
         "code",
         "call_id",
         "reason",
-        "attribution"
+        "attribution",
+        "disposition"
       ],
-      "additionalProperties": false
-    },
-    "EventData": {
-      "type": "object",
-      "properties": {
-        "tool_id": {
-          "$ref": "#/$defs/ToolID"
-        },
-        "duration_ms": {
-          "type": "number",
-          "minimum": 0,
-          "maximum": 86400000
-        },
-        "invoice_id": {
-          "$ref": "#/$defs/BusinessID"
-        },
-        "exposed_tool_ids": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/ToolID"
-          },
-          "minItems": 0,
-          "maxItems": 10,
-          "uniqueItems": true
-        },
-        "required_tool_ids": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/ToolID"
-          },
-          "minItems": 0,
-          "maxItems": 10,
-          "uniqueItems": true
-        },
-        "relevant_tool_ids": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/ToolID"
-          },
-          "minItems": 0,
-          "maxItems": 10,
-          "uniqueItems": true
-        },
-        "catalog_hash": {
-          "$ref": "#/$defs/SHA256"
-        },
-        "prompt_hash": {
-          "$ref": "#/$defs/SHA256"
-        },
-        "schema_hash": {
-          "$ref": "#/$defs/SHA256"
-        },
-        "model_digest": {
-          "$ref": "#/$defs/SHA256"
-        },
-        "prompt_tokens": {
-          "anyOf": [
-            {
-              "type": "integer",
-              "minimum": 0,
-              "maximum": 9007199254740991
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "output_tokens": {
-          "anyOf": [
-            {
-              "type": "integer",
-              "minimum": 0,
-              "maximum": 9007199254740991
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "retry_index": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 100000
-        },
-        "outcome": {
-          "enum": [
-            "passed",
-            "failed",
-            "blocked",
-            "interrupted"
-          ]
-        },
-        "failure": {
-          "$ref": "#/$defs/Failure"
-        },
-        "arguments": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/CreateDraftArgs"
-            },
-            {
-              "$ref": "#/$defs/EmptyArgs"
-            },
-            {
-              "$ref": "#/$defs/GetCustomerArgs"
-            },
-            {
-              "$ref": "#/$defs/GetInvoiceArgs"
-            },
-            {
-              "$ref": "#/$defs/GetProjectArgs"
-            },
-            {
-              "$ref": "#/$defs/GetTimesheetArgs"
-            },
-            {
-              "$ref": "#/$defs/ListInvoicesArgs"
-            },
-            {
-              "$ref": "#/$defs/ListProjectsArgs"
-            },
-            {
-              "$ref": "#/$defs/ListTimesheetsArgs"
-            }
-          ]
-        },
-        "result_hash": {
-          "$ref": "#/$defs/SHA256"
-        },
-        "receipt_generation": {
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 2
-        },
-        "artifact_complete": {
-          "type": "boolean"
-        },
-        "tool_result": {
-          "$ref": "#/$defs/ToolResult"
-        },
-        "proposed_tool_name": {
-          "type": "string",
-          "maxLength": 128
-        },
-        "name_truncated": {
-          "type": "boolean"
-        },
-        "rejected_argument_keys": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "maxLength": 64
-          },
-          "maxItems": 32,
-          "uniqueItems": true
-        },
-        "query_hash": {
-          "$ref": "#/$defs/SHA256"
-        }
-      },
-      "required": [],
       "additionalProperties": false
     },
     "Event": {
@@ -2681,15 +2583,26 @@
         },
         "event_type": {
           "enum": [
-            "run.started",
-            "run.finished",
-            "retrieval.completed",
+            "model.started",
             "model.completed",
+            "model.failed",
+            "model.interrupted",
+            "tool.started",
             "tool.completed",
             "tool.failed",
-            "agent.finished",
+            "tool.interrupted",
+            "db.started",
+            "db.completed",
+            "db.failed",
+            "db.interrupted",
+            "retrieval.completed",
             "fence.completed",
             "grading.completed",
+            "process.exited",
+            "operation.interrupted",
+            "run.started",
+            "run.finished",
+            "agent.finished",
             "cleanup.completed",
             "failure"
           ]
@@ -2704,8 +2617,7 @@
             "grading",
             "verification",
             "cleanup",
-            "operations",
-            "execution"
+            "operations"
           ]
         },
         "status": {
@@ -2733,9 +2645,7 @@
             }
           ]
         },
-        "data": {
-          "$ref": "#/$defs/EventData"
-        }
+        "data": {}
       },
       "required": [
         "schema_version",
@@ -2751,7 +2661,727 @@
         "elapsed_ms",
         "data"
       ],
-      "additionalProperties": false
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "event_type": {
+                "const": "model.started"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/EventModelStarted"
+              },
+              "source": {
+                "enum": [
+                  "agent"
+                ]
+              },
+              "phase": {
+                "enum": [
+                  "agent"
+                ]
+              },
+              "status": {
+                "const": "ok"
+              }
+            },
+            "required": [
+              "call_id"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "event_type": {
+                "const": "model.completed"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/EventModelCompleted"
+              },
+              "source": {
+                "enum": [
+                  "agent"
+                ]
+              },
+              "phase": {
+                "enum": [
+                  "agent"
+                ]
+              },
+              "status": {
+                "const": "ok"
+              }
+            },
+            "required": [
+              "call_id"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "event_type": {
+                "const": "model.failed"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/EventModelFailed"
+              },
+              "source": {
+                "enum": [
+                  "agent"
+                ]
+              },
+              "phase": {
+                "enum": [
+                  "agent"
+                ]
+              },
+              "status": {
+                "const": "error"
+              }
+            },
+            "required": [
+              "call_id"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "event_type": {
+                "const": "model.interrupted"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/EventModelInterrupted"
+              },
+              "source": {
+                "enum": [
+                  "agent"
+                ]
+              },
+              "phase": {
+                "enum": [
+                  "agent"
+                ]
+              },
+              "status": {
+                "const": "interrupted"
+              }
+            },
+            "required": [
+              "call_id"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "event_type": {
+                "const": "tool.started"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/EventToolStarted"
+              },
+              "source": {
+                "enum": [
+                  "agent",
+                  "mcp"
+                ]
+              },
+              "phase": {
+                "enum": [
+                  "execution",
+                  "verification"
+                ]
+              },
+              "status": {
+                "const": "ok"
+              }
+            },
+            "required": [
+              "call_id"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "event_type": {
+                "const": "tool.completed"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/EventToolCompleted"
+              },
+              "source": {
+                "enum": [
+                  "agent",
+                  "mcp"
+                ]
+              },
+              "phase": {
+                "enum": [
+                  "execution",
+                  "verification"
+                ]
+              },
+              "status": {
+                "const": "ok"
+              }
+            },
+            "required": [
+              "call_id"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "event_type": {
+                "const": "tool.failed"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/EventToolFailed"
+              },
+              "source": {
+                "enum": [
+                  "agent",
+                  "mcp"
+                ]
+              },
+              "phase": {
+                "enum": [
+                  "execution",
+                  "verification"
+                ]
+              },
+              "status": {
+                "const": "error"
+              }
+            },
+            "required": [
+              "call_id"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "event_type": {
+                "const": "tool.interrupted"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/EventToolInterrupted"
+              },
+              "source": {
+                "enum": [
+                  "agent",
+                  "mcp"
+                ]
+              },
+              "phase": {
+                "enum": [
+                  "execution",
+                  "verification"
+                ]
+              },
+              "status": {
+                "const": "interrupted"
+              }
+            },
+            "required": [
+              "call_id"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "event_type": {
+                "const": "db.started"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/EventDbStarted"
+              },
+              "source": {
+                "enum": [
+                  "mcp",
+                  "evaluator"
+                ]
+              },
+              "phase": {
+                "enum": [
+                  "execution",
+                  "verification",
+                  "grading",
+                  "cleanup",
+                  "prepare"
+                ]
+              },
+              "status": {
+                "const": "ok"
+              }
+            },
+            "required": [
+              "call_id"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "event_type": {
+                "const": "db.completed"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/EventDbCompleted"
+              },
+              "source": {
+                "enum": [
+                  "mcp",
+                  "evaluator"
+                ]
+              },
+              "phase": {
+                "enum": [
+                  "execution",
+                  "verification",
+                  "grading",
+                  "cleanup",
+                  "prepare"
+                ]
+              },
+              "status": {
+                "const": "ok"
+              }
+            },
+            "required": [
+              "call_id"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "event_type": {
+                "const": "db.failed"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/EventDbFailed"
+              },
+              "source": {
+                "enum": [
+                  "mcp",
+                  "evaluator"
+                ]
+              },
+              "phase": {
+                "enum": [
+                  "execution",
+                  "verification",
+                  "grading",
+                  "cleanup",
+                  "prepare"
+                ]
+              },
+              "status": {
+                "const": "error"
+              }
+            },
+            "required": [
+              "call_id"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "event_type": {
+                "const": "db.interrupted"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/EventDbInterrupted"
+              },
+              "source": {
+                "enum": [
+                  "mcp",
+                  "evaluator"
+                ]
+              },
+              "phase": {
+                "enum": [
+                  "execution",
+                  "verification",
+                  "grading",
+                  "cleanup",
+                  "prepare"
+                ]
+              },
+              "status": {
+                "const": "interrupted"
+              }
+            },
+            "required": [
+              "call_id"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "event_type": {
+                "const": "retrieval.completed"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/EventRetrievalCompleted"
+              },
+              "source": {
+                "enum": [
+                  "agent"
+                ]
+              },
+              "phase": {
+                "enum": [
+                  "retrieval"
+                ]
+              },
+              "status": {
+                "const": "ok"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "event_type": {
+                "const": "fence.completed"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/EventFenceCompleted"
+              },
+              "source": {
+                "enum": [
+                  "evaluator"
+                ]
+              },
+              "phase": {
+                "enum": [
+                  "grading",
+                  "verification"
+                ]
+              },
+              "status": {
+                "enum": [
+                  "ok",
+                  "error"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "event_type": {
+                "const": "grading.completed"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/EventGradingCompleted"
+              },
+              "source": {
+                "enum": [
+                  "evaluator"
+                ]
+              },
+              "phase": {
+                "enum": [
+                  "grading",
+                  "verification"
+                ]
+              },
+              "status": {
+                "const": "ok"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "event_type": {
+                "const": "process.exited"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/EventProcessExited"
+              },
+              "source": {
+                "enum": [
+                  "launcher"
+                ]
+              },
+              "phase": {
+                "enum": [
+                  "operations"
+                ]
+              },
+              "status": {
+                "const": "ok"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "event_type": {
+                "const": "operation.interrupted"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/EventOperationInterrupted"
+              },
+              "source": {
+                "enum": [
+                  "launcher"
+                ]
+              },
+              "phase": {
+                "enum": [
+                  "operations"
+                ]
+              },
+              "status": {
+                "const": "interrupted"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "event_type": {
+                "const": "run.started"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/EventRunStarted"
+              },
+              "source": {
+                "enum": [
+                  "launcher"
+                ]
+              },
+              "phase": {
+                "enum": [
+                  "prepare"
+                ]
+              },
+              "status": {
+                "const": "ok"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "event_type": {
+                "const": "run.finished"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/EventRunFinished"
+              },
+              "source": {
+                "enum": [
+                  "launcher"
+                ]
+              },
+              "phase": {
+                "enum": [
+                  "cleanup"
+                ]
+              },
+              "status": {
+                "const": "ok"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "event_type": {
+                "const": "agent.finished"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/EventAgentFinished"
+              },
+              "source": {
+                "enum": [
+                  "agent"
+                ]
+              },
+              "phase": {
+                "enum": [
+                  "agent"
+                ]
+              },
+              "status": {
+                "const": "ok"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "event_type": {
+                "const": "cleanup.completed"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/EventCleanupCompleted"
+              },
+              "source": {
+                "enum": [
+                  "evaluator"
+                ]
+              },
+              "phase": {
+                "enum": [
+                  "cleanup"
+                ]
+              },
+              "status": {
+                "const": "ok"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "event_type": {
+                "const": "failure"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/EventFailure"
+              },
+              "source": {
+                "enum": [
+                  "launcher",
+                  "evaluator",
+                  "agent",
+                  "mcp"
+                ]
+              },
+              "phase": {
+                "enum": [
+                  "admission",
+                  "prepare",
+                  "retrieval",
+                  "agent",
+                  "execution",
+                  "grading",
+                  "verification",
+                  "cleanup",
+                  "operations"
+                ]
+              },
+              "status": {
+                "const": "error"
+              }
+            }
+          }
+        }
+      ]
     },
     "Metrics": {
       "type": "object",
@@ -3081,34 +3711,56 @@
           "type": "object",
           "properties": {
             "agent_settlement_pass": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 256
+              "enum": [
+                "not_started",
+                "settlement_unknown"
+              ]
             },
             "verifier_settlement_pass": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 256
+              "enum": [
+                "not_started",
+                "read_only",
+                "original_failed",
+                "settlement_unknown"
+              ]
             },
             "db_oracle_pass": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 256
+              "enum": [
+                "not_started",
+                "settlement_unknown",
+                "grader_unavailable"
+              ]
             },
             "answer_pass": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 256
+              "enum": [
+                "not_started",
+                "no_answer",
+                "settlement_unknown",
+                "grader_unavailable"
+              ]
             },
             "replay_pass": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 256
+              "enum": [
+                "not_started",
+                "read_only",
+                "original_failed",
+                "settlement_unknown",
+                "verification_incomplete"
+              ]
             },
             "cleanup_pass": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 256
+              "enum": [
+                "not_started",
+                "settlement_unknown",
+                "cleanup_not_attempted"
+              ]
+            },
+            "final_state_unchanged": {
+              "enum": [
+                "not_started",
+                "settlement_unknown",
+                "snapshot_unavailable"
+              ]
             }
           },
           "required": [],
@@ -3149,6 +3801,25 @@
         },
         "metrics": {
           "$ref": "#/$defs/Metrics"
+        },
+        "workflow_kind": {
+          "enum": [
+            "draft_invoice",
+            "read_only"
+          ]
+        },
+        "setup_pass": {
+          "type": "boolean"
+        },
+        "final_state_unchanged": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "required": [
@@ -3177,7 +3848,10 @@
         "failures",
         "original_assertions",
         "verification_assertions",
-        "metrics"
+        "metrics",
+        "workflow_kind",
+        "setup_pass",
+        "final_state_unchanged"
       ],
       "additionalProperties": false
     },
@@ -3190,6 +3864,1328 @@
       },
       "required": [
         "text"
+      ],
+      "additionalProperties": false
+    },
+    "ArtifactRef": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "maxLength": 256,
+          "pattern": "^[a-z0-9][a-z0-9_-]{0,63}(?:/[a-z0-9][a-z0-9_-]{0,63}){0,2}/[a-z0-9][a-z0-9_.-]{0,63}\\.(?:json|jsonl)$"
+        },
+        "sha256": {
+          "$ref": "#/$defs/SHA256"
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1048576
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "bytes"
+      ],
+      "additionalProperties": false
+    },
+    "PostAgentBudget": {
+      "type": "object",
+      "properties": {
+        "anchor_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "started_at": {
+          "$ref": "#/$defs/UTC"
+        },
+        "deadline_at": {
+          "$ref": "#/$defs/UTC"
+        },
+        "elapsed_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 86400000
+        },
+        "remaining_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 30000
+        },
+        "operation_timeout_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5000
+        }
+      },
+      "required": [
+        "anchor_id",
+        "started_at",
+        "deadline_at",
+        "elapsed_ms",
+        "remaining_ms",
+        "operation_timeout_ms"
+      ],
+      "additionalProperties": false
+    },
+    "ControlRequest": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1,
+          "type": "integer"
+        },
+        "run_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "attempt_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "task_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "task_hash": {
+          "$ref": "#/$defs/SHA256"
+        },
+        "config_hash": {
+          "$ref": "#/$defs/SHA256"
+        },
+        "workflow_kind": {
+          "enum": [
+            "draft_invoice",
+            "read_only"
+          ]
+        },
+        "phase": {
+          "enum": [
+            "prepare",
+            "settle-grade",
+            "finalize"
+          ]
+        },
+        "budget": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PostAgentBudget"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "inputs": {
+          "type": "object",
+          "properties": {
+            "task": {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            "fixture": {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            "config": {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            "agent_result": {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            "agent_exit": {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            "verifier_result": {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            "verifier_exit": {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            "prior_phase_result": {
+              "$ref": "#/$defs/ArtifactRef"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "message_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "prior_result_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "schema_version",
+        "run_id",
+        "attempt_id",
+        "task_id",
+        "task_hash",
+        "config_hash",
+        "workflow_kind",
+        "phase",
+        "budget",
+        "inputs",
+        "message_id",
+        "prior_result_id"
+      ],
+      "additionalProperties": false
+    },
+    "ControlResult": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1,
+          "type": "integer"
+        },
+        "run_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "attempt_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "task_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "task_hash": {
+          "$ref": "#/$defs/SHA256"
+        },
+        "config_hash": {
+          "$ref": "#/$defs/SHA256"
+        },
+        "workflow_kind": {
+          "enum": [
+            "draft_invoice",
+            "read_only"
+          ]
+        },
+        "phase": {
+          "enum": [
+            "prepare",
+            "settle-grade",
+            "finalize"
+          ]
+        },
+        "budget": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PostAgentBudget"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "enum": [
+            "completed",
+            "failed"
+          ]
+        },
+        "action": {
+          "enum": [
+            "execute_agent",
+            "verify",
+            "finalize",
+            "quarantine",
+            "complete",
+            "blocked"
+          ]
+        },
+        "original_pass": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "fence_receipt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/FenceReceipt"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "outputs": {
+          "type": "object",
+          "properties": {
+            "agent_request": {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            "verification_request": {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            "evaluation": {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            "agent_snapshot": {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            "final_snapshot": {
+              "$ref": "#/$defs/ArtifactRef"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "message_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "request_id": {
+          "$ref": "#/$defs/Identifier"
+        }
+      },
+      "required": [
+        "schema_version",
+        "run_id",
+        "attempt_id",
+        "task_id",
+        "task_hash",
+        "config_hash",
+        "workflow_kind",
+        "phase",
+        "budget",
+        "status",
+        "action",
+        "original_pass",
+        "fence_receipt",
+        "outputs",
+        "message_id",
+        "request_id"
+      ],
+      "additionalProperties": false
+    },
+    "ProcessExit": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1,
+          "type": "integer"
+        },
+        "run_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "attempt_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "task_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "task_hash": {
+          "$ref": "#/$defs/SHA256"
+        },
+        "config_hash": {
+          "$ref": "#/$defs/SHA256"
+        },
+        "producer": {
+          "const": "launcher"
+        },
+        "child": {
+          "enum": [
+            "agent",
+            "evaluator",
+            "verifier"
+          ]
+        },
+        "phase": {
+          "enum": [
+            "run",
+            "verify",
+            "prepare",
+            "settle-grade",
+            "finalize"
+          ]
+        },
+        "termination": {
+          "enum": [
+            "exited",
+            "timed_out",
+            "terminated",
+            "spawn_failed"
+          ]
+        },
+        "exit_code": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 255
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "signal": {
+          "anyOf": [
+            {
+              "enum": [
+                "SIGTERM",
+                "SIGKILL"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "result_delivery": {
+          "enum": [
+            "complete",
+            "missing",
+            "partial",
+            "malformed",
+            "oversized"
+          ]
+        },
+        "result_ref": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "duration_ms": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 86400000
+        },
+        "budget": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PostAgentBudget"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "result_message_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reaped": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "schema_version",
+        "run_id",
+        "attempt_id",
+        "task_id",
+        "task_hash",
+        "config_hash",
+        "producer",
+        "child",
+        "phase",
+        "termination",
+        "exit_code",
+        "signal",
+        "result_delivery",
+        "result_ref",
+        "duration_ms",
+        "budget",
+        "result_message_id",
+        "reaped"
+      ],
+      "additionalProperties": false
+    },
+    "VerifierCheck": {
+      "type": "object",
+      "properties": {
+        "check": {
+          "enum": [
+            "same_payload_replay",
+            "changed_payload_conflict"
+          ]
+        },
+        "pass": {
+          "type": "boolean"
+        },
+        "tool_result": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ToolResult"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "failure": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Failure"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "check",
+        "pass",
+        "tool_result",
+        "failure"
+      ],
+      "additionalProperties": false
+    },
+    "VerifierResult": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1,
+          "type": "integer"
+        },
+        "run_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "attempt_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "task_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "task_hash": {
+          "$ref": "#/$defs/SHA256"
+        },
+        "config_hash": {
+          "$ref": "#/$defs/SHA256"
+        },
+        "status": {
+          "enum": [
+            "completed",
+            "failed",
+            "timeout",
+            "interrupted"
+          ]
+        },
+        "invoice_id": {
+          "$ref": "#/$defs/BusinessID"
+        },
+        "idempotency_key": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "original_request_hash": {
+          "$ref": "#/$defs/SHA256"
+        },
+        "budget": {
+          "$ref": "#/$defs/PostAgentBudget"
+        },
+        "calls": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2
+        },
+        "retries": {
+          "const": 0,
+          "type": "integer"
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/VerifierCheck"
+          },
+          "minItems": 0,
+          "maxItems": 2
+        }
+      },
+      "required": [
+        "schema_version",
+        "run_id",
+        "attempt_id",
+        "task_id",
+        "task_hash",
+        "config_hash",
+        "status",
+        "invoice_id",
+        "idempotency_key",
+        "original_request_hash",
+        "budget",
+        "calls",
+        "retries",
+        "checks"
+      ],
+      "additionalProperties": false
+    },
+    "EventModelStarted": {
+      "type": "object",
+      "properties": {
+        "model_digest": {
+          "$ref": "#/$defs/SHA256"
+        },
+        "prompt_hash": {
+          "$ref": "#/$defs/SHA256"
+        }
+      },
+      "required": [
+        "model_digest",
+        "prompt_hash"
+      ],
+      "additionalProperties": false
+    },
+    "EventModelCompleted": {
+      "type": "object",
+      "properties": {
+        "model_digest": {
+          "$ref": "#/$defs/SHA256"
+        },
+        "prompt_hash": {
+          "$ref": "#/$defs/SHA256"
+        },
+        "duration_ms": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 86400000
+        },
+        "prompt_tokens": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "output_tokens": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "counts_unavailable_reason": {
+          "anyOf": [
+            {
+              "enum": [
+                "unsupported",
+                "missing_response"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "model_digest",
+        "prompt_hash",
+        "duration_ms",
+        "prompt_tokens",
+        "output_tokens",
+        "counts_unavailable_reason"
+      ],
+      "additionalProperties": false
+    },
+    "EventModelFailed": {
+      "type": "object",
+      "properties": {
+        "duration_ms": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 86400000
+        },
+        "failure": {
+          "$ref": "#/$defs/Failure"
+        },
+        "prompt_tokens": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "output_tokens": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "counts_unavailable_reason": {
+          "anyOf": [
+            {
+              "enum": [
+                "unsupported",
+                "missing_response"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "duration_ms",
+        "failure",
+        "prompt_tokens",
+        "output_tokens",
+        "counts_unavailable_reason"
+      ],
+      "additionalProperties": false
+    },
+    "EventModelInterrupted": {
+      "type": "object",
+      "properties": {
+        "duration_ms": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 86400000
+        },
+        "reason": {
+          "enum": [
+            "deadline",
+            "cancelled",
+            "process_exit",
+            "artifact_limit"
+          ]
+        },
+        "prompt_tokens": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "output_tokens": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "counts_unavailable_reason": {
+          "anyOf": [
+            {
+              "enum": [
+                "unsupported",
+                "missing_response"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "duration_ms",
+        "reason",
+        "prompt_tokens",
+        "output_tokens",
+        "counts_unavailable_reason"
+      ],
+      "additionalProperties": false
+    },
+    "EventToolStarted": {
+      "type": "object",
+      "properties": {
+        "tool_id": {
+          "$ref": "#/$defs/ToolID"
+        },
+        "arguments": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CreateDraftArgs"
+            },
+            {
+              "$ref": "#/$defs/EmptyArgs"
+            },
+            {
+              "$ref": "#/$defs/GetCustomerArgs"
+            },
+            {
+              "$ref": "#/$defs/GetInvoiceArgs"
+            },
+            {
+              "$ref": "#/$defs/GetProjectArgs"
+            },
+            {
+              "$ref": "#/$defs/GetTimesheetArgs"
+            },
+            {
+              "$ref": "#/$defs/ListInvoicesArgs"
+            },
+            {
+              "$ref": "#/$defs/ListProjectsArgs"
+            },
+            {
+              "$ref": "#/$defs/ListTimesheetsArgs"
+            }
+          ]
+        },
+        "retry_index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        }
+      },
+      "required": [
+        "tool_id",
+        "arguments",
+        "retry_index"
+      ],
+      "additionalProperties": false
+    },
+    "EventToolCompleted": {
+      "type": "object",
+      "properties": {
+        "tool_id": {
+          "$ref": "#/$defs/ToolID"
+        },
+        "duration_ms": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 86400000
+        },
+        "tool_result": {
+          "$ref": "#/$defs/ToolResult"
+        },
+        "invoice_id": {
+          "$ref": "#/$defs/BusinessID"
+        }
+      },
+      "required": [
+        "tool_id",
+        "duration_ms",
+        "tool_result"
+      ],
+      "additionalProperties": false
+    },
+    "EventToolFailed": {
+      "type": "object",
+      "properties": {
+        "tool_id": {
+          "$ref": "#/$defs/ToolID"
+        },
+        "duration_ms": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 86400000
+        },
+        "failure": {
+          "$ref": "#/$defs/Failure"
+        },
+        "tool_result": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ToolResult"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "tool_id",
+        "duration_ms",
+        "failure",
+        "tool_result"
+      ],
+      "additionalProperties": false
+    },
+    "EventToolInterrupted": {
+      "type": "object",
+      "properties": {
+        "tool_id": {
+          "$ref": "#/$defs/ToolID"
+        },
+        "duration_ms": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 86400000
+        },
+        "reason": {
+          "enum": [
+            "deadline",
+            "cancelled",
+            "process_exit",
+            "artifact_limit"
+          ]
+        }
+      },
+      "required": [
+        "tool_id",
+        "duration_ms",
+        "reason"
+      ],
+      "additionalProperties": false
+    },
+    "EventDbStarted": {
+      "type": "object",
+      "properties": {
+        "operation": {
+          "enum": [
+            "read_tool",
+            "create_draft",
+            "replay",
+            "snapshot",
+            "seal",
+            "reset"
+          ]
+        },
+        "transaction_id": {
+          "$ref": "#/$defs/Identifier"
+        }
+      },
+      "required": [
+        "operation",
+        "transaction_id"
+      ],
+      "additionalProperties": false
+    },
+    "EventDbCompleted": {
+      "type": "object",
+      "properties": {
+        "operation": {
+          "enum": [
+            "read_tool",
+            "create_draft",
+            "replay",
+            "snapshot",
+            "seal",
+            "reset"
+          ]
+        },
+        "transaction_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "duration_ms": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 86400000
+        },
+        "rows_affected": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "operation",
+        "transaction_id",
+        "duration_ms",
+        "rows_affected"
+      ],
+      "additionalProperties": false
+    },
+    "EventDbFailed": {
+      "type": "object",
+      "properties": {
+        "operation": {
+          "enum": [
+            "read_tool",
+            "create_draft",
+            "replay",
+            "snapshot",
+            "seal",
+            "reset"
+          ]
+        },
+        "transaction_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "duration_ms": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 86400000
+        },
+        "failure": {
+          "$ref": "#/$defs/Failure"
+        }
+      },
+      "required": [
+        "operation",
+        "transaction_id",
+        "duration_ms",
+        "failure"
+      ],
+      "additionalProperties": false
+    },
+    "EventDbInterrupted": {
+      "type": "object",
+      "properties": {
+        "operation": {
+          "enum": [
+            "read_tool",
+            "create_draft",
+            "replay",
+            "snapshot",
+            "seal",
+            "reset"
+          ]
+        },
+        "transaction_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "duration_ms": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 86400000
+        },
+        "reason": {
+          "enum": [
+            "deadline",
+            "cancelled",
+            "process_exit",
+            "artifact_limit"
+          ]
+        }
+      },
+      "required": [
+        "operation",
+        "transaction_id",
+        "duration_ms",
+        "reason"
+      ],
+      "additionalProperties": false
+    },
+    "EventRetrievalCompleted": {
+      "type": "object",
+      "properties": {
+        "exposed_tool_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ToolID"
+          },
+          "minItems": 0,
+          "maxItems": 10,
+          "uniqueItems": true
+        },
+        "authorized_tool_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ToolID"
+          },
+          "minItems": 0,
+          "maxItems": 10,
+          "uniqueItems": true
+        },
+        "catalog_hash": {
+          "$ref": "#/$defs/SHA256"
+        },
+        "query_hash": {
+          "$ref": "#/$defs/SHA256"
+        },
+        "schema_hash": {
+          "$ref": "#/$defs/SHA256"
+        },
+        "duration_ms": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 86400000
+        }
+      },
+      "required": [
+        "exposed_tool_ids",
+        "authorized_tool_ids",
+        "catalog_hash",
+        "query_hash",
+        "schema_hash",
+        "duration_ms"
+      ],
+      "additionalProperties": false
+    },
+    "EventFenceCompleted": {
+      "type": "object",
+      "properties": {
+        "receipt": {
+          "$ref": "#/$defs/FenceReceipt"
+        }
+      },
+      "required": [
+        "receipt"
+      ],
+      "additionalProperties": false
+    },
+    "EventGradingCompleted": {
+      "type": "object",
+      "properties": {
+        "workflow_kind": {
+          "enum": [
+            "draft_invoice",
+            "read_only"
+          ]
+        },
+        "task_success": {
+          "type": "boolean"
+        },
+        "original_assertions": {
+          "$ref": "#/$defs/Assertions"
+        },
+        "verification_assertions": {
+          "$ref": "#/$defs/Assertions"
+        }
+      },
+      "required": [
+        "workflow_kind",
+        "task_success",
+        "original_assertions",
+        "verification_assertions"
+      ],
+      "additionalProperties": false
+    },
+    "EventProcessExited": {
+      "type": "object",
+      "properties": {
+        "exit": {
+          "$ref": "#/$defs/ProcessExit"
+        }
+      },
+      "required": [
+        "exit"
+      ],
+      "additionalProperties": false
+    },
+    "EventOperationInterrupted": {
+      "type": "object",
+      "properties": {
+        "operation_source": {
+          "enum": [
+            "agent",
+            "mcp",
+            "evaluator"
+          ]
+        },
+        "operation_kind": {
+          "enum": [
+            "model",
+            "tool",
+            "db"
+          ]
+        },
+        "operation_call_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "reason": {
+          "enum": [
+            "deadline",
+            "cancelled",
+            "process_exit",
+            "artifact_limit"
+          ]
+        }
+      },
+      "required": [
+        "operation_source",
+        "operation_kind",
+        "operation_call_id",
+        "reason"
+      ],
+      "additionalProperties": false
+    },
+    "EventRunStarted": {
+      "type": "object",
+      "properties": {
+        "config_hash": {
+          "$ref": "#/$defs/SHA256"
+        },
+        "catalog_hash": {
+          "$ref": "#/$defs/SHA256"
+        }
+      },
+      "required": [
+        "config_hash",
+        "catalog_hash"
+      ],
+      "additionalProperties": false
+    },
+    "EventRunFinished": {
+      "type": "object",
+      "properties": {
+        "outcome": {
+          "enum": [
+            "passed",
+            "failed",
+            "blocked"
+          ]
+        },
+        "artifact_complete": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "outcome",
+        "artifact_complete"
+      ],
+      "additionalProperties": false
+    },
+    "EventAgentFinished": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "$ref": "#/$defs/AgentResult"
+        }
+      },
+      "required": [
+        "result"
+      ],
+      "additionalProperties": false
+    },
+    "EventCleanupCompleted": {
+      "type": "object",
+      "properties": {
+        "seed_hash": {
+          "$ref": "#/$defs/SHA256"
+        },
+        "pass": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "seed_hash",
+        "pass"
+      ],
+      "additionalProperties": false
+    },
+    "EventFailure": {
+      "type": "object",
+      "properties": {
+        "failure": {
+          "$ref": "#/$defs/Failure"
+        },
+        "proposed_tool_name": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "name_truncated": {
+          "type": "boolean"
+        },
+        "rejected_argument_keys": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "maxItems": 32,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "failure"
+      ],
+      "additionalProperties": false
+    },
+    "EventStream": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Event"
+      },
+      "minItems": 1,
+      "maxItems": 10000
+    },
+    "ControlChain": {
+      "type": "object",
+      "properties": {
+        "requests": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ControlRequest"
+          },
+          "minItems": 1,
+          "maxItems": 3
+        },
+        "results": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ControlResult"
+          },
+          "minItems": 1,
+          "maxItems": 3
+        },
+        "exits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ProcessExit"
+          },
+          "minItems": 1,
+          "maxItems": 5
+        },
+        "verifier": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/VerifierResult"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "verification_request": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/VerificationRequest"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "requests",
+        "results",
+        "exits",
+        "verifier",
+        "verification_request"
       ],
       "additionalProperties": false
     }

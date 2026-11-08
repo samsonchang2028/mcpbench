@@ -1,6 +1,5 @@
 {
   "schema_version": 1,
-  "notice": "Synthetic shape/semantic contract cases; no runtime evidence or usable credentials.",
   "cases": [
     {
       "name": "catalog-valid",
@@ -1008,7 +1007,8 @@
         "agent_token_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
         "verifier_token_sha256": null,
         "verifier_scope": null,
-        "lock_marker": 0
+        "lock_marker": 0,
+        "workflow_kind": "draft_invoice"
       }
     },
     {
@@ -1034,7 +1034,8 @@
         "verifier_token_sha256": null,
         "verifier_scope": null,
         "lock_marker": 0,
-        "unexpected_field": "rejected"
+        "unexpected_field": "rejected",
+        "workflow_kind": "draft_invoice"
       }
     },
     {
@@ -1110,7 +1111,18 @@
         "checks": [
           "same_payload_replay",
           "changed_payload_conflict"
-        ]
+        ],
+        "task_id": "draft-invoice-001",
+        "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+        "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+        "budget": {
+          "anchor_id": "post-example-001",
+          "started_at": "2026-11-07T23:00:00Z",
+          "deadline_at": "2026-11-07T23:00:30Z",
+          "elapsed_ms": 100,
+          "remaining_ms": 29900,
+          "operation_timeout_ms": 5000
+        }
       }
     },
     {
@@ -1150,7 +1162,18 @@
           "same_payload_replay",
           "changed_payload_conflict"
         ],
-        "unexpected_field": "rejected"
+        "unexpected_field": "rejected",
+        "task_id": "draft-invoice-001",
+        "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+        "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+        "budget": {
+          "anchor_id": "post-example-001",
+          "started_at": "2026-11-07T23:00:00Z",
+          "deadline_at": "2026-11-07T23:00:30Z",
+          "elapsed_ms": 100,
+          "remaining_ms": 29900,
+          "operation_timeout_ms": 5000
+        }
       }
     },
     {
@@ -1173,7 +1196,36 @@
         "data": {
           "tool_id": "billing_create_draft_invoice",
           "duration_ms": 18,
-          "invoice_id": "INV-EXAMPLE-001"
+          "invoice_id": "INV-EXAMPLE-001",
+          "tool_result": {
+            "tool_id": "billing_create_draft_invoice",
+            "is_error": false,
+            "result": {
+              "invoice": {
+                "invoice_id": "INV-EXAMPLE-001",
+                "customer_id": "CUST-001",
+                "invoice_date": "2026-11-07",
+                "due_date": "2026-11-21",
+                "currency": "USD",
+                "status": "draft",
+                "subtotal_cents": 25000,
+                "tax_cents": 0,
+                "total_cents": 25000,
+                "created_at": "2026-11-07T23:00:00Z"
+              },
+              "lines": [
+                {
+                  "line_id": "LINE-EXAMPLE-001",
+                  "invoice_id": "INV-EXAMPLE-001",
+                  "item_id": "SVC-CONSULT",
+                  "quantity": 2,
+                  "unit_price_cents": 12500,
+                  "line_total_cents": 25000,
+                  "line_number": 1
+                }
+              ]
+            }
+          }
         }
       }
     },
@@ -1197,7 +1249,36 @@
         "data": {
           "tool_id": "billing_create_draft_invoice",
           "duration_ms": 18,
-          "invoice_id": "INV-EXAMPLE-001"
+          "invoice_id": "INV-EXAMPLE-001",
+          "tool_result": {
+            "tool_id": "billing_create_draft_invoice",
+            "is_error": false,
+            "result": {
+              "invoice": {
+                "invoice_id": "INV-EXAMPLE-001",
+                "customer_id": "CUST-001",
+                "invoice_date": "2026-11-07",
+                "due_date": "2026-11-21",
+                "currency": "USD",
+                "status": "draft",
+                "subtotal_cents": 25000,
+                "tax_cents": 0,
+                "total_cents": 25000,
+                "created_at": "2026-11-07T23:00:00Z"
+              },
+              "lines": [
+                {
+                  "line_id": "LINE-EXAMPLE-001",
+                  "invoice_id": "INV-EXAMPLE-001",
+                  "item_id": "SVC-CONSULT",
+                  "quantity": 2,
+                  "unit_price_cents": 12500,
+                  "line_total_cents": 25000,
+                  "line_number": 1
+                }
+              ]
+            }
+          }
         },
         "unexpected_field": "rejected"
       }
@@ -1232,14 +1313,29 @@
         "failures": [],
         "original_assertions": [
           {
-            "name": "invoice-total",
+            "name": "db-oracle",
+            "pass": true,
+            "reason": "Synthetic contract example only."
+          },
+          {
+            "name": "answer",
             "pass": true,
             "reason": "Synthetic contract example only."
           }
         ],
         "verification_assertions": [
           {
-            "name": "same-key-replay",
+            "name": "same-payload-replay",
+            "pass": true,
+            "reason": "Synthetic contract example only."
+          },
+          {
+            "name": "changed-payload-conflict",
+            "pass": true,
+            "reason": "Synthetic contract example only."
+          },
+          {
+            "name": "unchanged-state",
             "pass": true,
             "reason": "Synthetic contract example only."
           }
@@ -1262,7 +1358,10 @@
           "energy_joules": null,
           "cost_basis": null,
           "energy_basis": null
-        }
+        },
+        "workflow_kind": "draft_invoice",
+        "setup_pass": true,
+        "final_state_unchanged": true
       }
     },
     {
@@ -1295,14 +1394,29 @@
         "failures": [],
         "original_assertions": [
           {
-            "name": "invoice-total",
+            "name": "db-oracle",
+            "pass": true,
+            "reason": "Synthetic contract example only."
+          },
+          {
+            "name": "answer",
             "pass": true,
             "reason": "Synthetic contract example only."
           }
         ],
         "verification_assertions": [
           {
-            "name": "same-key-replay",
+            "name": "same-payload-replay",
+            "pass": true,
+            "reason": "Synthetic contract example only."
+          },
+          {
+            "name": "changed-payload-conflict",
+            "pass": true,
+            "reason": "Synthetic contract example only."
+          },
+          {
+            "name": "unchanged-state",
             "pass": true,
             "reason": "Synthetic contract example only."
           }
@@ -1326,7 +1440,10 @@
           "cost_basis": null,
           "energy_basis": null
         },
-        "unexpected_field": "rejected"
+        "unexpected_field": "rejected",
+        "workflow_kind": "draft_invoice",
+        "setup_pass": true,
+        "final_state_unchanged": true
       }
     },
     {
@@ -2478,10 +2595,11 @@
         "replay_pass": null,
         "cleanup_pass": null,
         "null_reasons": {
-          "db_oracle_pass": "Unknown write settlement.",
-          "verifier_settlement_pass": "Original task did not pass.",
-          "replay_pass": "Original task did not pass.",
-          "cleanup_pass": "Quarantined."
+          "db_oracle_pass": "settlement_unknown",
+          "verifier_settlement_pass": "original_failed",
+          "replay_pass": "original_failed",
+          "cleanup_pass": "settlement_unknown",
+          "final_state_unchanged": "settlement_unknown"
         },
         "artifact_complete": true,
         "comparison_valid": false,
@@ -2494,21 +2612,2189 @@
             "code": "settlement_unknown",
             "call_id": null,
             "reason": "Synthetic example only.",
-            "attribution": "observed"
+            "attribution": "observed",
+            "disposition": "terminal"
           }
         ],
         "original_assertions": [
           {
-            "name": "invoice-total",
+            "name": "db-oracle",
+            "pass": null,
+            "reason": "Synthetic contract example only."
+          },
+          {
+            "name": "answer",
+            "pass": false,
+            "reason": "Synthetic contract example only."
+          }
+        ],
+        "verification_assertions": [],
+        "metrics": {
+          "task_latency_ms": 1250,
+          "lifecycle_latency_ms": 1500,
+          "post_agent_ms": 200,
+          "cpu_ms": null,
+          "prompt_tokens": null,
+          "output_tokens": null,
+          "known_prompt_tokens": 0,
+          "known_output_tokens": 0,
+          "missing_token_components": 2,
+          "retrieval_precision": 1,
+          "required_tool_recall": 1,
+          "unauthorized_executions": 0,
+          "verifier_calls": 0,
+          "cost_usd": null,
+          "energy_joules": null,
+          "cost_basis": null,
+          "energy_basis": null
+        },
+        "workflow_kind": "draft_invoice",
+        "setup_pass": true,
+        "final_state_unchanged": null
+      }
+    },
+    {
+      "name": "control-request-valid",
+      "contract": "ControlRequest",
+      "valid": true,
+      "value": {
+        "schema_version": 1,
+        "run_id": "run-example-001",
+        "attempt_id": "attempt-example-001",
+        "task_id": "draft-invoice-001",
+        "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+        "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+        "workflow_kind": "draft_invoice",
+        "phase": "settle-grade",
+        "budget": {
+          "anchor_id": "post-example-001",
+          "started_at": "2026-11-07T23:00:00Z",
+          "deadline_at": "2026-11-07T23:00:30Z",
+          "elapsed_ms": 20,
+          "remaining_ms": 29980,
+          "operation_timeout_ms": 5000
+        },
+        "inputs": {
+          "prior_phase_result": {
+            "path": "control/prepare-result.json",
+            "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+            "bytes": 100
+          },
+          "agent_exit": {
+            "path": "control/agent-exit.json",
+            "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+            "bytes": 100
+          },
+          "agent_result": {
+            "path": "control/agent-result.json",
+            "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+            "bytes": 100
+          }
+        },
+        "message_id": "settle-grade-request-001",
+        "prior_result_id": "prepare-result-001"
+      }
+    },
+    {
+      "name": "control-request-invalid",
+      "contract": "ControlRequest",
+      "valid": false,
+      "value": {
+        "schema_version": 1,
+        "run_id": "run-example-001",
+        "attempt_id": "attempt-example-001",
+        "task_id": "draft-invoice-001",
+        "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+        "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+        "workflow_kind": "draft_invoice",
+        "phase": "settle-grade",
+        "budget": {
+          "anchor_id": "not valid",
+          "started_at": "2026-11-07T23:00:00Z",
+          "deadline_at": "2026-11-07T23:00:30Z",
+          "elapsed_ms": 20,
+          "remaining_ms": 29980,
+          "operation_timeout_ms": 5000
+        },
+        "inputs": {
+          "prior_phase_result": {
+            "path": "control/prepare-result.json",
+            "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+            "bytes": 100
+          },
+          "agent_exit": {
+            "path": "control/agent-exit.json",
+            "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+            "bytes": 100
+          },
+          "agent_result": {
+            "path": "control/agent-result.json",
+            "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+            "bytes": 100
+          }
+        },
+        "message_id": "settle-grade-request-001",
+        "prior_result_id": "prepare-result-001"
+      }
+    },
+    {
+      "name": "control-result-valid",
+      "contract": "ControlResult",
+      "valid": true,
+      "value": {
+        "schema_version": 1,
+        "run_id": "run-example-001",
+        "attempt_id": "attempt-example-001",
+        "task_id": "draft-invoice-001",
+        "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+        "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+        "workflow_kind": "draft_invoice",
+        "phase": "settle-grade",
+        "budget": {
+          "anchor_id": "post-example-001",
+          "started_at": "2026-11-07T23:00:00Z",
+          "deadline_at": "2026-11-07T23:00:30Z",
+          "elapsed_ms": 30,
+          "remaining_ms": 29970,
+          "operation_timeout_ms": 5000
+        },
+        "status": "completed",
+        "action": "verify",
+        "original_pass": true,
+        "fence_receipt": {
+          "schema_version": 1,
+          "run_id": "run-example-001",
+          "attempt_id": "attempt-example-001",
+          "fence": "agent",
+          "status": "settled",
+          "generation": 1,
+          "phase": "agent_sealed",
+          "commit_acknowledged": true,
+          "committed_at": "2026-11-07T23:00:00Z",
+          "remaining_inflight": 0,
+          "elapsed_ms": 12
+        },
+        "outputs": {
+          "agent_snapshot": {
+            "path": "control/agent-snapshot.json",
+            "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+            "bytes": 100
+          },
+          "verification_request": {
+            "path": "control/verification-request.json",
+            "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+            "bytes": 100
+          }
+        },
+        "message_id": "settle-grade-result-001",
+        "request_id": "settle-grade-request-001"
+      }
+    },
+    {
+      "name": "control-result-invalid",
+      "contract": "ControlResult",
+      "valid": false,
+      "value": {
+        "schema_version": 1,
+        "run_id": "run-example-001",
+        "attempt_id": "attempt-example-001",
+        "task_id": "draft-invoice-001",
+        "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+        "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+        "workflow_kind": "draft_invoice",
+        "phase": "settle-grade",
+        "budget": {
+          "anchor_id": "post-example-001",
+          "started_at": "2026-11-07T23:00:00Z",
+          "deadline_at": "2026-11-07T23:00:30Z",
+          "elapsed_ms": 30,
+          "remaining_ms": 29970,
+          "operation_timeout_ms": 5000
+        },
+        "status": "completed",
+        "action": "verify",
+        "original_pass": false,
+        "fence_receipt": {
+          "schema_version": 1,
+          "run_id": "run-example-001",
+          "attempt_id": "attempt-example-001",
+          "fence": "agent",
+          "status": "settled",
+          "generation": 1,
+          "phase": "agent_sealed",
+          "commit_acknowledged": true,
+          "committed_at": "2026-11-07T23:00:00Z",
+          "remaining_inflight": 0,
+          "elapsed_ms": 12
+        },
+        "outputs": {
+          "agent_snapshot": {
+            "path": "control/agent-snapshot.json",
+            "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+            "bytes": 100
+          },
+          "verification_request": {
+            "path": "control/verification-request.json",
+            "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+            "bytes": 100
+          }
+        },
+        "message_id": "settle-grade-result-001",
+        "request_id": "settle-grade-request-001"
+      }
+    },
+    {
+      "name": "host-exit-valid",
+      "contract": "ProcessExit",
+      "valid": true,
+      "value": {
+        "schema_version": 1,
+        "run_id": "run-example-001",
+        "attempt_id": "attempt-example-001",
+        "task_id": "draft-invoice-001",
+        "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+        "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+        "producer": "launcher",
+        "child": "verifier",
+        "phase": "verify",
+        "termination": "exited",
+        "exit_code": 0,
+        "signal": null,
+        "result_delivery": "complete",
+        "result_ref": {
+          "path": "control/verifier-result.json",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "bytes": 100
+        },
+        "duration_ms": 100,
+        "budget": {
+          "anchor_id": "post-example-001",
+          "started_at": "2026-11-07T23:00:00Z",
+          "deadline_at": "2026-11-07T23:00:30Z",
+          "elapsed_ms": 180,
+          "remaining_ms": 29820,
+          "operation_timeout_ms": 5000
+        },
+        "result_message_id": null,
+        "reaped": true
+      }
+    },
+    {
+      "name": "host-exit-invalid",
+      "contract": "ProcessExit",
+      "valid": false,
+      "value": {
+        "schema_version": 1,
+        "run_id": "run-example-001",
+        "attempt_id": "attempt-example-001",
+        "task_id": "draft-invoice-001",
+        "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+        "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+        "producer": "launcher",
+        "child": "verifier",
+        "phase": "verify",
+        "termination": "timed_out",
+        "exit_code": 0,
+        "signal": null,
+        "result_delivery": "complete",
+        "result_ref": {
+          "path": "control/verifier-result.json",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "bytes": 100
+        },
+        "duration_ms": 100,
+        "budget": {
+          "anchor_id": "post-example-001",
+          "started_at": "2026-11-07T23:00:00Z",
+          "deadline_at": "2026-11-07T23:00:30Z",
+          "elapsed_ms": 180,
+          "remaining_ms": 29820,
+          "operation_timeout_ms": 5000
+        },
+        "result_message_id": null,
+        "reaped": false
+      }
+    },
+    {
+      "name": "verifier-result-valid",
+      "contract": "VerifierResult",
+      "valid": true,
+      "value": {
+        "schema_version": 1,
+        "run_id": "run-example-001",
+        "attempt_id": "attempt-example-001",
+        "task_id": "draft-invoice-001",
+        "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+        "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+        "status": "completed",
+        "invoice_id": "INV-EXAMPLE-001",
+        "idempotency_key": "idem-example-001",
+        "original_request_hash": "4afcbfba5ba2a4d075601bc2080ec33d122cc23369b4812c97dd42ad2a8ea8b6",
+        "budget": {
+          "anchor_id": "post-example-001",
+          "started_at": "2026-11-07T23:00:00Z",
+          "deadline_at": "2026-11-07T23:00:30Z",
+          "elapsed_ms": 170,
+          "remaining_ms": 29830,
+          "operation_timeout_ms": 5000
+        },
+        "calls": 2,
+        "retries": 0,
+        "checks": [
+          {
+            "check": "same_payload_replay",
+            "pass": true,
+            "tool_result": {
+              "tool_id": "billing_create_draft_invoice",
+              "is_error": false,
+              "result": {
+                "invoice": {
+                  "invoice_id": "INV-EXAMPLE-001",
+                  "customer_id": "CUST-001",
+                  "invoice_date": "2026-11-07",
+                  "due_date": "2026-11-21",
+                  "currency": "USD",
+                  "status": "draft",
+                  "subtotal_cents": 25000,
+                  "tax_cents": 0,
+                  "total_cents": 25000,
+                  "created_at": "2026-11-07T23:00:00Z"
+                },
+                "lines": [
+                  {
+                    "line_id": "LINE-EXAMPLE-001",
+                    "invoice_id": "INV-EXAMPLE-001",
+                    "item_id": "SVC-CONSULT",
+                    "quantity": 2,
+                    "unit_price_cents": 12500,
+                    "line_total_cents": 25000,
+                    "line_number": 1
+                  }
+                ]
+              }
+            },
+            "failure": null
+          },
+          {
+            "check": "changed_payload_conflict",
+            "pass": true,
+            "tool_result": {
+              "tool_id": "billing_create_draft_invoice",
+              "is_error": true,
+              "error": {
+                "code": "idempotency_conflict",
+                "message": "Conflicting payload.",
+                "retryable": false
+              }
+            },
+            "failure": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "verifier-result-invalid",
+      "contract": "VerifierResult",
+      "valid": false,
+      "value": {
+        "schema_version": 1,
+        "run_id": "run-example-001",
+        "attempt_id": "attempt-example-001",
+        "task_id": "draft-invoice-001",
+        "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+        "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+        "status": "completed",
+        "invoice_id": "INV-EXAMPLE-001",
+        "idempotency_key": "idem-example-001",
+        "original_request_hash": "4afcbfba5ba2a4d075601bc2080ec33d122cc23369b4812c97dd42ad2a8ea8b6",
+        "budget": {
+          "anchor_id": "post-example-001",
+          "started_at": "2026-11-07T23:00:00Z",
+          "deadline_at": "2026-11-07T23:00:30Z",
+          "elapsed_ms": 170,
+          "remaining_ms": 29830,
+          "operation_timeout_ms": 5000
+        },
+        "calls": 0,
+        "retries": 0,
+        "checks": []
+      }
+    },
+    {
+      "name": "control-chain-valid",
+      "contract": "ControlChain",
+      "valid": true,
+      "value": {
+        "requests": [
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "draft-invoice-001",
+            "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "workflow_kind": "draft_invoice",
+            "phase": "prepare",
+            "budget": null,
+            "inputs": {
+              "task": {
+                "path": "control/task.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              },
+              "fixture": {
+                "path": "control/fixture.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              },
+              "config": {
+                "path": "control/config.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              }
+            },
+            "message_id": "prepare-request-001",
+            "prior_result_id": null
+          },
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "draft-invoice-001",
+            "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "workflow_kind": "draft_invoice",
+            "phase": "settle-grade",
+            "budget": {
+              "anchor_id": "post-example-001",
+              "started_at": "2026-11-07T23:00:00Z",
+              "deadline_at": "2026-11-07T23:00:30Z",
+              "elapsed_ms": 20,
+              "remaining_ms": 29980,
+              "operation_timeout_ms": 5000
+            },
+            "inputs": {
+              "prior_phase_result": {
+                "path": "control/prepare-result.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              },
+              "agent_exit": {
+                "path": "control/agent-exit.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              },
+              "agent_result": {
+                "path": "control/agent-result.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              }
+            },
+            "message_id": "settle-grade-request-001",
+            "prior_result_id": "prepare-result-001"
+          },
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "draft-invoice-001",
+            "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "workflow_kind": "draft_invoice",
+            "phase": "finalize",
+            "budget": {
+              "anchor_id": "post-example-001",
+              "started_at": "2026-11-07T23:00:00Z",
+              "deadline_at": "2026-11-07T23:00:30Z",
+              "elapsed_ms": 200,
+              "remaining_ms": 29800,
+              "operation_timeout_ms": 5000
+            },
+            "inputs": {
+              "prior_phase_result": {
+                "path": "control/grade-result.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              },
+              "verifier_exit": {
+                "path": "control/verifier-exit.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              },
+              "verifier_result": {
+                "path": "control/verifier-result.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              }
+            },
+            "message_id": "finalize-request-001",
+            "prior_result_id": "settle-grade-result-001"
+          }
+        ],
+        "results": [
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "draft-invoice-001",
+            "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "workflow_kind": "draft_invoice",
+            "phase": "prepare",
+            "budget": null,
+            "status": "completed",
+            "action": "execute_agent",
+            "original_pass": null,
+            "fence_receipt": null,
+            "outputs": {
+              "agent_request": {
+                "path": "control/agent-request.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              }
+            },
+            "message_id": "prepare-result-001",
+            "request_id": "prepare-request-001"
+          },
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "draft-invoice-001",
+            "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "workflow_kind": "draft_invoice",
+            "phase": "settle-grade",
+            "budget": {
+              "anchor_id": "post-example-001",
+              "started_at": "2026-11-07T23:00:00Z",
+              "deadline_at": "2026-11-07T23:00:30Z",
+              "elapsed_ms": 30,
+              "remaining_ms": 29970,
+              "operation_timeout_ms": 5000
+            },
+            "status": "completed",
+            "action": "verify",
+            "original_pass": true,
+            "fence_receipt": {
+              "schema_version": 1,
+              "run_id": "run-example-001",
+              "attempt_id": "attempt-example-001",
+              "fence": "agent",
+              "status": "settled",
+              "generation": 1,
+              "phase": "agent_sealed",
+              "commit_acknowledged": true,
+              "committed_at": "2026-11-07T23:00:00Z",
+              "remaining_inflight": 0,
+              "elapsed_ms": 12
+            },
+            "outputs": {
+              "agent_snapshot": {
+                "path": "control/agent-snapshot.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              },
+              "verification_request": {
+                "path": "control/verification-request.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              }
+            },
+            "message_id": "settle-grade-result-001",
+            "request_id": "settle-grade-request-001"
+          },
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "draft-invoice-001",
+            "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "workflow_kind": "draft_invoice",
+            "phase": "finalize",
+            "budget": {
+              "anchor_id": "post-example-001",
+              "started_at": "2026-11-07T23:00:00Z",
+              "deadline_at": "2026-11-07T23:00:30Z",
+              "elapsed_ms": 210,
+              "remaining_ms": 29790,
+              "operation_timeout_ms": 5000
+            },
+            "status": "completed",
+            "action": "complete",
+            "original_pass": true,
+            "fence_receipt": {
+              "schema_version": 1,
+              "run_id": "run-example-001",
+              "attempt_id": "attempt-example-001",
+              "fence": "verifier",
+              "status": "settled",
+              "generation": 2,
+              "phase": "final_sealed",
+              "commit_acknowledged": true,
+              "committed_at": "2026-11-07T23:00:00Z",
+              "remaining_inflight": 0,
+              "elapsed_ms": 12
+            },
+            "outputs": {
+              "evaluation": {
+                "path": "control/evaluation.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              },
+              "final_snapshot": {
+                "path": "control/final-snapshot.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              }
+            },
+            "message_id": "finalize-result-001",
+            "request_id": "finalize-request-001"
+          }
+        ],
+        "exits": [
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "draft-invoice-001",
+            "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "producer": "launcher",
+            "child": "agent",
+            "phase": "run",
+            "termination": "exited",
+            "exit_code": 0,
+            "signal": null,
+            "result_delivery": "complete",
+            "result_ref": {
+              "path": "control/agent-result.json",
+              "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+              "bytes": 100
+            },
+            "duration_ms": 100,
+            "budget": null,
+            "result_message_id": null,
+            "reaped": true
+          },
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "draft-invoice-001",
+            "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "producer": "launcher",
+            "child": "verifier",
+            "phase": "verify",
+            "termination": "exited",
+            "exit_code": 0,
+            "signal": null,
+            "result_delivery": "complete",
+            "result_ref": {
+              "path": "control/verifier-result.json",
+              "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+              "bytes": 100
+            },
+            "duration_ms": 100,
+            "budget": {
+              "anchor_id": "post-example-001",
+              "started_at": "2026-11-07T23:00:00Z",
+              "deadline_at": "2026-11-07T23:00:30Z",
+              "elapsed_ms": 180,
+              "remaining_ms": 29820,
+              "operation_timeout_ms": 5000
+            },
+            "result_message_id": null,
+            "reaped": true
+          },
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "draft-invoice-001",
+            "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "producer": "launcher",
+            "child": "evaluator",
+            "phase": "prepare",
+            "termination": "exited",
+            "exit_code": 0,
+            "signal": null,
+            "result_delivery": "complete",
+            "result_ref": {
+              "path": "control/prepare-result.json",
+              "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+              "bytes": 100
+            },
+            "duration_ms": 10,
+            "budget": null,
+            "result_message_id": "prepare-result-001",
+            "reaped": true
+          },
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "draft-invoice-001",
+            "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "producer": "launcher",
+            "child": "evaluator",
+            "phase": "settle-grade",
+            "termination": "exited",
+            "exit_code": 0,
+            "signal": null,
+            "result_delivery": "complete",
+            "result_ref": {
+              "path": "control/settle-grade-result.json",
+              "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+              "bytes": 100
+            },
+            "duration_ms": 10,
+            "budget": {
+              "anchor_id": "post-example-001",
+              "started_at": "2026-11-07T23:00:00Z",
+              "deadline_at": "2026-11-07T23:00:30Z",
+              "elapsed_ms": 30,
+              "remaining_ms": 29970,
+              "operation_timeout_ms": 5000
+            },
+            "result_message_id": "settle-grade-result-001",
+            "reaped": true
+          },
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "draft-invoice-001",
+            "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "producer": "launcher",
+            "child": "evaluator",
+            "phase": "finalize",
+            "termination": "exited",
+            "exit_code": 0,
+            "signal": null,
+            "result_delivery": "complete",
+            "result_ref": {
+              "path": "control/finalize-result.json",
+              "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+              "bytes": 100
+            },
+            "duration_ms": 10,
+            "budget": {
+              "anchor_id": "post-example-001",
+              "started_at": "2026-11-07T23:00:00Z",
+              "deadline_at": "2026-11-07T23:00:30Z",
+              "elapsed_ms": 210,
+              "remaining_ms": 29790,
+              "operation_timeout_ms": 5000
+            },
+            "result_message_id": "finalize-result-001",
+            "reaped": true
+          }
+        ],
+        "verifier": {
+          "schema_version": 1,
+          "run_id": "run-example-001",
+          "attempt_id": "attempt-example-001",
+          "task_id": "draft-invoice-001",
+          "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+          "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+          "status": "completed",
+          "invoice_id": "INV-EXAMPLE-001",
+          "idempotency_key": "idem-example-001",
+          "original_request_hash": "4afcbfba5ba2a4d075601bc2080ec33d122cc23369b4812c97dd42ad2a8ea8b6",
+          "budget": {
+            "anchor_id": "post-example-001",
+            "started_at": "2026-11-07T23:00:00Z",
+            "deadline_at": "2026-11-07T23:00:30Z",
+            "elapsed_ms": 170,
+            "remaining_ms": 29830,
+            "operation_timeout_ms": 5000
+          },
+          "calls": 2,
+          "retries": 0,
+          "checks": [
+            {
+              "check": "same_payload_replay",
+              "pass": true,
+              "tool_result": {
+                "tool_id": "billing_create_draft_invoice",
+                "is_error": false,
+                "result": {
+                  "invoice": {
+                    "invoice_id": "INV-EXAMPLE-001",
+                    "customer_id": "CUST-001",
+                    "invoice_date": "2026-11-07",
+                    "due_date": "2026-11-21",
+                    "currency": "USD",
+                    "status": "draft",
+                    "subtotal_cents": 25000,
+                    "tax_cents": 0,
+                    "total_cents": 25000,
+                    "created_at": "2026-11-07T23:00:00Z"
+                  },
+                  "lines": [
+                    {
+                      "line_id": "LINE-EXAMPLE-001",
+                      "invoice_id": "INV-EXAMPLE-001",
+                      "item_id": "SVC-CONSULT",
+                      "quantity": 2,
+                      "unit_price_cents": 12500,
+                      "line_total_cents": 25000,
+                      "line_number": 1
+                    }
+                  ]
+                }
+              },
+              "failure": null
+            },
+            {
+              "check": "changed_payload_conflict",
+              "pass": true,
+              "tool_result": {
+                "tool_id": "billing_create_draft_invoice",
+                "is_error": true,
+                "error": {
+                  "code": "idempotency_conflict",
+                  "message": "Conflicting payload.",
+                  "retryable": false
+                }
+              },
+              "failure": null
+            }
+          ]
+        },
+        "verification_request": {
+          "schema_version": 1,
+          "run_id": "run-example-001",
+          "attempt_id": "attempt-example-001",
+          "invoice_id": "INV-EXAMPLE-001",
+          "idempotency_key": "idem-example-001",
+          "original_arguments": {
+            "customer_id": "CUST-001",
+            "invoice_date": "2026-11-07",
+            "due_date": "2026-11-21",
+            "lines": [
+              {
+                "item_id": "SVC-CONSULT",
+                "quantity": 2
+              }
+            ]
+          },
+          "original_request_hash": "4afcbfba5ba2a4d075601bc2080ec33d122cc23369b4812c97dd42ad2a8ea8b6",
+          "conflict_arguments": {
+            "customer_id": "CUST-001",
+            "invoice_date": "2026-11-07",
+            "due_date": "2026-11-21",
+            "lines": [
+              {
+                "item_id": "SVC-CONSULT",
+                "quantity": 3
+              }
+            ]
+          },
+          "checks": [
+            "same_payload_replay",
+            "changed_payload_conflict"
+          ],
+          "task_id": "draft-invoice-001",
+          "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+          "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+          "budget": {
+            "anchor_id": "post-example-001",
+            "started_at": "2026-11-07T23:00:00Z",
+            "deadline_at": "2026-11-07T23:00:30Z",
+            "elapsed_ms": 100,
+            "remaining_ms": 29900,
+            "operation_timeout_ms": 5000
+          }
+        }
+      }
+    },
+    {
+      "name": "control-chain-invalid",
+      "contract": "ControlChain",
+      "valid": false,
+      "value": {
+        "requests": [
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "draft-invoice-001",
+            "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "workflow_kind": "draft_invoice",
+            "phase": "prepare",
+            "budget": null,
+            "inputs": {
+              "task": {
+                "path": "control/task.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              },
+              "fixture": {
+                "path": "control/fixture.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              },
+              "config": {
+                "path": "control/config.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              }
+            },
+            "message_id": "prepare-request-001",
+            "prior_result_id": null
+          },
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "draft-invoice-001",
+            "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "workflow_kind": "draft_invoice",
+            "phase": "settle-grade",
+            "budget": {
+              "anchor_id": "post-example-001",
+              "started_at": "2026-11-07T23:00:00Z",
+              "deadline_at": "2026-11-07T23:00:30Z",
+              "elapsed_ms": 20,
+              "remaining_ms": 29980,
+              "operation_timeout_ms": 5000
+            },
+            "inputs": {
+              "prior_phase_result": {
+                "path": "control/prepare-result.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              },
+              "agent_exit": {
+                "path": "control/agent-exit.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              },
+              "agent_result": {
+                "path": "control/agent-result.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              }
+            },
+            "message_id": "settle-grade-request-001",
+            "prior_result_id": "prepare-result-001"
+          },
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "draft-invoice-001",
+            "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "workflow_kind": "draft_invoice",
+            "phase": "finalize",
+            "budget": {
+              "anchor_id": "reset-anchor",
+              "started_at": "2026-11-07T23:00:00Z",
+              "deadline_at": "2026-11-07T23:00:30Z",
+              "elapsed_ms": 200,
+              "remaining_ms": 29800,
+              "operation_timeout_ms": 5000
+            },
+            "inputs": {
+              "prior_phase_result": {
+                "path": "control/grade-result.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              },
+              "verifier_exit": {
+                "path": "control/verifier-exit.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              },
+              "verifier_result": {
+                "path": "control/verifier-result.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              }
+            },
+            "message_id": "finalize-request-001",
+            "prior_result_id": "settle-grade-result-001"
+          }
+        ],
+        "results": [
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "draft-invoice-001",
+            "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "workflow_kind": "draft_invoice",
+            "phase": "prepare",
+            "budget": null,
+            "status": "completed",
+            "action": "execute_agent",
+            "original_pass": null,
+            "fence_receipt": null,
+            "outputs": {
+              "agent_request": {
+                "path": "control/agent-request.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              }
+            },
+            "message_id": "prepare-result-001",
+            "request_id": "prepare-request-001"
+          },
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "draft-invoice-001",
+            "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "workflow_kind": "draft_invoice",
+            "phase": "settle-grade",
+            "budget": {
+              "anchor_id": "post-example-001",
+              "started_at": "2026-11-07T23:00:00Z",
+              "deadline_at": "2026-11-07T23:00:30Z",
+              "elapsed_ms": 30,
+              "remaining_ms": 29970,
+              "operation_timeout_ms": 5000
+            },
+            "status": "completed",
+            "action": "verify",
+            "original_pass": true,
+            "fence_receipt": {
+              "schema_version": 1,
+              "run_id": "run-example-001",
+              "attempt_id": "attempt-example-001",
+              "fence": "agent",
+              "status": "settled",
+              "generation": 1,
+              "phase": "agent_sealed",
+              "commit_acknowledged": true,
+              "committed_at": "2026-11-07T23:00:00Z",
+              "remaining_inflight": 0,
+              "elapsed_ms": 12
+            },
+            "outputs": {
+              "agent_snapshot": {
+                "path": "control/agent-snapshot.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              },
+              "verification_request": {
+                "path": "control/verification-request.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              }
+            },
+            "message_id": "settle-grade-result-001",
+            "request_id": "settle-grade-request-001"
+          },
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "draft-invoice-001",
+            "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "workflow_kind": "draft_invoice",
+            "phase": "finalize",
+            "budget": {
+              "anchor_id": "post-example-001",
+              "started_at": "2026-11-07T23:00:00Z",
+              "deadline_at": "2026-11-07T23:00:30Z",
+              "elapsed_ms": 210,
+              "remaining_ms": 29790,
+              "operation_timeout_ms": 5000
+            },
+            "status": "completed",
+            "action": "complete",
+            "original_pass": true,
+            "fence_receipt": {
+              "schema_version": 1,
+              "run_id": "run-example-001",
+              "attempt_id": "attempt-example-001",
+              "fence": "verifier",
+              "status": "settled",
+              "generation": 2,
+              "phase": "final_sealed",
+              "commit_acknowledged": true,
+              "committed_at": "2026-11-07T23:00:00Z",
+              "remaining_inflight": 0,
+              "elapsed_ms": 12
+            },
+            "outputs": {
+              "evaluation": {
+                "path": "control/evaluation.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              },
+              "final_snapshot": {
+                "path": "control/final-snapshot.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              }
+            },
+            "message_id": "finalize-result-001",
+            "request_id": "finalize-request-001"
+          }
+        ],
+        "exits": [
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "draft-invoice-001",
+            "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "producer": "launcher",
+            "child": "agent",
+            "phase": "run",
+            "termination": "exited",
+            "exit_code": 0,
+            "signal": null,
+            "result_delivery": "complete",
+            "result_ref": {
+              "path": "control/agent-result.json",
+              "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+              "bytes": 100
+            },
+            "duration_ms": 100,
+            "budget": null,
+            "result_message_id": null,
+            "reaped": true
+          },
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "draft-invoice-001",
+            "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "producer": "launcher",
+            "child": "verifier",
+            "phase": "verify",
+            "termination": "exited",
+            "exit_code": 0,
+            "signal": null,
+            "result_delivery": "complete",
+            "result_ref": {
+              "path": "control/verifier-result.json",
+              "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+              "bytes": 100
+            },
+            "duration_ms": 100,
+            "budget": {
+              "anchor_id": "post-example-001",
+              "started_at": "2026-11-07T23:00:00Z",
+              "deadline_at": "2026-11-07T23:00:30Z",
+              "elapsed_ms": 180,
+              "remaining_ms": 29820,
+              "operation_timeout_ms": 5000
+            },
+            "result_message_id": null,
+            "reaped": true
+          },
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "draft-invoice-001",
+            "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "producer": "launcher",
+            "child": "evaluator",
+            "phase": "prepare",
+            "termination": "exited",
+            "exit_code": 0,
+            "signal": null,
+            "result_delivery": "complete",
+            "result_ref": {
+              "path": "control/prepare-result.json",
+              "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+              "bytes": 100
+            },
+            "duration_ms": 10,
+            "budget": null,
+            "result_message_id": "prepare-result-001",
+            "reaped": true
+          },
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "draft-invoice-001",
+            "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "producer": "launcher",
+            "child": "evaluator",
+            "phase": "settle-grade",
+            "termination": "exited",
+            "exit_code": 0,
+            "signal": null,
+            "result_delivery": "complete",
+            "result_ref": {
+              "path": "control/settle-grade-result.json",
+              "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+              "bytes": 100
+            },
+            "duration_ms": 10,
+            "budget": {
+              "anchor_id": "post-example-001",
+              "started_at": "2026-11-07T23:00:00Z",
+              "deadline_at": "2026-11-07T23:00:30Z",
+              "elapsed_ms": 30,
+              "remaining_ms": 29970,
+              "operation_timeout_ms": 5000
+            },
+            "result_message_id": "settle-grade-result-001",
+            "reaped": true
+          },
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "draft-invoice-001",
+            "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "producer": "launcher",
+            "child": "evaluator",
+            "phase": "finalize",
+            "termination": "exited",
+            "exit_code": 0,
+            "signal": null,
+            "result_delivery": "complete",
+            "result_ref": {
+              "path": "control/finalize-result.json",
+              "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+              "bytes": 100
+            },
+            "duration_ms": 10,
+            "budget": {
+              "anchor_id": "post-example-001",
+              "started_at": "2026-11-07T23:00:00Z",
+              "deadline_at": "2026-11-07T23:00:30Z",
+              "elapsed_ms": 210,
+              "remaining_ms": 29790,
+              "operation_timeout_ms": 5000
+            },
+            "result_message_id": "finalize-result-001",
+            "reaped": true
+          }
+        ],
+        "verifier": {
+          "schema_version": 1,
+          "run_id": "run-example-001",
+          "attempt_id": "attempt-example-001",
+          "task_id": "draft-invoice-001",
+          "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+          "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+          "status": "completed",
+          "invoice_id": "INV-EXAMPLE-001",
+          "idempotency_key": "idem-example-001",
+          "original_request_hash": "4afcbfba5ba2a4d075601bc2080ec33d122cc23369b4812c97dd42ad2a8ea8b6",
+          "budget": {
+            "anchor_id": "post-example-001",
+            "started_at": "2026-11-07T23:00:00Z",
+            "deadline_at": "2026-11-07T23:00:30Z",
+            "elapsed_ms": 170,
+            "remaining_ms": 29830,
+            "operation_timeout_ms": 5000
+          },
+          "calls": 2,
+          "retries": 0,
+          "checks": [
+            {
+              "check": "same_payload_replay",
+              "pass": true,
+              "tool_result": {
+                "tool_id": "billing_create_draft_invoice",
+                "is_error": false,
+                "result": {
+                  "invoice": {
+                    "invoice_id": "INV-EXAMPLE-001",
+                    "customer_id": "CUST-001",
+                    "invoice_date": "2026-11-07",
+                    "due_date": "2026-11-21",
+                    "currency": "USD",
+                    "status": "draft",
+                    "subtotal_cents": 25000,
+                    "tax_cents": 0,
+                    "total_cents": 25000,
+                    "created_at": "2026-11-07T23:00:00Z"
+                  },
+                  "lines": [
+                    {
+                      "line_id": "LINE-EXAMPLE-001",
+                      "invoice_id": "INV-EXAMPLE-001",
+                      "item_id": "SVC-CONSULT",
+                      "quantity": 2,
+                      "unit_price_cents": 12500,
+                      "line_total_cents": 25000,
+                      "line_number": 1
+                    }
+                  ]
+                }
+              },
+              "failure": null
+            },
+            {
+              "check": "changed_payload_conflict",
+              "pass": true,
+              "tool_result": {
+                "tool_id": "billing_create_draft_invoice",
+                "is_error": true,
+                "error": {
+                  "code": "idempotency_conflict",
+                  "message": "Conflicting payload.",
+                  "retryable": false
+                }
+              },
+              "failure": null
+            }
+          ]
+        },
+        "verification_request": {
+          "schema_version": 1,
+          "run_id": "run-example-001",
+          "attempt_id": "attempt-example-001",
+          "invoice_id": "INV-EXAMPLE-001",
+          "idempotency_key": "idem-example-001",
+          "original_arguments": {
+            "customer_id": "CUST-001",
+            "invoice_date": "2026-11-07",
+            "due_date": "2026-11-21",
+            "lines": [
+              {
+                "item_id": "SVC-CONSULT",
+                "quantity": 2
+              }
+            ]
+          },
+          "original_request_hash": "4afcbfba5ba2a4d075601bc2080ec33d122cc23369b4812c97dd42ad2a8ea8b6",
+          "conflict_arguments": {
+            "customer_id": "CUST-001",
+            "invoice_date": "2026-11-07",
+            "due_date": "2026-11-21",
+            "lines": [
+              {
+                "item_id": "SVC-CONSULT",
+                "quantity": 3
+              }
+            ]
+          },
+          "checks": [
+            "same_payload_replay",
+            "changed_payload_conflict"
+          ],
+          "task_id": "draft-invoice-001",
+          "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+          "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+          "budget": {
+            "anchor_id": "post-example-001",
+            "started_at": "2026-11-07T23:00:00Z",
+            "deadline_at": "2026-11-07T23:00:30Z",
+            "elapsed_ms": 100,
+            "remaining_ms": 29900,
+            "operation_timeout_ms": 5000
+          }
+        }
+      }
+    },
+    {
+      "name": "read-control-chain-valid",
+      "contract": "ControlChain",
+      "valid": true,
+      "value": {
+        "requests": [
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "read-project-001",
+            "task_hash": "ca0aaa1ac4ce219626dff6af1fa293cdcdb0418f742641cafdad026fde8401a7",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "workflow_kind": "read_only",
+            "phase": "prepare",
+            "budget": null,
+            "inputs": {
+              "task": {
+                "path": "control/task.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              },
+              "fixture": {
+                "path": "control/fixture.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              },
+              "config": {
+                "path": "control/config.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              }
+            },
+            "message_id": "prepare-request-001",
+            "prior_result_id": null
+          },
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "read-project-001",
+            "task_hash": "ca0aaa1ac4ce219626dff6af1fa293cdcdb0418f742641cafdad026fde8401a7",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "workflow_kind": "read_only",
+            "phase": "settle-grade",
+            "budget": {
+              "anchor_id": "post-example-001",
+              "started_at": "2026-11-07T23:00:00Z",
+              "deadline_at": "2026-11-07T23:00:30Z",
+              "elapsed_ms": 20,
+              "remaining_ms": 29980,
+              "operation_timeout_ms": 5000
+            },
+            "inputs": {
+              "prior_phase_result": {
+                "path": "control/prepare-result.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              },
+              "agent_exit": {
+                "path": "control/agent-exit.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              },
+              "agent_result": {
+                "path": "control/agent-result.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              }
+            },
+            "message_id": "settle-grade-request-001",
+            "prior_result_id": "prepare-result-001"
+          },
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "read-project-001",
+            "task_hash": "ca0aaa1ac4ce219626dff6af1fa293cdcdb0418f742641cafdad026fde8401a7",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "workflow_kind": "read_only",
+            "phase": "finalize",
+            "budget": {
+              "anchor_id": "post-example-001",
+              "started_at": "2026-11-07T23:00:00Z",
+              "deadline_at": "2026-11-07T23:00:30Z",
+              "elapsed_ms": 200,
+              "remaining_ms": 29800,
+              "operation_timeout_ms": 5000
+            },
+            "inputs": {
+              "prior_phase_result": {
+                "path": "control/grade-result.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              }
+            },
+            "message_id": "finalize-request-001",
+            "prior_result_id": "settle-grade-result-001"
+          }
+        ],
+        "results": [
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "read-project-001",
+            "task_hash": "ca0aaa1ac4ce219626dff6af1fa293cdcdb0418f742641cafdad026fde8401a7",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "workflow_kind": "read_only",
+            "phase": "prepare",
+            "budget": null,
+            "status": "completed",
+            "action": "execute_agent",
+            "original_pass": null,
+            "fence_receipt": null,
+            "outputs": {
+              "agent_request": {
+                "path": "control/agent-request.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              }
+            },
+            "message_id": "prepare-result-001",
+            "request_id": "prepare-request-001"
+          },
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "read-project-001",
+            "task_hash": "ca0aaa1ac4ce219626dff6af1fa293cdcdb0418f742641cafdad026fde8401a7",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "workflow_kind": "read_only",
+            "phase": "settle-grade",
+            "budget": {
+              "anchor_id": "post-example-001",
+              "started_at": "2026-11-07T23:00:00Z",
+              "deadline_at": "2026-11-07T23:00:30Z",
+              "elapsed_ms": 30,
+              "remaining_ms": 29970,
+              "operation_timeout_ms": 5000
+            },
+            "status": "completed",
+            "action": "finalize",
+            "original_pass": true,
+            "fence_receipt": {
+              "schema_version": 1,
+              "run_id": "run-example-001",
+              "attempt_id": "attempt-example-001",
+              "fence": "agent",
+              "status": "settled",
+              "generation": 1,
+              "phase": "agent_sealed",
+              "commit_acknowledged": true,
+              "committed_at": "2026-11-07T23:00:00Z",
+              "remaining_inflight": 0,
+              "elapsed_ms": 12
+            },
+            "outputs": {
+              "agent_snapshot": {
+                "path": "control/agent-snapshot.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              }
+            },
+            "message_id": "settle-grade-result-001",
+            "request_id": "settle-grade-request-001"
+          },
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "read-project-001",
+            "task_hash": "ca0aaa1ac4ce219626dff6af1fa293cdcdb0418f742641cafdad026fde8401a7",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "workflow_kind": "read_only",
+            "phase": "finalize",
+            "budget": {
+              "anchor_id": "post-example-001",
+              "started_at": "2026-11-07T23:00:00Z",
+              "deadline_at": "2026-11-07T23:00:30Z",
+              "elapsed_ms": 210,
+              "remaining_ms": 29790,
+              "operation_timeout_ms": 5000
+            },
+            "status": "completed",
+            "action": "complete",
+            "original_pass": true,
+            "fence_receipt": {
+              "schema_version": 1,
+              "run_id": "run-example-001",
+              "attempt_id": "attempt-example-001",
+              "fence": "agent",
+              "status": "settled",
+              "generation": 1,
+              "phase": "agent_sealed",
+              "commit_acknowledged": true,
+              "committed_at": "2026-11-07T23:00:00Z",
+              "remaining_inflight": 0,
+              "elapsed_ms": 12
+            },
+            "outputs": {
+              "evaluation": {
+                "path": "control/evaluation.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              },
+              "final_snapshot": {
+                "path": "control/final-snapshot.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              }
+            },
+            "message_id": "finalize-result-001",
+            "request_id": "finalize-request-001"
+          }
+        ],
+        "exits": [
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "read-project-001",
+            "task_hash": "ca0aaa1ac4ce219626dff6af1fa293cdcdb0418f742641cafdad026fde8401a7",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "producer": "launcher",
+            "child": "agent",
+            "phase": "run",
+            "termination": "exited",
+            "exit_code": 0,
+            "signal": null,
+            "result_delivery": "complete",
+            "result_ref": {
+              "path": "control/agent-result.json",
+              "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+              "bytes": 100
+            },
+            "duration_ms": 100,
+            "budget": null,
+            "result_message_id": null,
+            "reaped": true
+          },
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "read-project-001",
+            "task_hash": "ca0aaa1ac4ce219626dff6af1fa293cdcdb0418f742641cafdad026fde8401a7",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "producer": "launcher",
+            "child": "evaluator",
+            "phase": "prepare",
+            "termination": "exited",
+            "exit_code": 0,
+            "signal": null,
+            "result_delivery": "complete",
+            "result_ref": {
+              "path": "control/prepare-result.json",
+              "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+              "bytes": 100
+            },
+            "duration_ms": 10,
+            "budget": null,
+            "result_message_id": "prepare-result-001",
+            "reaped": true
+          },
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "read-project-001",
+            "task_hash": "ca0aaa1ac4ce219626dff6af1fa293cdcdb0418f742641cafdad026fde8401a7",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "producer": "launcher",
+            "child": "evaluator",
+            "phase": "settle-grade",
+            "termination": "exited",
+            "exit_code": 0,
+            "signal": null,
+            "result_delivery": "complete",
+            "result_ref": {
+              "path": "control/settle-grade-result.json",
+              "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+              "bytes": 100
+            },
+            "duration_ms": 10,
+            "budget": {
+              "anchor_id": "post-example-001",
+              "started_at": "2026-11-07T23:00:00Z",
+              "deadline_at": "2026-11-07T23:00:30Z",
+              "elapsed_ms": 30,
+              "remaining_ms": 29970,
+              "operation_timeout_ms": 5000
+            },
+            "result_message_id": "settle-grade-result-001",
+            "reaped": true
+          },
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "read-project-001",
+            "task_hash": "ca0aaa1ac4ce219626dff6af1fa293cdcdb0418f742641cafdad026fde8401a7",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "producer": "launcher",
+            "child": "evaluator",
+            "phase": "finalize",
+            "termination": "exited",
+            "exit_code": 0,
+            "signal": null,
+            "result_delivery": "complete",
+            "result_ref": {
+              "path": "control/finalize-result.json",
+              "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+              "bytes": 100
+            },
+            "duration_ms": 10,
+            "budget": {
+              "anchor_id": "post-example-001",
+              "started_at": "2026-11-07T23:00:00Z",
+              "deadline_at": "2026-11-07T23:00:30Z",
+              "elapsed_ms": 210,
+              "remaining_ms": 29790,
+              "operation_timeout_ms": 5000
+            },
+            "result_message_id": "finalize-result-001",
+            "reaped": true
+          }
+        ],
+        "verifier": null,
+        "verification_request": null
+      }
+    },
+    {
+      "name": "read-control-chain-invalid",
+      "contract": "ControlChain",
+      "valid": false,
+      "value": {
+        "requests": [
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "read-project-001",
+            "task_hash": "ca0aaa1ac4ce219626dff6af1fa293cdcdb0418f742641cafdad026fde8401a7",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "workflow_kind": "read_only",
+            "phase": "prepare",
+            "budget": null,
+            "inputs": {
+              "task": {
+                "path": "control/task.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              },
+              "fixture": {
+                "path": "control/fixture.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              },
+              "config": {
+                "path": "control/config.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              }
+            },
+            "message_id": "prepare-request-001",
+            "prior_result_id": null
+          },
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "read-project-001",
+            "task_hash": "ca0aaa1ac4ce219626dff6af1fa293cdcdb0418f742641cafdad026fde8401a7",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "workflow_kind": "read_only",
+            "phase": "settle-grade",
+            "budget": {
+              "anchor_id": "post-example-001",
+              "started_at": "2026-11-07T23:00:00Z",
+              "deadline_at": "2026-11-07T23:00:30Z",
+              "elapsed_ms": 20,
+              "remaining_ms": 29980,
+              "operation_timeout_ms": 5000
+            },
+            "inputs": {
+              "prior_phase_result": {
+                "path": "control/prepare-result.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              },
+              "agent_exit": {
+                "path": "control/agent-exit.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              },
+              "agent_result": {
+                "path": "control/agent-result.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              }
+            },
+            "message_id": "settle-grade-request-001",
+            "prior_result_id": "prepare-result-001"
+          },
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "read-project-001",
+            "task_hash": "ca0aaa1ac4ce219626dff6af1fa293cdcdb0418f742641cafdad026fde8401a7",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "workflow_kind": "read_only",
+            "phase": "finalize",
+            "budget": {
+              "anchor_id": "post-example-001",
+              "started_at": "2026-11-07T23:00:00Z",
+              "deadline_at": "2026-11-07T23:00:30Z",
+              "elapsed_ms": 200,
+              "remaining_ms": 29800,
+              "operation_timeout_ms": 5000
+            },
+            "inputs": {
+              "prior_phase_result": {
+                "path": "control/grade-result.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              }
+            },
+            "message_id": "finalize-request-001",
+            "prior_result_id": "settle-grade-result-001"
+          }
+        ],
+        "results": [
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "read-project-001",
+            "task_hash": "ca0aaa1ac4ce219626dff6af1fa293cdcdb0418f742641cafdad026fde8401a7",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "workflow_kind": "read_only",
+            "phase": "prepare",
+            "budget": null,
+            "status": "completed",
+            "action": "execute_agent",
+            "original_pass": null,
+            "fence_receipt": null,
+            "outputs": {
+              "agent_request": {
+                "path": "control/agent-request.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              }
+            },
+            "message_id": "prepare-result-001",
+            "request_id": "prepare-request-001"
+          },
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "read-project-001",
+            "task_hash": "ca0aaa1ac4ce219626dff6af1fa293cdcdb0418f742641cafdad026fde8401a7",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "workflow_kind": "read_only",
+            "phase": "settle-grade",
+            "budget": {
+              "anchor_id": "post-example-001",
+              "started_at": "2026-11-07T23:00:00Z",
+              "deadline_at": "2026-11-07T23:00:30Z",
+              "elapsed_ms": 30,
+              "remaining_ms": 29970,
+              "operation_timeout_ms": 5000
+            },
+            "status": "completed",
+            "action": "verify",
+            "original_pass": true,
+            "fence_receipt": {
+              "schema_version": 1,
+              "run_id": "run-example-001",
+              "attempt_id": "attempt-example-001",
+              "fence": "agent",
+              "status": "settled",
+              "generation": 1,
+              "phase": "agent_sealed",
+              "commit_acknowledged": true,
+              "committed_at": "2026-11-07T23:00:00Z",
+              "remaining_inflight": 0,
+              "elapsed_ms": 12
+            },
+            "outputs": {
+              "agent_snapshot": {
+                "path": "control/agent-snapshot.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              }
+            },
+            "message_id": "settle-grade-result-001",
+            "request_id": "settle-grade-request-001"
+          },
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "read-project-001",
+            "task_hash": "ca0aaa1ac4ce219626dff6af1fa293cdcdb0418f742641cafdad026fde8401a7",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "workflow_kind": "read_only",
+            "phase": "finalize",
+            "budget": {
+              "anchor_id": "post-example-001",
+              "started_at": "2026-11-07T23:00:00Z",
+              "deadline_at": "2026-11-07T23:00:30Z",
+              "elapsed_ms": 210,
+              "remaining_ms": 29790,
+              "operation_timeout_ms": 5000
+            },
+            "status": "completed",
+            "action": "complete",
+            "original_pass": true,
+            "fence_receipt": {
+              "schema_version": 1,
+              "run_id": "run-example-001",
+              "attempt_id": "attempt-example-001",
+              "fence": "agent",
+              "status": "settled",
+              "generation": 1,
+              "phase": "agent_sealed",
+              "commit_acknowledged": true,
+              "committed_at": "2026-11-07T23:00:00Z",
+              "remaining_inflight": 0,
+              "elapsed_ms": 12
+            },
+            "outputs": {
+              "evaluation": {
+                "path": "control/evaluation.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              },
+              "final_snapshot": {
+                "path": "control/final-snapshot.json",
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "bytes": 100
+              }
+            },
+            "message_id": "finalize-result-001",
+            "request_id": "finalize-request-001"
+          }
+        ],
+        "exits": [
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "read-project-001",
+            "task_hash": "ca0aaa1ac4ce219626dff6af1fa293cdcdb0418f742641cafdad026fde8401a7",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "producer": "launcher",
+            "child": "agent",
+            "phase": "run",
+            "termination": "exited",
+            "exit_code": 0,
+            "signal": null,
+            "result_delivery": "complete",
+            "result_ref": {
+              "path": "control/agent-result.json",
+              "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+              "bytes": 100
+            },
+            "duration_ms": 100,
+            "budget": null,
+            "result_message_id": null,
+            "reaped": true
+          },
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "read-project-001",
+            "task_hash": "ca0aaa1ac4ce219626dff6af1fa293cdcdb0418f742641cafdad026fde8401a7",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "producer": "launcher",
+            "child": "evaluator",
+            "phase": "prepare",
+            "termination": "exited",
+            "exit_code": 0,
+            "signal": null,
+            "result_delivery": "complete",
+            "result_ref": {
+              "path": "control/prepare-result.json",
+              "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+              "bytes": 100
+            },
+            "duration_ms": 10,
+            "budget": null,
+            "result_message_id": "prepare-result-001",
+            "reaped": true
+          },
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "read-project-001",
+            "task_hash": "ca0aaa1ac4ce219626dff6af1fa293cdcdb0418f742641cafdad026fde8401a7",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "producer": "launcher",
+            "child": "evaluator",
+            "phase": "settle-grade",
+            "termination": "exited",
+            "exit_code": 0,
+            "signal": null,
+            "result_delivery": "complete",
+            "result_ref": {
+              "path": "control/settle-grade-result.json",
+              "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+              "bytes": 100
+            },
+            "duration_ms": 10,
+            "budget": {
+              "anchor_id": "post-example-001",
+              "started_at": "2026-11-07T23:00:00Z",
+              "deadline_at": "2026-11-07T23:00:30Z",
+              "elapsed_ms": 30,
+              "remaining_ms": 29970,
+              "operation_timeout_ms": 5000
+            },
+            "result_message_id": "settle-grade-result-001",
+            "reaped": true
+          },
+          {
+            "schema_version": 1,
+            "run_id": "run-example-001",
+            "attempt_id": "attempt-example-001",
+            "task_id": "read-project-001",
+            "task_hash": "ca0aaa1ac4ce219626dff6af1fa293cdcdb0418f742641cafdad026fde8401a7",
+            "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+            "producer": "launcher",
+            "child": "evaluator",
+            "phase": "finalize",
+            "termination": "exited",
+            "exit_code": 0,
+            "signal": null,
+            "result_delivery": "complete",
+            "result_ref": {
+              "path": "control/finalize-result.json",
+              "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+              "bytes": 100
+            },
+            "duration_ms": 10,
+            "budget": {
+              "anchor_id": "post-example-001",
+              "started_at": "2026-11-07T23:00:00Z",
+              "deadline_at": "2026-11-07T23:00:30Z",
+              "elapsed_ms": 210,
+              "remaining_ms": 29790,
+              "operation_timeout_ms": 5000
+            },
+            "result_message_id": "finalize-result-001",
+            "reaped": true
+          }
+        ],
+        "verifier": null,
+        "verification_request": null
+      }
+    },
+    {
+      "name": "interrupted-stream-valid",
+      "contract": "EventStream",
+      "valid": true,
+      "value": [
+        {
+          "schema_version": 1,
+          "run_id": "run-example-001",
+          "attempt_id": "attempt-example-001",
+          "event_id": "event-model-start",
+          "source": "agent",
+          "sequence": 1,
+          "timestamp": "2026-11-07T23:00:00Z",
+          "event_type": "model.started",
+          "phase": "agent",
+          "status": "ok",
+          "call_id": "model-call-001",
+          "elapsed_ms": 0,
+          "data": {
+            "model_digest": "0000000000000000000000000000000000000000000000000000000000000000",
+            "prompt_hash": "1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        },
+        {
+          "schema_version": 1,
+          "run_id": "run-example-001",
+          "attempt_id": "attempt-example-001",
+          "event_id": "event-host-interrupt",
+          "source": "launcher",
+          "sequence": 1,
+          "timestamp": "2026-11-07T23:00:00Z",
+          "event_type": "operation.interrupted",
+          "phase": "operations",
+          "status": "interrupted",
+          "elapsed_ms": 300000,
+          "data": {
+            "operation_source": "agent",
+            "operation_kind": "model",
+            "operation_call_id": "model-call-001",
+            "reason": "deadline"
+          }
+        }
+      ]
+    },
+    {
+      "name": "interrupted-stream-invalid",
+      "contract": "EventStream",
+      "valid": false,
+      "value": [
+        {
+          "schema_version": 1,
+          "run_id": "run-example-001",
+          "attempt_id": "attempt-example-001",
+          "event_id": "event-model-start",
+          "source": "agent",
+          "sequence": 1,
+          "timestamp": "2026-11-07T23:00:00Z",
+          "event_type": "model.started",
+          "phase": "agent",
+          "status": "ok",
+          "call_id": "model-call-001",
+          "elapsed_ms": 0,
+          "data": {
+            "model_digest": "0000000000000000000000000000000000000000000000000000000000000000",
+            "prompt_hash": "1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        }
+      ]
+    },
+    {
+      "name": "read-only-outcome-valid",
+      "contract": "EvaluationResult",
+      "valid": true,
+      "value": {
+        "schema_version": 1,
+        "run_id": "run-example-001",
+        "attempt_id": "attempt-example-001",
+        "task_id": "read-project-001",
+        "task_hash": "ca0aaa1ac4ce219626dff6af1fa293cdcdb0418f742641cafdad026fde8401a7",
+        "fixture_hash": "46d3d72ab3ff923a191505e19eba96a643edc24afd1b8e23ef5a9ce92f820a07",
+        "catalog_hash": "ba4fd63a813139a67c1ff960dbb29589f11fa12b821875f0ad73172482d2137b",
+        "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+        "agent_status": "completed",
+        "agent_budget_pass": true,
+        "agent_settlement_pass": true,
+        "verifier_settlement_pass": null,
+        "db_oracle_pass": true,
+        "answer_pass": true,
+        "replay_pass": null,
+        "cleanup_pass": true,
+        "null_reasons": {
+          "verifier_settlement_pass": "read_only",
+          "replay_pass": "read_only"
+        },
+        "artifact_complete": true,
+        "comparison_valid": true,
+        "task_success": true,
+        "overall_status": "passed",
+        "quarantined": false,
+        "failures": [],
+        "original_assertions": [
+          {
+            "name": "db-oracle",
+            "pass": true,
+            "reason": "Synthetic contract example only."
+          },
+          {
+            "name": "answer",
             "pass": true,
             "reason": "Synthetic contract example only."
           }
         ],
         "verification_assertions": [
           {
-            "name": "same-key-replay",
+            "name": "unchanged-state",
             "pass": true,
-            "reason": "Synthetic contract example only."
+            "reason": "Synthetic unchanged final snapshot."
           }
         ],
         "metrics": {
@@ -2529,7 +4815,232 @@
           "energy_joules": null,
           "cost_basis": null,
           "energy_basis": null
+        },
+        "workflow_kind": "read_only",
+        "setup_pass": true,
+        "final_state_unchanged": true
+      }
+    },
+    {
+      "name": "read-only-outcome-invalid",
+      "contract": "EvaluationResult",
+      "valid": false,
+      "value": {
+        "schema_version": 1,
+        "run_id": "run-example-001",
+        "attempt_id": "attempt-example-001",
+        "task_id": "read-project-001",
+        "task_hash": "ca0aaa1ac4ce219626dff6af1fa293cdcdb0418f742641cafdad026fde8401a7",
+        "fixture_hash": "46d3d72ab3ff923a191505e19eba96a643edc24afd1b8e23ef5a9ce92f820a07",
+        "catalog_hash": "ba4fd63a813139a67c1ff960dbb29589f11fa12b821875f0ad73172482d2137b",
+        "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+        "agent_status": "completed",
+        "agent_budget_pass": true,
+        "agent_settlement_pass": true,
+        "verifier_settlement_pass": null,
+        "db_oracle_pass": true,
+        "answer_pass": true,
+        "replay_pass": null,
+        "cleanup_pass": true,
+        "null_reasons": {
+          "verifier_settlement_pass": "read_only",
+          "replay_pass": "read_only"
+        },
+        "artifact_complete": true,
+        "comparison_valid": true,
+        "task_success": true,
+        "overall_status": "passed",
+        "quarantined": false,
+        "failures": [],
+        "original_assertions": [
+          {
+            "name": "db-oracle",
+            "pass": true,
+            "reason": "Synthetic contract example only."
+          },
+          {
+            "name": "answer",
+            "pass": true,
+            "reason": "Synthetic contract example only."
+          }
+        ],
+        "verification_assertions": [
+          {
+            "name": "unchanged-state",
+            "pass": true,
+            "reason": "Synthetic unchanged final snapshot."
+          }
+        ],
+        "metrics": {
+          "task_latency_ms": 1250,
+          "lifecycle_latency_ms": 1500,
+          "post_agent_ms": 200,
+          "cpu_ms": null,
+          "prompt_tokens": null,
+          "output_tokens": null,
+          "known_prompt_tokens": 0,
+          "known_output_tokens": 0,
+          "missing_token_components": 2,
+          "retrieval_precision": 1,
+          "required_tool_recall": 1,
+          "unauthorized_executions": 0,
+          "verifier_calls": 1,
+          "cost_usd": null,
+          "energy_joules": null,
+          "cost_basis": null,
+          "energy_basis": null
+        },
+        "workflow_kind": "read_only",
+        "setup_pass": true,
+        "final_state_unchanged": true
+      }
+    },
+    {
+      "name": "read-only-task-valid",
+      "contract": "Task",
+      "valid": true,
+      "value": {
+        "schema_version": 1,
+        "task_id": "read-project-001",
+        "task_version": "1",
+        "fixture_id": "billing-smoke-001",
+        "fixture_version": "1",
+        "prompt": "Get project PROJ-001.",
+        "split": "development",
+        "principal_id": "billing-reader",
+        "permitted_tools": [
+          "billing_get_project"
+        ],
+        "required_tool_ids": [
+          "billing_get_project"
+        ],
+        "relevant_tool_ids": [
+          "billing_get_project"
+        ],
+        "expected_state": {
+          "kind": "read_only",
+          "record_table": "projects",
+          "required_record_ids": [
+            "PROJ-001"
+          ],
+          "allowed_changed_tables": []
+        },
+        "final_answer_rule": "read_result_ids",
+        "budgets": {
+          "context_tokens": 4096,
+          "output_tokens": 512,
+          "model_turns": 8,
+          "tool_calls": 12,
+          "tool_timeout_ms": 5000,
+          "db_timeout_ms": 5000,
+          "model_timeout_ms": 120000,
+          "task_timeout_ms": 300000,
+          "transient_retries": 1,
+          "post_agent_timeout_ms": 30000,
+          "verification_operation_ms": 5000,
+          "verification_calls": 2,
+          "verification_retries": 0,
+          "artifact_bytes": 104857600,
+          "document_bytes": 1048576
         }
+      }
+    },
+    {
+      "name": "read-only-task-invalid",
+      "contract": "Task",
+      "valid": false,
+      "value": {
+        "schema_version": 1,
+        "task_id": "read-project-001",
+        "task_version": "1",
+        "fixture_id": "billing-smoke-001",
+        "fixture_version": "1",
+        "prompt": "Get project PROJ-001.",
+        "split": "development",
+        "principal_id": "billing-reader",
+        "permitted_tools": [
+          "billing_get_project"
+        ],
+        "required_tool_ids": [
+          "billing_get_project"
+        ],
+        "relevant_tool_ids": [
+          "billing_get_project"
+        ],
+        "expected_state": {
+          "kind": "read_only",
+          "record_table": "unknown",
+          "required_record_ids": [
+            "PROJ-001"
+          ],
+          "allowed_changed_tables": []
+        },
+        "final_answer_rule": "read_result_ids",
+        "budgets": {
+          "context_tokens": 4096,
+          "output_tokens": 512,
+          "model_turns": 8,
+          "tool_calls": 12,
+          "tool_timeout_ms": 5000,
+          "db_timeout_ms": 5000,
+          "model_timeout_ms": 120000,
+          "task_timeout_ms": 300000,
+          "transient_retries": 1,
+          "post_agent_timeout_ms": 30000,
+          "verification_operation_ms": 5000,
+          "verification_calls": 2,
+          "verification_retries": 0,
+          "artifact_bytes": 104857600,
+          "document_bytes": 1048576
+        }
+      }
+    },
+    {
+      "name": "read-only-mapping-valid",
+      "contract": "RunMapping",
+      "valid": true,
+      "value": {
+        "schema_version": 1,
+        "run_id": "run-example-001",
+        "attempt_id": "attempt-example-001",
+        "tenant_id": "TENANT-001",
+        "principal_id": "billing-reader",
+        "allowed_tools": [
+          "billing_get_project"
+        ],
+        "schema_name": "r_8e3372285564e045eeaa185e1db96d77",
+        "phase": "agent_sealed",
+        "generation": 1,
+        "not_after": "2026-11-07T23:05:00Z",
+        "agent_token_sha256": null,
+        "verifier_token_sha256": null,
+        "verifier_scope": null,
+        "lock_marker": 0,
+        "workflow_kind": "read_only"
+      }
+    },
+    {
+      "name": "read-only-mapping-invalid",
+      "contract": "RunMapping",
+      "valid": false,
+      "value": {
+        "schema_version": 1,
+        "run_id": "run-example-001",
+        "attempt_id": "attempt-example-001",
+        "tenant_id": "TENANT-001",
+        "principal_id": "billing-reader",
+        "allowed_tools": [
+          "billing_create_draft_invoice"
+        ],
+        "schema_name": "r_8e3372285564e045eeaa185e1db96d77",
+        "phase": "agent_sealed",
+        "generation": 1,
+        "not_after": "2026-11-07T23:05:00Z",
+        "agent_token_sha256": null,
+        "verifier_token_sha256": null,
+        "verifier_scope": null,
+        "lock_marker": 0,
+        "workflow_kind": "read_only"
       }
     }
   ]

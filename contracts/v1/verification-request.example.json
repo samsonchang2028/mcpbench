@@ -30,5 +30,16 @@
   "checks": [
     "same_payload_replay",
     "changed_payload_conflict"
-  ]
+  ],
+  "task_id": "draft-invoice-001",
+  "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+  "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+  "budget": {
+    "anchor_id": "post-example-001",
+    "started_at": "2026-11-07T23:00:00Z",
+    "deadline_at": "2026-11-07T23:00:30Z",
+    "elapsed_ms": 100,
+    "remaining_ms": 29900,
+    "operation_timeout_ms": 5000
+  }
 }
