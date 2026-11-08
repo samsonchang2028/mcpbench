@@ -41,4 +41,5 @@ Keep deterministic integration checks separate from live model smoke tests.
 Record exact dependency and model versions when selected. A check is complete
 only with its actual result; label blocked and unrun checks explicitly. Record
 material architectural decisions in the existing documents and keep observed
-facts separate from proposed settings. No application or test commands exist yet.
+facts separate from proposed settings. Static contract checks are documented in `contracts/README.md`; application
+commands remain gated by their DAG tasks.

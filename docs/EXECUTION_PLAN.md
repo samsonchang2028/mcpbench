@@ -1,9 +1,13 @@
 # MCPBench execution plan
 
+Current milestone: T006 static contracts DONE after independent review/testing;
+T009 fixtures now IMPLEMENTING. T001 model-store evidence remains BLOCKED. The
+active-goal authorization section supersedes historical per-wave approval stops.
+
 This document schedules [TASK_GRAPH.md](TASK_GRAPH.md), which owns IDs, edges,
 priorities, statuses and acceptance criteria. The user approved documentation-only T003–T005 execution. Application
-implementation, Docker mutations and live Ollama execution remain blocked pending
-a later approved wave and all relevant admission gates. DAG waves express dependencies, not elapsed-time estimates.
+implementation, Docker mutations and live Ollama execution require their completed
+DAG prerequisites and all relevant admission gates under the active goal. DAG waves express dependencies, not elapsed-time estimates.
 
 ## Gates and milestones
 

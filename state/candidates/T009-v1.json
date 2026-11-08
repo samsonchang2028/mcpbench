@@ -1,0 +1,33 @@
+{
+  "task": "T009",
+  "worktree": "/home/sfkim/projects/mcpbench/.worktrees/T009",
+  "base_commit": "7116a10",
+  "candidate_commit": "f6b196e9c7f070d06256ae887198afa386f52330",
+  "source_hashes": {
+    "eval/fixtures/README.md": "1b21885aa9931a5a5b4f1f4c8d7858297ed279ed3307313d0ec5265a5d8a6b96",
+    "eval/fixtures/__init__.py": "52f7031775442948f0914b353c3f83343163d49efc1d9fc73dd1e1b4684cfe66",
+    "eval/fixtures/test_fixtures.py": "deaa24365389c72a68105a27499e810f52e726c9b430885c46e84d2b2380a152",
+    "eval/fixtures/v1/assertions.json": "96756336a39780692b53f740a9830f32519f6b63ca9205bc9fd2a793e7cc4d80",
+    "eval/fixtures/v1/fixture.json": "d44eb33a0fbdb08b735af1b159bd67a1bbbd262ff31e0bddcc9c175ede8b5c15",
+    "eval/fixtures/v1/manifest.json": "ed62378638695972d66de5b0dc97293d4d771795755cf5b4d7b0cd86711c139e",
+    "eval/fixtures/v1/tasks/baseline-invoice.json": "3f404c5ec5335c59960a47a77573465d2a9b504a3053db7d2ef60083c19a7f33",
+    "eval/fixtures/v1/tasks/baseline-project.json": "8e24c5d64085706107937bbeeea1d5340ce500c39bba38d883fd48b3328abfb8",
+    "eval/fixtures/v1/tasks/baseline-time.json": "a9ea1545d555d031cbd1eeee26859bdb9a6afd8670454b0dd2838ae7c061bda8",
+    "eval/fixtures/v1/tasks/smoke-invoice.json": "ae26839682abfbfa61c81f9b86a98d32ff812386882d9597fa244f33da8c9ce0",
+    "eval/fixtures/validate.py": "49af6ea825fdcf4ffc893d096a202679b00a38ea78555b6cad46a01a8814e481"
+  },
+  "approved_contract_candidate": "32bafe0607bfb81938d151de6c15e8288e9bc526",
+  "governance_hashes": {
+    "AGENTS.md": "f8e19c5806406098f8aeb8eddebbe2335874097ab731a7bb4e41e290cda8392c",
+    "docs/EVALUATION_PLAN.md": "5c5dde8766d62caf9d43f76abc0cef0d164a218348327b1893ed3c35ae13bb27",
+    "docs/ARCHITECTURE.md": "f1fb146060951cd7a0ad659b247b6ca884a87d5203f6a57baccb84bf06b19ed2",
+    "docs/SECURITY_RESOURCE_CONTRACT.md": "98cbb730b9dfc9a5c659dc55fcee57e25e2a02f58c534bd3b6160c740121ac07"
+  },
+  "author_checks": {
+    "fixture_tests": 14,
+    "combined_tests": 46,
+    "corpus_cli": "PASS",
+    "fixture_task_cli": "PASS",
+    "runtime": "UNRUN"
+  }
+}

@@ -1,5 +1,10 @@
 # Security and resource contract — v1
 
+Current authorization: the active v1 goal permits routine eligible DAG work,
+including admitted runtime tasks, without repeated per-wave approval. This changes
+no security boundary, resource threshold or stop condition. Earlier doc-only wave
+limits are historical; T001 still blocks full runtime admission.
+
 Status: T005 documentation candidate. These are required design/test behaviors,
 not claims that benchmark containers, authorization or full admission have passed.
 Follow [AGENTS.md](../AGENTS.md), the shared
@@ -243,7 +248,7 @@ force unload, clear swap/cache, change drivers, or restart another service.
 
 ## Early Ollama capability probe T040
 
-T040 requires successful fresh T007 admission and separate user runtime approval;
+T040 requires successful fresh T007 admission and active-goal runtime authorization;
 the documentation-wave approval does not authorize it. Use the exact installed
 model tag/digest and one bounded native chat request with a harmless `probe_echo`
 tool. Validate returned tool name and strict JSON arguments, then compute the

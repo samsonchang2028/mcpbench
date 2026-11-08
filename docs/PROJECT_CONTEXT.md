@@ -1,5 +1,11 @@
 # MCPBench project context
 
+Current execution: the user authorized autonomous routine DAG transitions. T006
+contracts are implemented and independently approved; T009 fixtures are in progress.
+Go/MCP/DB/model runtime gates remain pending T001/T007/T040 and later task evidence.
+Older documentation-wave status below records that stage, not a continuing
+per-wave approval requirement. See state/CURRENT.md and TASK_GRAPH for live status.
+
 ## Goal and scope
 
 Research question: how do MCP tool retrieval strategies affect agent task success,
@@ -100,7 +106,7 @@ run without unsafe reset or reuse. Post-agent settlement/verification has its ow
 30-second ceiling, recorded separately from the 300-second agent task deadline.
 
 The future T040 harmless Ollama capability probe runs only after admission and
-separate runtime approval. Metadata or a successful probe cannot replace T023's
+active-goal runtime authorization. Metadata or a successful probe cannot replace T023's
 real MCP-backed invoice proof. Scripted-model tests remain distinct from live Qwen.
 
 ## Reading map and deferred work

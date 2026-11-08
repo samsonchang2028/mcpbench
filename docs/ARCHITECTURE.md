@@ -1,5 +1,10 @@
 # MCPBench v1 architecture
 
+Implementation status: the T006 static contract bundle is now approved under
+contracts/. Runtime components described here are still planned, not proven.
+The active goal authorizes routine eligible DAG work; no admission/security gate
+is waived. Older documentation-wave authorization limits below are historical.
+
 Status: design candidate for T003's permission-refresh documentation wave, not an
 implemented or runtime-validated system. The [shared assumptions](WAVE1_CONTRACT_ASSUMPTIONS.md)
 govern this wave; T006 freezes versioned schemas and exact launch/auth transport.
@@ -152,7 +157,7 @@ MCPBench execution; compare future health against the recorded baseline rather
 than repairing it or treating it as a benchmark-induced regression.
 
 T040 is a future one-request harmless `probe_echo` capability test after T007 and
-separate approval, without a billing server or writes. Strict returned-name/argument
+the active-goal authorization, without a billing server or writes. Strict returned-name/argument
 validation and local echo computation establish observed basic tool output only.
 T023 later proves a real invoice through MCP and the independent DB oracle.
 Scripted replies validate loop mechanics but never stand in for live-model success.

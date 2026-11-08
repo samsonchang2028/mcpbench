@@ -1,12 +1,12 @@
 <!-- Current access refresh supersedes historical snapshot/status prose below. -->
 # MCPBench task graph
 
-Current permission refresh: Git works normally and read-only Docker/Ollama access
-is verified. T001 is narrowly BLOCKED on actual model-storage target verification;
-T002 is DONE with independently validated normal Git evidence. T003–T005
-completed their isolated documentation refresh and review/test. T006 is READY,
-unstarted and awaiting a contract-work wave; all runtime/application gates remain uncompleted. The
-14:23 access observations below are historical, not the current environment.
+Current active-goal status: T002–T006 are DONE with independent evidence. T009
+fixture data/static validation is IMPLEMENTING automatically after T006. T001 is
+BLOCKED only on model-store target/filesystem evidence. T007/T040/T008 and app
+runtime work remain WAITING. Routine admitted DAG transitions are authorized;
+security/architecture changes and unresolved P0/P1 still require stopping.
+The older access observations below are historical.
 
 Snapshot: 2026-11-07. Planning only; no implementation dispatched. This graph
 supersedes the coarse P0–P7 task sequence in IMPLEMENTATION_PLAN.md; that file's
@@ -79,7 +79,7 @@ claims that workers are currently running.
 | T007 | Runtime admission evidence / H,I | T001,T006 | P0 | WAITING | IMPLEMENTATION_PLAN admission met: 60-second resource sample, >=20 GiB available RAM and >=20 GiB free on relevant filesystems, no sustained swapping/regression; unused project/subnet/ports, model residency/shared use known. Recalculate model budget if >12 GiB. Metadata capability check only; T040 verifies basic tool output early and T023 verifies the real MCP invoice later. |
 | T040 | Early Ollama capability probe / H,A,V | T007 | P1 | WAITING | Goal-directed authorization covers this routine probe only after T007 and no open P0/P1; exact installed model/digest, one bounded native chat request with harmless `probe_echo` tool, validate returned name/JSON args and locally computed echo; no billing/MCP writes, config changes, pulls or forced unload; resource observations and model response saved; no call or malformed call is failure, not metadata-only success. Output: artifacts/probes/<probe-id>/. |
 | T008 | Repository skeleton and pinned dependencies / O | T002,T006,T007,T040 | P0 | WAITING | Go module, Python project/lock, chosen SDK/protocol and image digests pinned; empty package boundaries and check commands agree with contracts; dependency resolution/build is admitted by explicit T007 dependency. |
-| T009 | Versioned fixtures and expected states / E | T006 | P0 | IMPLEMENTING | eval/fixtures contains three-tool invoice fixture, baseline fictional customers/projects/items/timesheets and expected states; valid/invalid fixture contract checks; no runtime/model dependencies. |
+| T009 | Versioned fixtures and expected states / E | T006 | P0 | CANDIDATE | eval/fixtures contains three-tool invoice fixture, baseline fictional customers/projects/items/timesheets and expected states; valid/invalid fixture contract checks; no runtime/model dependencies. |
 | T010 | Independent grader and reset tests first / E | T008,T009 | P0 | WAITING | eval/grading and eval/reset tests cover correct and deliberately wrong customer/price/status/date, extra writes, stale state and failed reset; grader consumes database snapshots, not model prose; unimplemented DB path explicitly unrun until T018. |
 | T011 | Migrations and seed / D | T008,T009 | P0 | WAITING | db/ versioned schema and repeatable seed match contracts, foreign keys, money and idempotency constraints; tests authored for seed twice, migrate existing volume and rollback; live validation at T018. |
 | T012 | Draft billing domain / D | T010,T011 | P0 | WAITING | internal/billing and repository code calculate cents, reject invalid dates/IDs/quantities and unknown fields, create atomically and enforce same-key replay/changed-payload conflict; unit tests pass, PostgreSQL cases await T018. |

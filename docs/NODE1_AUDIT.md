@@ -95,3 +95,10 @@ still needs separate runtime approval. No application implementation is authoriz
 
 Historical 14:13/14:23 snapshots were partial because of sandbox access; the prior
 versions are preserved in Git and candidate evidence, not presented as current facts.
+
+## Later goal authorization
+
+The user subsequently authorized routine eligible DAG execution, including T040
+after full admission. Earlier separate-wave approval limits above are historical;
+no factual observation, filesystem restriction, resource threshold or security
+boundary changed. Consult TASK_GRAPH and state/CURRENT for live task statuses.

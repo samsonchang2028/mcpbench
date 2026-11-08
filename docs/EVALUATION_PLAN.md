@@ -1,5 +1,10 @@
 # Evaluation plan
 
+Current milestone: T006 machine-readable contracts and local validation now PASS
+independent review/testing; see contracts/README.md and state/handoffs/T006.md.
+The active v1 goal authorizes routine admitted DAG execution. Earlier documentation-
+only/per-wave approval wording below is historical; runtime proof remains gated.
+
 Status: T004 documentation candidate. These are proposed v1 behavioral contracts,
 not evidence of working software. The shared baseline is
 [WAVE1_CONTRACT_ASSUMPTIONS.md](WAVE1_CONTRACT_ASSUMPTIONS.md); T006 must convert
@@ -315,7 +320,7 @@ T004 is documentation only. Later gates require actual observed evidence:
 | T010 oracle/reset | Wrong snapshots fail; failed reset prevents execution; late-commit/unknown-settlement cases quarantine without reset; replay cannot create a missing invoice |
 | T018 DB integration | Actual PostgreSQL migrations, seed twice, isolation, reset fingerprints and adversarial oracle cases pass |
 | T019–T021 deterministic slice | Real MCP, scripted model, Python lifecycle and JSONL agree; both revocation/settlement fences, non-repair replay, duplicate/retry safety, security and known-metric cases pass |
-| T040 early probe | Admission plus separate approval; real Ollama returns valid `probe_echo` call; metadata/scripted output insufficient, no billing writes |
+| T040 early probe | Successful admission plus active-goal authorization; real Ollama returns valid `probe_echo` call; metadata/scripted output insufficient, no billing writes |
 | T022–T023 live invoice | Fresh readiness, monitored real Qwen and full DB/answer/replay/cleanup/artifact smoke gate pass |
 | T025 baseline | Ten executable tools, development-only task attempts, all outcomes saved |
 
