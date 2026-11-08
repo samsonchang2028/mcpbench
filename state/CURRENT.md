@@ -26,8 +26,10 @@ R: state/reviews/T040-result-reviewer.md approves failed evidence, gate BLOCKED.
 V: state/reviews/T040-result-tester.md capability FAIL, safety abort PASS.
 T008/application work WAITING; zero READY,31 WAITING,1 BLOCKED,8 DONE.
 No MCPBench containers/builds/dependency installs/app runtime were started.
-Full v1 remains incomplete. Second confirmed audit of swap-resource blocker;
-previous model-storage blocker was resolved. Goal remains active pending decision.
+Full v1 remains incomplete. Third confirmed audit of swap-resource blocker;
+previous model-storage blocker was resolved. Blocked threshold met; no eligible
+DAG task or authorized second inference attempt. Goal to be marked BLOCKED
+pending an explicit retry/resource decision.
 Resource lease released; do not retry or alter stop thresholds automatically.
 
 Read-only post-abort investigation:60.10sec, min25.37GiB RAM,7 swap-in
@@ -36,3 +38,6 @@ Ollama MemoryHigh/Max unlimited; empty resident models before/after. This does
 not establish causal attribution or prove another model load safe. No retry
 approval received. Proposed second controller and R/V evidence are referenced
 in state/audits/2026-11-08-T040-recovery-candidate.json.
+
+Final blocker verification UTC: 2026-11-08T15:39:58.880243+00:00.
+Prospective controller hash unchanged; no second request/result artifacts exist.
