@@ -27,7 +27,7 @@
     "ControlChain",
     "EventStream"
   ],
-  "schema_sha256": "7f0ff4b15e719c01ac08dac8387b15c1624cf32c0c87dc7a55e786d55b77b749",
+  "schema_sha256": "12a0353cb97eb1bdfab779de90a98a97b2616ef95d8b16a698c559bf8face223",
   "catalog_sha256": "64e6b0ec54b2242747373ef1a567d9ec8c59f033f47c02afbe715d184a31ae36",
   "examples": [
     {

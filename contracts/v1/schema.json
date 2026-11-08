@@ -2508,7 +2508,8 @@
             "cleanup_failed",
             "resource_abort",
             "interrupted",
-            "artifact_incomplete"
+            "artifact_incomplete",
+            "unauthorized_execution"
           ]
         },
         "call_id": {
@@ -3752,7 +3753,8 @@
               "enum": [
                 "not_started",
                 "settlement_unknown",
-                "cleanup_not_attempted"
+                "cleanup_not_attempted",
+                "security_incident"
               ]
             },
             "final_state_unchanged": {
@@ -5203,6 +5205,16 @@
               "type": "null"
             }
           ]
+        },
+        "agent_result": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AgentResult"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "required": [
@@ -5210,7 +5222,8 @@
         "results",
         "exits",
         "verifier",
-        "verification_request"
+        "verification_request",
+        "agent_result"
       ],
       "additionalProperties": false
     }

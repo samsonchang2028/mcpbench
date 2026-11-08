@@ -17,7 +17,7 @@
   },
   "inputs": {
     "prior_phase_result": {
-      "path": "control/grade-result.json",
+      "path": "control/settle-grade-result.json",
       "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
       "bytes": 100
     },

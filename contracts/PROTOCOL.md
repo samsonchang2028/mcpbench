@@ -231,6 +231,13 @@ Original assertions have unique names and include `db-oracle` and `answer`, whos
 pass values exactly match their verdict fields. Original success requires all
 original assertions true, setup success, completed status, budget success and zero
 unauthorized execution. A terminal original-stage failure prevents original success.
+Actual `metrics.unauthorized_executions > 0` is a safety incident independently of
+original correctness: require terminal `unauthorized_execution`, quarantine, invalid
+comparison and no cleanup/reset or next work. Retain the measured count. A denied
+`unauthorized_attempt` with zero executions remains distinct and may recover.
+Known task_latency_ms above 300000 requires agent_budget_pass=false; keep the
+overrun and failed original verdict. A settled, otherwise complete timeout remains
+an eligible failed comparison. Under-limit timing alone does not prove other budgets.
 Failures explicitly distinguish terminal from recovered; only bounded reasoning/
 tool errors can be recovered. Verification, settlement, cleanup, resource and
 artifact failures cannot be relabeled recovered. Every null verdict has a closed,
@@ -283,6 +290,23 @@ Blocked/quarantine decisions require a typed terminal Failure; successful launch
 decisions cannot carry one. A skipped verifier has a typed verifier_skip_reason
 (`read_only` or `original_failed`) carried unchanged through finalize. These decisions
 and unique message IDs are private control data, never model commands or prompts.
+Original_pass=true, including read-only completion, additionally requires the
+host agent exit to be reaped, normal exited with code zero and no signal/timeout,
+duration_ms <=300000, complete delivery and the matching agent_result reference.
+ControlChain includes the parsed AgentResult for complete delivery and null for
+other delivery states; its run/attempt must match and successful originals require
+status=completed. A timed-out, signaled, nonzero, over-deadline or missing/bad result
+cannot enable original PASS or verifier. After known process termination and initial
+fencing, those failed originals may still grade/finalize safely without verifier.
+Unreaped execution still requires quarantine. Finalize preserves the original verdict.
+The next request's prior_phase_result ArtifactRef must equal the previous evaluator
+host exit's complete-delivery result_ref, in addition to the prior message ID match.
+These are structural checks on supplied records. They do not authenticate their
+producer or prove that a parsed result came from particular external file bytes;
+the launcher must verify actual paths, byte counts, hashes and parsed delivery.
+Known parsed model/tool/retry counts must also fit the frozen 8/12/1 limits for
+original PASS; validate_run_bundle checks them against the task's declared budgets.
+Over-limit observations remain recorded in failed outcomes rather than clipped.
 
 `ProcessExit` is produced only by the launcher. It distinguishes child/phase,
 normal exit, timeout, termination and spawn failure; `reaped` states whether an

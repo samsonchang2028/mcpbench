@@ -428,6 +428,122 @@ class Contracts(unittest.TestCase):
         agent["final_answer"]["record_ids"] = [record_id]
         c.validate_run_bundle(*bundle)
 
+    def test_actual_execution_safety_is_independent_of_task_failure(self):
+        for read_only in [False, True]:
+            for state_pass in [False, True]:
+                value = self.failed_agent()
+                if state_pass:
+                    value.update(db_oracle_pass=True, answer_pass=True)
+                    for row in value["original_assertions"]: row["pass"] = True
+                if read_only:
+                    value["workflow_kind"] = "read_only"
+                    value["null_reasons"] = {"replay_pass": "read_only", "verifier_settlement_pass": "read_only"}
+                value["metrics"]["unauthorized_executions"] = 1
+                self.reject("EvaluationResult", value)
+                # Preserve the incident count; no reset or later comparison may follow.
+                value.update(comparison_valid=False, quarantined=True, cleanup_pass=None)
+                value["null_reasons"]["cleanup_pass"] = "security_incident"
+                value["failures"] = [self.failure("unauthorized_execution", "execution")]
+                c.validate("EvaluationResult", value)
+                self.assertEqual(value["metrics"]["unauthorized_executions"], 1)
+                for flag in ["comparison_valid", "cleanup_pass"]:
+                    bad = deepcopy(value)
+                    bad[flag] = True
+                    if flag == "cleanup_pass": bad["null_reasons"].pop(flag)
+                    self.reject("EvaluationResult", bad)
+        recovered = self.example("evaluation-result")
+        recovered["failures"] = [self.failure("unauthorized_attempt", "execution", "recovered")]
+        c.validate("EvaluationResult", recovered)  # A denied attempt is distinct from execution.
+
+    def failed_control(self, chain):
+        chain = deepcopy(chain)
+        reason = "read_only" if chain["requests"][0]["workflow_kind"] == "read_only" else "original_failed"
+        chain["results"][1].update(original_pass=False, action="finalize", verifier_skip_reason=reason)
+        chain["results"][1]["outputs"].pop("verification_request", None)
+        chain["results"][2].update(original_pass=False, verifier_skip_reason=reason, fence_receipt=deepcopy(chain["results"][1]["fence_receipt"]))
+        chain["requests"][2]["inputs"] = {key: value for key, value in chain["requests"][2]["inputs"].items() if not key.startswith("verifier")}
+        chain["exits"] = [record for record in chain["exits"] if record["child"] != "verifier"]
+        chain.update(verifier=None, verification_request=None)
+        return chain
+
+    def test_host_agent_success_matrix_and_safe_failed_paths(self):
+        variants = [
+            {"termination": "timed_out"}, {"exit_code": 1}, {"exit_code": 255},
+            {"termination": "terminated", "exit_code": None, "signal": "SIGTERM"},
+            {"termination": "terminated", "exit_code": None, "signal": "SIGKILL"},
+            {"duration_ms": 300001}, {"duration_ms": 86400000},
+        ]
+        for name in ["control-chain", "read-control-chain"]:
+            for change in variants:
+                with self.subTest(workflow=name, host=change):
+                    chain = self.example(name)
+                    host = next(record for record in chain["exits"] if record["child"] == "agent")
+                    host.update(change)
+                    self.reject("ControlChain", chain)
+                    c.validate("ControlChain", self.failed_control(chain))
+            for delivery in ["missing", "partial", "malformed", "oversized"]:
+                with self.subTest(workflow=name, delivery=delivery):
+                    chain = self.example(name)
+                    host = next(record for record in chain["exits"] if record["child"] == "agent")
+                    host.update(result_delivery=delivery, result_ref=None)
+                    chain["requests"][1]["inputs"].pop("agent_result")
+                    chain["agent_result"] = None
+                    self.reject("ControlChain", chain)
+                    c.validate("ControlChain", self.failed_control(chain))
+            for status in ["failed", "timeout", "interrupted"]:
+                chain = self.example(name)
+                chain["agent_result"]["status"] = status
+                self.reject("ControlChain", chain)
+                c.validate("ControlChain", self.failed_control(chain))
+            chain = self.example(name)
+            host = next(record for record in chain["exits"] if record["child"] == "agent")
+            host["duration_ms"] = 300000
+            c.validate("ControlChain", chain)
+            chain["agent_result"]["run_id"] = "another-run"
+            self.reject("ControlChain", chain)
+
+    def test_known_latency_budget_matrix_preserves_failed_measurements(self):
+        for read_only in [False, True]:
+            for latency, budget in [(299999, True), (300000, True), (300001, False), (400000, False)]:
+                with self.subTest(read_only=read_only, latency=latency):
+                    value = self.example("read-evaluation-result" if read_only else "evaluation-result") if budget else self.failed_agent()
+                    if not budget and read_only:
+                        value["workflow_kind"] = "read_only"
+                        value["null_reasons"] = {"replay_pass":"read_only", "verifier_settlement_pass":"read_only"}
+                    value["metrics"].update(task_latency_ms=latency, lifecycle_latency_ms=latency+1000)
+                    value["agent_budget_pass"] = budget
+                    c.validate("EvaluationResult", value)
+                    if not budget:
+                        self.assertTrue(value["comparison_valid"])
+                        bad = deepcopy(value)
+                        bad["agent_budget_pass"] = True
+                        self.reject("EvaluationResult", bad)
+        value = self.example("evaluation-result")
+        value["metrics"].update(task_latency_ms=300001, lifecycle_latency_ms=300500)
+        self.reject("EvaluationResult", value)
+
+    def test_prior_phase_artifact_equality_is_structural_not_raw_byte_proof(self):
+        for phase_index in [1, 2]:
+            for field, replacement in [("path", "control/different-result.json"), ("sha256", "f"*64), ("bytes", 101)]:
+                chain = self.example("control-chain")
+                chain["requests"][phase_index]["inputs"]["prior_phase_result"][field] = replacement
+                self.reject("ControlChain", chain)
+                prior_phase = chain["results"][phase_index-1]["phase"]
+                host = next(record for record in chain["exits"] if record["child"] == "evaluator" and record["phase"] == prior_phase)
+                host["result_ref"][field] = replacement
+                c.validate("ControlChain", chain)  # Matching metadata still does not prove external bytes.
+
+    def test_observed_parsed_counts_cannot_exceed_passing_budget(self):
+        for key, limit in c.AGENT_COUNT_LIMITS.items():
+            chain = self.example("control-chain")
+            chain["agent_result"]["counts"][key] = limit + 1
+            self.reject("ControlChain", chain)
+            c.validate("ControlChain", self.failed_control(chain))
+            bundle = [self.example(name) for name in ["read-task", "fixture", "read-run-mapping", "read-evaluation-result", "read-agent-result"]]
+            bundle[-1]["counts"][key] = limit + 1
+            with self.assertRaises(c.ContractError):
+                c.validate_run_bundle(*bundle)
+
 
 if __name__ == "__main__":
     unittest.main()

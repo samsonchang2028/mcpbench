@@ -27,6 +27,7 @@ SCHEMA_ID = SCHEMA["$id"]
 CATALOG = json.loads((ROOT / "v1/catalog.json").read_text())
 TOOLS = {tool["name"]: tool for tool in CATALOG["tools"]}
 CREATE = "billing_create_draft_invoice"
+AGENT_COUNT_LIMITS = {"model_calls": 8, "tool_calls": 12, "retries": 1}
 TABLE_KEYS = {
     "customers": "customer_id", "items": "item_id", "projects": "project_id",
     "timesheets": "timesheet_id", "invoices": "invoice_id",
@@ -341,11 +342,14 @@ def _semantics(name: str, value: Any) -> None:
         for failure in value["failures"]:
             validate("Failure", failure)
         terminal = {row["code"] for row in value["failures"] if row["disposition"] == "terminal"}
+        _require("unauthorized_execution" not in terminal or value["metrics"]["unauthorized_executions"] > 0, "execution safety failure contradicts observed count")
         original_terminal = {row["code"] for row in value["failures"] if row["disposition"] == "terminal" and row["stage"] in {"admission", "prepare", "retrieval", "agent", "execution", "grading"}}
         original = original and not original_terminal
         if original:
             _require(_assertions_pass(value["original_assertions"], {"db-oracle", "answer"}), "original PASS contradicts assertions")
         _require(value["task_success"] == original, "task success is not original settled outcome")
+        if value["metrics"]["unauthorized_executions"] > 0:
+            _require(value["quarantined"] and not value["comparison_valid"] and value["cleanup_pass"] is not True and "unauthorized_execution" in terminal, "actual unauthorized execution lacks safety stop and quarantine")
         for flag, assertion in [("db_oracle_pass", "db-oracle"), ("answer_pass", "answer")]:
             recorded = [row["pass"] for row in value["original_assertions"] if row["name"] == assertion]
             _require(len(recorded) == 1 and recorded[0] is value[flag], "original assertion and verdict disagree")
@@ -380,12 +384,14 @@ def _semantics(name: str, value: Any) -> None:
             _require({row["name"] for row in value["verification_assertions"]} <= {"unchanged-state"}, "skipped verifier claims replay assertions")
         if value["final_state_unchanged"] is True:
             _require(_assertions_pass(value["verification_assertions"], {"unchanged-state"}, exact=False), "final snapshot lacks unchanged-state assertion")
-        safety_failure = bool(terminal & {"admission_blocked", "fixture_invalid", "prepare_failed", "reset_failed", "grader_error", "settlement_unknown", "verification_failed", "cleanup_failed", "resource_abort", "artifact_incomplete"})
+        safety_failure = bool(terminal & {"admission_blocked", "fixture_invalid", "prepare_failed", "reset_failed", "grader_error", "settlement_unknown", "verification_failed", "cleanup_failed", "resource_abort", "artifact_incomplete", "unauthorized_execution"})
         if value["quarantined"]:
             _require(value["cleanup_pass"] is not True, "quarantined state was reset")
         if value["comparison_valid"]:
-            _require(value["setup_pass"] and not not_started and value["agent_settlement_pass"] is True and value["final_state_unchanged"] is True and not value["quarantined"] and not safety_failure and verification_ok and all(row["pass"] is True for row in value["verification_assertions"]), "comparison contains safety, verification or evidence failure")
+            _require(value["metrics"]["unauthorized_executions"] == 0 and value["setup_pass"] and not not_started and value["agent_settlement_pass"] is True and value["final_state_unchanged"] is True and not value["quarantined"] and not safety_failure and verification_ok and all(row["pass"] is True for row in value["verification_assertions"]), "comparison contains safety, verification or evidence failure")
         metrics = value["metrics"]
+        if metrics["task_latency_ms"] is not None and metrics["task_latency_ms"] > 300000:
+            _require(not value["agent_budget_pass"], "known task latency exceeds declared passing agent budget")
         if metrics["missing_token_components"]:
             _require(metrics["prompt_tokens"] is None and metrics["output_tokens"] is None, "missing model counts imputed as complete")
         else:
@@ -555,7 +561,7 @@ def validate_event_stream(events: list[dict[str, Any]]) -> None:
     _require(not opened, "stream has unclosed operations without interrupted marker")
 
 
-def validate_control_chain(requests: list[dict[str, Any]], results: list[dict[str, Any]], exits: list[dict[str, Any]], verifier: dict[str, Any] | None = None, verification_request: dict[str, Any] | None = None) -> None:
+def validate_control_chain(requests: list[dict[str, Any]], results: list[dict[str, Any]], exits: list[dict[str, Any]], verifier: dict[str, Any] | None = None, verification_request: dict[str, Any] | None = None, agent_result: dict[str, Any] | None = None) -> None:
     """Check finalized transport records, not actual process, filesystem or DB behavior."""
     _require(len(requests) == len(results) and 1 <= len(requests) <= 3, "control chain length invalid")
     fields = ["run_id", "attempt_id", "task_id", "task_hash", "config_hash"]
@@ -584,6 +590,8 @@ def validate_control_chain(requests: list[dict[str, Any]], results: list[dict[st
         _require(request["workflow_kind"] == root["workflow_kind"], "control workflow changed")
         if index:
             _require(request["prior_result_id"] == prior["message_id"], "control prior-result binding changed")
+            previous_exit = next(record for record in exits if record["child"] == "evaluator" and record["phase"] == prior["phase"])
+            _require(request["inputs"]["prior_phase_result"] == previous_exit["result_ref"], "prior-result artifact differs from host delivered reference")
             _require(prior["action"] in ({"execute_agent"} if index == 1 else {"verify", "finalize"}), "control continued after terminal action")
             child = "agent" if index == 1 else "verifier"
             expected = index == 1 or prior["action"] == "verify"
@@ -596,6 +604,15 @@ def validate_control_chain(requests: list[dict[str, Any]], results: list[dict[st
                 _require((result_key in request["inputs"]) == (exit_record["result_delivery"] == "complete"), "request ignores host delivery outcome")
                 if result_key in request["inputs"]:
                     _require(request["inputs"][result_key] == exit_record["result_ref"], "child result artifact binding changed")
+                if child == "agent":
+                    _require((agent_result is not None) == (exit_record["result_delivery"] == "complete"), "parsed agent result and host delivery disagree")
+                    if agent_result is not None:
+                        validate("AgentResult", agent_result)
+                        _require(all(agent_result[key] == root[key] for key in ["run_id", "attempt_id"]), "parsed agent result identity changed")
+                    if result["original_pass"] is True:
+                        normal = exit_record["termination"] == "exited" and exit_record["exit_code"] == 0 and exit_record["signal"] is None and exit_record["reaped"]
+                        _require(normal and exit_record["duration_ms"] <= 300000 and agent_result is not None and agent_result["status"] == "completed" and "agent_result" in request["inputs"], "original PASS contradicts trusted agent exit or delivered result")
+                        _require(all(agent_result["counts"][key] <= limit for key, limit in AGENT_COUNT_LIMITS.items()), "original PASS exceeds observed agent count budget")
                 if child == "verifier":
                     _require(verification_request is not None, "verifier has no bounded invocation")
                     bind(verification_request, "VerificationRequest")
@@ -689,6 +706,9 @@ def validate_run_bundle(task: dict[str, Any], fixture: dict[str, Any], mapping: 
         _require(evaluation["agent_status"] != "completed" and evaluation["answer_pass"] is not True, "missing agent result supplies success evidence")
         return
     _require(evaluation["agent_status"] == agent["status"], "agent outcome binding mismatch")
+    if evaluation["agent_budget_pass"]:
+        limits = {"model_calls": task["budgets"]["model_turns"], "tool_calls": task["budgets"]["tool_calls"], "retries": task["budgets"]["transient_retries"]}
+        _require(all(agent["counts"][key] <= limit for key, limit in limits.items()), "passing budget contradicts parsed agent counts")
     if kind == "read_only" and evaluation["answer_pass"] is True:
         _require(agent["final_answer"]["invoice_id"] is None and set(agent["final_answer"]["record_ids"]) == set(task["expected_state"]["required_record_ids"]), "read answer does not match exact expected record IDs")
 

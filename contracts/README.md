@@ -55,6 +55,12 @@ requires evidence specific to its operation; `EventStream` checks a complete tra
 sequence, identities and operation closure. Its example is a JSON array for offline
 validation; production transport remains one individually bounded Event per JSONL
 line. A single Event does not prove stream completeness.
+Complete agent delivery includes its parsed AgentResult in ControlChain; host exit,
+result status and observed duration must support any original PASS. Reference
+equality checks compare supplied metadata; real file-byte/hash verification remains
+a separate launcher obligation. Known task overruns cannot claim a passing budget.
+Actual unauthorized execution invalidates comparison and requires a typed safety
+incident/quarantine with no reset, independently of ordinary failed-task eligibility.
 
 Use `validate_run_bundle(task, fixture, mapping, evaluation, agent_result)` to bind
 the private workflow kind and hashes to the actual task and agent answer. Read-only

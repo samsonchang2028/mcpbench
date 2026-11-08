@@ -86,7 +86,7 @@
       },
       "inputs": {
         "prior_phase_result": {
-          "path": "control/grade-result.json",
+          "path": "control/settle-grade-result.json",
           "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
           "bytes": 100
         }
@@ -331,5 +331,23 @@
     }
   ],
   "verifier": null,
-  "verification_request": null
+  "verification_request": null,
+  "agent_result": {
+    "schema_version": 1,
+    "run_id": "run-example-001",
+    "attempt_id": "attempt-example-001",
+    "status": "completed",
+    "final_answer": {
+      "text": "Project PROJ-001.",
+      "invoice_id": null,
+      "record_ids": [
+        "PROJ-001"
+      ]
+    },
+    "counts": {
+      "model_calls": 2,
+      "tool_calls": 1,
+      "retries": 0
+    }
+  }
 }
