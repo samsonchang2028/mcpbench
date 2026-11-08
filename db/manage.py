@@ -172,6 +172,7 @@ def _seed(conn, mapping, seed):
     if _metadata(conn, mapping, seed) is None:
         raise DatabaseStateError('migration required before seed')
     name = mapping['schema_name']
+    _check_shape(conn, name)
     current = _tables(conn, name)
     if any(current.values()):
         if _fingerprint(seed, current) != seed['seed_hash']:

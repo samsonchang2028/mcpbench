@@ -63,7 +63,9 @@ A versioned reapply checks the exact table/column inventory. This is compatibili
 checking, not a forensic guarantee against a privileged owner altering constraints.
 Unversioned schemas and mismatched records fail; no IF NOT EXISTS adoption occurs.
 
-Seed reads back all seven tables and verifies canonical hash before commit. A
+Seed first checks the complete table/column inventory, rejecting extra tables or
+columns before any application read or insert. It then reads back all seven
+tables and verifies canonical hash before commit. A
 second seed is a read-only no-op. Partial or changed data is rejected instead of
 upserted or overwritten. Rollback accepts only empty/canonical unused prepared
 state, leaves the immutable registry binding, drops known objects without CASCADE,

@@ -73,7 +73,7 @@ class OfflineTests(unittest.TestCase):
         source = manage.fixture()
         conn = Mock()
         with patch.object(manage, '_metadata', return_value=(1,)), patch.object(
-                manage, '_tables', return_value={**source['seed'], 'invoices': [{'invoice_id': 'BAD'}]}):
+                manage, '_check_shape'), patch.object(manage, '_tables', return_value={**source['seed'], 'invoices': [{'invoice_id': 'BAD'}]}):
             with self.assertRaises(manage.DatabaseStateError):
                 manage._seed(conn, {'schema_name': schema_name('run-test')}, source)
         conn.execute.assert_not_called()
@@ -82,9 +82,31 @@ class OfflineTests(unittest.TestCase):
         source = manage.fixture()
         conn = Mock()
         with patch.object(manage, '_metadata', return_value=(1,)), patch.object(
-                manage, '_tables', return_value=source['seed']):
+                manage, '_check_shape'), patch.object(manage, '_tables', return_value=source['seed']):
             self.assertEqual(manage._seed(conn, {'schema_name': schema_name('run-test')}, source), source['seed_hash'])
         conn.execute.assert_not_called()
+
+    def test_incompatible_inventory_blocks_seed_before_read_or_insert(self):
+        source = manage.fixture()
+        inventory = [(table, column) for table, columns in manage.TABLES.items()
+                     for column in columns]
+        # Exercise the real inventory comparison, with only the catalog response
+        # mocked. Neither canonical rows nor empty tables may bypass the check.
+        for extra in (('extra_table', 'extra_column'), ('customers', 'extra_column')):
+            for tables in (source['seed'], {table: [] for table in manage.TABLES}):
+                with self.subTest(extra=extra, populated=any(tables.values())):
+                    conn = Mock()
+                    conn.execute.return_value.fetchall.return_value = inventory + [extra]
+                    with patch.object(manage, '_metadata', return_value=(1,)), patch.object(
+                            manage, '_tables', return_value=tables) as read_tables:
+                        with self.assertRaisesRegex(manage.DatabaseStateError, 'inventory'):
+                            manage._seed(conn, {'schema_name': schema_name('run-test')}, source)
+                    read_tables.assert_not_called()
+                    # Only the inventory SELECT ran; no seed INSERT was attempted.
+                    conn.execute.assert_called_once()
+                    query, params = conn.execute.call_args.args
+                    self.assertIn('information_schema.columns', query)
+                    self.assertEqual(params, (schema_name('run-test'),))
 
     def test_migration_checksum_is_stable(self):
         self.assertEqual(len(manage.migration_digest()), 64)

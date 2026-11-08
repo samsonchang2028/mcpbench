@@ -74,6 +74,22 @@ class PostgreSQLTests(unittest.TestCase):
         manage.migrate(self.controller, self.run)
         self.assertEqual(manage.seed(self.controller, self.run), manage.fixture()['seed_hash'])
 
+    def test_seed_rejects_extra_table_and_column(self):
+        alterations = (
+            ('CREATE TABLE {s}.extra_table(extra_column integer)', 'DROP TABLE {s}.extra_table'),
+            ('ALTER TABLE {s}.customers ADD COLUMN extra_column text',
+             'ALTER TABLE {s}.customers DROP COLUMN extra_column'),
+        )
+        for create, restore in alterations:
+            with self.subTest(alteration=create):
+                self.controller.execute(self.q(create))
+                try:
+                    with self.assertRaisesRegex(manage.DatabaseStateError, 'inventory'):
+                        manage.seed(self.controller, self.run)
+                finally:
+                    self.controller.execute(self.q(restore))
+                self.assertEqual(manage.seed(self.controller, self.run), manage.fixture()['seed_hash'])
+
     def test_version_checksum_rejection(self):
         self.controller.execute('UPDATE bench_control.schema_migrations SET migration_sha256=%s WHERE run_id=%s', ('0' * 64, self.run))
         try:
