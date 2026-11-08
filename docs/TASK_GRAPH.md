@@ -2,7 +2,7 @@
 # MCPBench task graph
 
 Current active-goal status: T002–T006 are DONE with independent evidence. T009
-fixture data/static validation is IMPLEMENTING automatically after T006. T001 is
+fixture data/static validation is DONE after independent review/testing. T001 is
 BLOCKED only on model-store target/filesystem evidence. T007/T040/T008 and app
 runtime work remain WAITING. Routine admitted DAG transitions are authorized;
 security/architecture changes and unresolved P0/P1 still require stopping.
@@ -79,7 +79,7 @@ claims that workers are currently running.
 | T007 | Runtime admission evidence / H,I | T001,T006 | P0 | WAITING | IMPLEMENTATION_PLAN admission met: 60-second resource sample, >=20 GiB available RAM and >=20 GiB free on relevant filesystems, no sustained swapping/regression; unused project/subnet/ports, model residency/shared use known. Recalculate model budget if >12 GiB. Metadata capability check only; T040 verifies basic tool output early and T023 verifies the real MCP invoice later. |
 | T040 | Early Ollama capability probe / H,A,V | T007 | P1 | WAITING | Goal-directed authorization covers this routine probe only after T007 and no open P0/P1; exact installed model/digest, one bounded native chat request with harmless `probe_echo` tool, validate returned name/JSON args and locally computed echo; no billing/MCP writes, config changes, pulls or forced unload; resource observations and model response saved; no call or malformed call is failure, not metadata-only success. Output: artifacts/probes/<probe-id>/. |
 | T008 | Repository skeleton and pinned dependencies / O | T002,T006,T007,T040 | P0 | WAITING | Go module, Python project/lock, chosen SDK/protocol and image digests pinned; empty package boundaries and check commands agree with contracts; dependency resolution/build is admitted by explicit T007 dependency. |
-| T009 | Versioned fixtures and expected states / E | T006 | P0 | CANDIDATE | eval/fixtures contains three-tool invoice fixture, baseline fictional customers/projects/items/timesheets and expected states; valid/invalid fixture contract checks; no runtime/model dependencies. |
+| T009 | Versioned fixtures and expected states / E | T006 | P0 | DONE | eval/fixtures contains three-tool invoice fixture, baseline fictional customers/projects/items/timesheets and expected states; valid/invalid fixture contract checks; no runtime/model dependencies. |
 | T010 | Independent grader and reset tests first / E | T008,T009 | P0 | WAITING | eval/grading and eval/reset tests cover correct and deliberately wrong customer/price/status/date, extra writes, stale state and failed reset; grader consumes database snapshots, not model prose; unimplemented DB path explicitly unrun until T018. |
 | T011 | Migrations and seed / D | T008,T009 | P0 | WAITING | db/ versioned schema and repeatable seed match contracts, foreign keys, money and idempotency constraints; tests authored for seed twice, migrate existing volume and rollback; live validation at T018. |
 | T012 | Draft billing domain / D | T010,T011 | P0 | WAITING | internal/billing and repository code calculate cents, reject invalid dates/IDs/quantities and unknown fields, create atomically and enforce same-key replay/changed-payload conflict; unit tests pass, PostgreSQL cases await T018. |
@@ -208,3 +208,13 @@ tester PASS in state/reviews/T006-reviewer-v3.md and T006-tester-v3.md. Main-che
 32 contract tests and Catalog/Task CLI validation PASS; source hashes match. T009
 is now READY independently of runtime access. T007/T040/T008 still wait on T001
 actual model-store evidence plus their other prerequisites. Runtime proofs UNRUN.
+
+## Fixture milestone accepted and admission impasse
+
+T009 DONE at reviewed f6b196e, merged normally. Reviewer APPROVE/tester PASS in
+state/reviews/T009-reviewer-v1.md and T009-tester-v1.md; 46 combined tests and
+corpus CLI PASS in main. All11 source hashes match approved candidate. No static
+P0/P1 remains. Recalculated DAG has no READY tasks: T001 model-store filesystem
+evidence remains BLOCKED, T007/T040/T008 and all downstream work are WAITING.
+Fresh20:00 host checks still have working Git/Docker/Ollama and sudo authentication
+required for private model-path readlink/df. No security/resource gate is waived.

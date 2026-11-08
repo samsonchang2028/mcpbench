@@ -1,0 +1,19 @@
+{
+  "observed_utc": "2026-11-08T04:01:53.200485+00:00",
+  "goal_turn_audit": 2,
+  "task": "T001",
+  "blocking_condition": "actual model-store path/symlink/filesystem/free-space evidence inaccessible; noninteractive sudo requires authentication",
+  "commands": [
+    "sudo -n -u ollama readlink -e /usr/share/ollama/.ollama/models",
+    "sudo -n -u ollama df -hT /usr/share/ollama/.ollama/models"
+  ],
+  "results": [
+    "interactive authentication is required",
+    "interactive authentication is required"
+  ],
+  "git": "working/writable",
+  "docker": "29.7.2 read-only connectivity working; no mcpbench containers",
+  "ollama": "0.40.13 metadata reachable; models empty",
+  "ready_tasks": [],
+  "bypass": false
+}

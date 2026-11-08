@@ -1,7 +1,7 @@
 # MCPBench project context
 
 Current execution: the user authorized autonomous routine DAG transitions. T006
-contracts are implemented and independently approved; T009 fixtures are in progress.
+contracts are implemented and independently approved; T009 fixtures are independently approved.
 Go/MCP/DB/model runtime gates remain pending T001/T007/T040 and later task evidence.
 Older documentation-wave status below records that stage, not a continuing
 per-wave approval requirement. See state/CURRENT.md and TASK_GRAPH for live status.

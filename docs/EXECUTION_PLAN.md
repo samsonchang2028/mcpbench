@@ -1,7 +1,7 @@
 # MCPBench execution plan
 
 Current milestone: T006 static contracts DONE after independent review/testing;
-T009 fixtures now IMPLEMENTING. T001 model-store evidence remains BLOCKED. The
+T009 fixtures now DONE. T001 model-store evidence remains BLOCKED. The
 active-goal authorization section supersedes historical per-wave approval stops.
 
 This document schedules [TASK_GRAPH.md](TASK_GRAPH.md), which owns IDs, edges,
