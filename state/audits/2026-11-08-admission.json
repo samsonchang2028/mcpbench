@@ -1,0 +1,2433 @@
+{
+  "started_utc": "2026-11-08T15:26:13.972590+00:00",
+  "kind": "T001/T007 read-only admission candidate",
+  "source_revision": "b9db1c9cb874fe512ef6290b6a045c25cb1011f5",
+  "user_supplied_model_storage": {
+    "provenance": "Authenticated Node 1 shell output pasted by user in this session; command time not supplied; not independently traversed by sfkim",
+    "readlink_command": "sudo -u ollama readlink -e /usr/share/ollama/.ollama/models",
+    "resolved_path": "/usr/share/ollama/.ollama/models",
+    "df_command": "sudo -u ollama df -hT /usr/share/ollama/.ollama/models",
+    "filesystem": "/dev/nvme0n1p2",
+    "type": "ext4",
+    "size_display": "468G",
+    "available_display": "229G",
+    "mounted_on": "/"
+  },
+  "hardware": {
+    "command": [
+      "lscpu",
+      "-J"
+    ],
+    "returncode": 0,
+    "stdout": "{\n   \"lscpu\": [\n      {\n         \"field\": \"Architecture:\",\n         \"data\": \"x86_64\"\n      },{\n         \"field\": \"CPU op-mode(s):\",\n         \"data\": \"32-bit, 64-bit\"\n      },{\n         \"field\": \"Address sizes:\",\n         \"data\": \"39 bits physical, 48 bits virtual\"\n      },{\n         \"field\": \"Byte Order:\",\n         \"data\": \"Little Endian\"\n      },{\n         \"field\": \"CPU(s):\",\n         \"data\": \"8\"\n      },{\n         \"field\": \"On-line CPU(s) list:\",\n         \"data\": \"0-7\"\n      },{\n         \"field\": \"Vendor ID:\",\n         \"data\": \"GenuineIntel\"\n      },{\n         \"field\": \"Model name:\",\n         \"data\": \"Intel(R) Core(TM) i7-7820HQ CPU @ 2.90GHz\"\n      },{\n         \"field\": \"CPU family:\",\n         \"data\": \"6\"\n      },{\n         \"field\": \"Model:\",\n         \"data\": \"158\"\n      },{\n         \"field\": \"Thread(s) per core:\",\n         \"data\": \"2\"\n      },{\n         \"field\": \"Core(s) per socket:\",\n         \"data\": \"4\"\n      },{\n         \"field\": \"Socket(s):\",\n         \"data\": \"1\"\n      },{\n         \"field\": \"Stepping:\",\n         \"data\": \"9\"\n      },{\n         \"field\": \"CPU(s) scaling MHz:\",\n         \"data\": \"92%\"\n      },{\n         \"field\": \"CPU max MHz:\",\n         \"data\": \"3900.0000\"\n      },{\n         \"field\": \"CPU min MHz:\",\n         \"data\": \"800.0000\"\n      },{\n         \"field\": \"BogoMIPS:\",\n         \"data\": \"5799.77\"\n      },{\n         \"field\": \"Flags:\",\n         \"data\": \"fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb pti ssbd ibrs ibpb stibp tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust sgx bmi1 avx2 smep bmi2 erms invpcid mpx rdseed adx smap clflushopt intel_pt xsaveopt xsavec xgetbv1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp vnmi md_clear flush_l1d arch_capabilities\"\n      },{\n         \"field\": \"Virtualization:\",\n         \"data\": \"VT-x\"\n      },{\n         \"field\": \"L1d cache:\",\n         \"data\": \"128 KiB (4 instances)\"\n      },{\n         \"field\": \"L1i cache:\",\n         \"data\": \"128 KiB (4 instances)\"\n      },{\n         \"field\": \"L2 cache:\",\n         \"data\": \"1 MiB (4 instances)\"\n      },{\n         \"field\": \"L3 cache:\",\n         \"data\": \"8 MiB (1 instance)\"\n      },{\n         \"field\": \"NUMA node(s):\",\n         \"data\": \"1\"\n      },{\n         \"field\": \"NUMA node0 CPU(s):\",\n         \"data\": \"0-7\"\n      },{\n         \"field\": \"Vulnerability Gather data sampling:\",\n         \"data\": \"Vulnerable\"\n      },{\n         \"field\": \"Vulnerability Ghostwrite:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Indirect target selection:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Itlb multihit:\",\n         \"data\": \"KVM: Mitigation: Split huge pages\"\n      },{\n         \"field\": \"Vulnerability L1tf:\",\n         \"data\": \"Mitigation; PTE Inversion; VMX conditional cache flushes, SMT vulnerable\"\n      },{\n         \"field\": \"Vulnerability Mds:\",\n         \"data\": \"Mitigation; Clear CPU buffers; SMT vulnerable\"\n      },{\n         \"field\": \"Vulnerability Meltdown:\",\n         \"data\": \"Mitigation; PTI\"\n      },{\n         \"field\": \"Vulnerability Mmio stale data:\",\n         \"data\": \"Mitigation; Clear CPU buffers; SMT vulnerable\"\n      },{\n         \"field\": \"Vulnerability Old microcode:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Reg file data sampling:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Retbleed:\",\n         \"data\": \"Mitigation; IBRS\"\n      },{\n         \"field\": \"Vulnerability Spec rstack overflow:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Spec store bypass:\",\n         \"data\": \"Mitigation; Speculative Store Bypass disabled via prctl\"\n      },{\n         \"field\": \"Vulnerability Spectre v1:\",\n         \"data\": \"Mitigation; usercopy/swapgs barriers and __user pointer sanitization\"\n      },{\n         \"field\": \"Vulnerability Spectre v2:\",\n         \"data\": \"Mitigation; IBRS; IBPB conditional; STIBP conditional; RSB filling; PBRSB-eIBRS Not affected; BHI Not affected\"\n      },{\n         \"field\": \"Vulnerability Srbds:\",\n         \"data\": \"Mitigation; Microcode\"\n      },{\n         \"field\": \"Vulnerability Tsa:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Tsx async abort:\",\n         \"data\": \"Mitigation; TSX disabled\"\n      },{\n         \"field\": \"Vulnerability Vmscape:\",\n         \"data\": \"Mitigation; IBPB before exit to userspace\"\n      }\n   ]\n}",
+    "stderr": ""
+  },
+  "host": "node1",
+  "disk": {
+    "command": [
+      "df",
+      "-B1",
+      "--output=source,fstype,size,used,avail,target",
+      "/home/sfkim/projects/mcpbench",
+      "/var/lib/docker",
+      "/usr/share/ollama"
+    ],
+    "returncode": 0,
+    "stdout": "Filesystem     Type    1B-blocks         Used        Avail Mounted on\n/dev/nvme0n1p2 ext4 501809635328 230685216768 245558616064 /\n/dev/nvme0n1p2 ext4 501809635328 230685216768 245558616064 /\n/dev/nvme0n1p2 ext4 501809635328 230685216768 245558616064 /",
+    "stderr": ""
+  },
+  "docker_info": {
+    "command": [
+      "docker",
+      "info",
+      "--format",
+      "{{json .DockerRootDir}}"
+    ],
+    "returncode": 0,
+    "stdout": "\"/var/lib/docker\"",
+    "stderr": ""
+  },
+  "docker_version": {
+    "command": [
+      "docker",
+      "version",
+      "--format",
+      "{{json .Server.Version}}"
+    ],
+    "returncode": 0,
+    "stdout": "\"29.7.2\"",
+    "stderr": ""
+  },
+  "containers_before": [
+    {
+      "name": "/okc-postgres",
+      "id": "bcdeb2f37986185a559396c3e90a2be41260d0b8ac71b77e5660d09929c04017",
+      "image": "postgres:16",
+      "state": {
+        "Status": "running",
+        "Running": true,
+        "OOMKilled": false,
+        "StartedAt": "2026-09-29T19:59:38.54835241Z"
+      },
+      "health": null,
+      "project": null,
+      "limits": {
+        "Memory": 0,
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0
+      },
+      "ports": {
+        "5432/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "5432"
+          },
+          {
+            "HostIp": "::",
+            "HostPort": "5432"
+          }
+        ]
+      }
+    },
+    {
+      "name": "/qbittorrent",
+      "id": "671e4768a7f3574d594711d7dcdca843b5e1a4637d6917fc5baa63ac925ff93c",
+      "image": "lscr.io/linuxserver/qbittorrent:latest",
+      "state": {
+        "Status": "running",
+        "Running": true,
+        "OOMKilled": false,
+        "StartedAt": "2026-08-29T17:39:45.2744453Z"
+      },
+      "health": "healthy",
+      "project": "arrstack",
+      "limits": {
+        "Memory": 0,
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0
+      },
+      "ports": {}
+    },
+    {
+      "name": "/flaresolverr",
+      "id": "0fa5d9a69c99e841f6f69c6fa157c50f76a72a2deb7644d3b8180f7c4084129f",
+      "image": "ghcr.io/flaresolverr/flaresolverr:latest",
+      "state": {
+        "Status": "running",
+        "Running": true,
+        "OOMKilled": false,
+        "StartedAt": "2026-08-29T17:39:45.287016892Z"
+      },
+      "health": null,
+      "project": "arrstack",
+      "limits": {
+        "Memory": 0,
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0
+      },
+      "ports": {}
+    },
+    {
+      "name": "/prowlarr",
+      "id": "919839159a8bd5142998468131bc9ab07fcd538626b4d9d3779b6ff214f0f312",
+      "image": "lscr.io/linuxserver/prowlarr:latest",
+      "state": {
+        "Status": "running",
+        "Running": true,
+        "OOMKilled": false,
+        "StartedAt": "2026-08-29T17:39:45.272876156Z"
+      },
+      "health": null,
+      "project": "arrstack",
+      "limits": {
+        "Memory": 0,
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0
+      },
+      "ports": {}
+    },
+    {
+      "name": "/gluetun",
+      "id": "5954fffeb11454453af7ccf7eeb5ea38b06a9b5ef6f16f05f58b12c732aa624f",
+      "image": "qmcgaw/gluetun:latest",
+      "state": {
+        "Status": "running",
+        "Running": true,
+        "OOMKilled": false,
+        "StartedAt": "2026-08-29T17:39:44.423519911Z"
+      },
+      "health": "healthy",
+      "project": "arrstack",
+      "limits": {
+        "Memory": 0,
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0
+      },
+      "ports": {
+        "1080/tcp": null,
+        "1080/udp": null,
+        "6881/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "6881"
+          },
+          {
+            "HostIp": "::",
+            "HostPort": "6881"
+          }
+        ],
+        "6881/udp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "6881"
+          },
+          {
+            "HostIp": "::",
+            "HostPort": "6881"
+          }
+        ],
+        "8000/tcp": null,
+        "8080/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "8080"
+          },
+          {
+            "HostIp": "::",
+            "HostPort": "8080"
+          }
+        ],
+        "8191/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "8191"
+          },
+          {
+            "HostIp": "::",
+            "HostPort": "8191"
+          }
+        ],
+        "8388/tcp": null,
+        "8388/udp": null,
+        "8888/tcp": null,
+        "9696/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "9696"
+          },
+          {
+            "HostIp": "::",
+            "HostPort": "9696"
+          }
+        ]
+      }
+    },
+    {
+      "name": "/bazarr",
+      "id": "be7238654926dfea8a13cb1b0059a62e27fdd96e5c8efb87dd25f55a5826c522",
+      "image": "lscr.io/linuxserver/bazarr:latest",
+      "state": {
+        "Status": "running",
+        "Running": true,
+        "OOMKilled": false,
+        "StartedAt": "2026-08-29T17:39:44.427879966Z"
+      },
+      "health": null,
+      "project": "arrstack",
+      "limits": {
+        "Memory": 0,
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0
+      },
+      "ports": {
+        "6767/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "6767"
+          },
+          {
+            "HostIp": "::",
+            "HostPort": "6767"
+          }
+        ]
+      }
+    },
+    {
+      "name": "/jellyfin",
+      "id": "eb2f21ab995e33f7d01b5e243fb9a2358336b720218c4b70248c6f0daa1db57e",
+      "image": "lscr.io/linuxserver/jellyfin:latest",
+      "state": {
+        "Status": "running",
+        "Running": true,
+        "OOMKilled": false,
+        "StartedAt": "2026-08-29T17:39:44.431117231Z"
+      },
+      "health": null,
+      "project": "arrstack",
+      "limits": {
+        "Memory": 0,
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0
+      },
+      "ports": {
+        "8096/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "8096"
+          },
+          {
+            "HostIp": "::",
+            "HostPort": "8096"
+          }
+        ],
+        "8920/tcp": null
+      }
+    },
+    {
+      "name": "/sonarr",
+      "id": "108b33100355ce38bfeebdf939462b2a0d1a5a7a56ae301283e3850305f2bac3",
+      "image": "lscr.io/linuxserver/sonarr:latest",
+      "state": {
+        "Status": "running",
+        "Running": true,
+        "OOMKilled": false,
+        "StartedAt": "2026-08-29T17:39:44.425472153Z"
+      },
+      "health": null,
+      "project": "arrstack",
+      "limits": {
+        "Memory": 0,
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0
+      },
+      "ports": {
+        "8989/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "8989"
+          },
+          {
+            "HostIp": "::",
+            "HostPort": "8989"
+          }
+        ]
+      }
+    },
+    {
+      "name": "/radarr",
+      "id": "18abf5fb7489c7644f423e52a17066100345a7148177e4bb3c5caa443124d34b",
+      "image": "lscr.io/linuxserver/radarr:latest",
+      "state": {
+        "Status": "running",
+        "Running": true,
+        "OOMKilled": false,
+        "StartedAt": "2026-08-29T17:39:44.428631722Z"
+      },
+      "health": null,
+      "project": "arrstack",
+      "limits": {
+        "Memory": 0,
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0
+      },
+      "ports": {
+        "7878/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "7878"
+          },
+          {
+            "HostIp": "::",
+            "HostPort": "7878"
+          }
+        ]
+      }
+    },
+    {
+      "name": "/lidarr",
+      "id": "a7409a82b53119f882fd0c802c16506e8f3c43df96addc3c4e195e8bd3e6a8c1",
+      "image": "lscr.io/linuxserver/lidarr:latest",
+      "state": {
+        "Status": "exited",
+        "Running": false,
+        "OOMKilled": false,
+        "StartedAt": "2026-08-14T22:02:13.22699214Z"
+      },
+      "health": null,
+      "project": "arrstack",
+      "limits": {
+        "Memory": 0,
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0
+      },
+      "ports": {}
+    },
+    {
+      "name": "/seerr",
+      "id": "9b882985fbbb75c19d237af4df4c4d2617e5e67e5c240b27d3512821c66e76e7",
+      "image": "ghcr.io/seerr-team/seerr:v3.0.1",
+      "state": {
+        "Status": "running",
+        "Running": true,
+        "OOMKilled": false,
+        "StartedAt": "2026-08-29T17:39:44.431610941Z"
+      },
+      "health": "healthy",
+      "project": "arrstack",
+      "limits": {
+        "Memory": 0,
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0
+      },
+      "ports": {
+        "5055/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "5055"
+          },
+          {
+            "HostIp": "::",
+            "HostPort": "5055"
+          }
+        ]
+      }
+    },
+    {
+      "name": "/deunhealth",
+      "id": "f88542f6ffe4c2bd44871dce4a450495267494f1368a4e74a7ab28b48c61f1fc",
+      "image": "qmcgaw/deunhealth",
+      "state": {
+        "Status": "running",
+        "Running": true,
+        "OOMKilled": false,
+        "StartedAt": "2026-08-29T17:39:44.427264907Z"
+      },
+      "health": "healthy",
+      "project": "arrstack",
+      "limits": {
+        "Memory": 0,
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0
+      },
+      "ports": {}
+    },
+    {
+      "name": "/immich_server",
+      "id": "051e70b77c7088544ea2204af4fde54a0d2295991aa3973ba0a673164a68266d",
+      "image": "ghcr.io/immich-app/immich-server:v2",
+      "state": {
+        "Status": "running",
+        "Running": true,
+        "OOMKilled": false,
+        "StartedAt": "2026-08-29T17:39:44.43535444Z"
+      },
+      "health": "healthy",
+      "project": "immich",
+      "limits": {
+        "Memory": 0,
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0
+      },
+      "ports": {
+        "2283/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "2283"
+          },
+          {
+            "HostIp": "::",
+            "HostPort": "2283"
+          }
+        ]
+      }
+    },
+    {
+      "name": "/immich_postgres",
+      "id": "59726e03cbb3a690db7633cb0529a144040bbc53d3bffc7b510d2805e91d8b3a",
+      "image": "ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0",
+      "state": {
+        "Status": "running",
+        "Running": true,
+        "OOMKilled": false,
+        "StartedAt": "2026-08-29T17:39:44.433607343Z"
+      },
+      "health": "healthy",
+      "project": "immich",
+      "limits": {
+        "Memory": 0,
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0
+      },
+      "ports": {
+        "5432/tcp": null
+      }
+    },
+    {
+      "name": "/immich_machine_learning",
+      "id": "b943c172223a8c9759a52306a993265f53af948b67caeb13f4ec49b9f39b8a0f",
+      "image": "ghcr.io/immich-app/immich-machine-learning:v2",
+      "state": {
+        "Status": "running",
+        "Running": true,
+        "OOMKilled": false,
+        "StartedAt": "2026-08-29T17:39:44.435409492Z"
+      },
+      "health": "unhealthy",
+      "project": "immich",
+      "limits": {
+        "Memory": 0,
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0
+      },
+      "ports": {}
+    },
+    {
+      "name": "/immich_redis",
+      "id": "51ac4fa635668509d3564536fdddaa7064e2b30095c3973274d156b6c40df812",
+      "image": "valkey/valkey:9",
+      "state": {
+        "Status": "running",
+        "Running": true,
+        "OOMKilled": false,
+        "StartedAt": "2026-08-29T17:39:44.422343977Z"
+      },
+      "health": "healthy",
+      "project": "immich",
+      "limits": {
+        "Memory": 0,
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0
+      },
+      "ports": {
+        "6379/tcp": null
+      }
+    },
+    {
+      "name": "/wonderful_thompson",
+      "id": "5733101a9f86251f24bdd1c3debc87bffe510b57f1b7fb7156d95802f1e48c5b",
+      "image": "hello-world",
+      "state": {
+        "Status": "exited",
+        "Running": false,
+        "OOMKilled": false,
+        "StartedAt": "2026-06-30T22:17:35.371138871Z"
+      },
+      "health": null,
+      "project": null,
+      "limits": {
+        "Memory": 0,
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0
+      },
+      "ports": {}
+    },
+    {
+      "name": "/clever_hamilton",
+      "id": "41719cce4f9b69feafa2be71c917a942c5a196316978db1b36f34578f15515a4",
+      "image": "nginx",
+      "state": {
+        "Status": "exited",
+        "Running": false,
+        "OOMKilled": false,
+        "StartedAt": "2026-06-28T23:03:46.700110168Z"
+      },
+      "health": null,
+      "project": null,
+      "limits": {
+        "Memory": 0,
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0
+      },
+      "ports": {}
+    },
+    {
+      "name": "/sad_wright",
+      "id": "ac862b1a6c71fd2020ffb200862e58a51dc8088681586299bfeb99350500a79a",
+      "image": "hello-world",
+      "state": {
+        "Status": "exited",
+        "Running": false,
+        "OOMKilled": false,
+        "StartedAt": "2026-06-28T23:03:29.512683913Z"
+      },
+      "health": null,
+      "project": null,
+      "limits": {
+        "Memory": 0,
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0
+      },
+      "ports": {}
+    }
+  ],
+  "docker_stats": {
+    "command": [
+      "docker",
+      "stats",
+      "--no-stream",
+      "--format",
+      "{{json .}}"
+    ],
+    "returncode": 0,
+    "stdout": "{\"BlockIO\":\"4.92MB / 72.6MB\",\"CPUPerc\":\"0.00%\",\"Container\":\"bcdeb2f37986185a559396c3e90a2be41260d0b8ac71b77e5660d09929c04017\",\"ID\":\"bcdeb2f37986\",\"MemPerc\":\"0.04%\",\"MemUsage\":\"12.65MiB / 30.57GiB\",\"Name\":\"okc-postgres\",\"NetIO\":\"3.56MB / 27.8MB\",\"PIDs\":\"6\"}\n{\"BlockIO\":\"11.5GB / 52.7GB\",\"CPUPerc\":\"1.85%\",\"Container\":\"671e4768a7f3574d594711d7dcdca843b5e1a4637d6917fc5baa63ac925ff93c\",\"ID\":\"671e4768a7f3\",\"MemPerc\":\"15.21%\",\"MemUsage\":\"4.648GiB / 30.57GiB\",\"Name\":\"qbittorrent\",\"NetIO\":\"115GB / 204GB\",\"PIDs\":\"20\"}\n{\"BlockIO\":\"920MB / 7.86GB\",\"CPUPerc\":\"0.01%\",\"Container\":\"0fa5d9a69c99e841f6f69c6fa157c50f76a72a2deb7644d3b8180f7c4084129f\",\"ID\":\"0fa5d9a69c99\",\"MemPerc\":\"1.18%\",\"MemUsage\":\"370.4MiB / 30.57GiB\",\"Name\":\"flaresolverr\",\"NetIO\":\"115GB / 204GB\",\"PIDs\":\"7\"}\n{\"BlockIO\":\"271MB / 5.66GB\",\"CPUPerc\":\"0.12%\",\"Container\":\"919839159a8bd5142998468131bc9ab07fcd538626b4d9d3779b6ff214f0f312\",\"ID\":\"919839159a8b\",\"MemPerc\":\"0.49%\",\"MemUsage\":\"154.5MiB / 30.57GiB\",\"Name\":\"prowlarr\",\"NetIO\":\"115GB / 204GB\",\"PIDs\":\"23\"}\n{\"BlockIO\":\"70.7MB / 9.4MB\",\"CPUPerc\":\"0.02%\",\"Container\":\"5954fffeb11454453af7ccf7eeb5ea38b06a9b5ef6f16f05f58b12c732aa624f\",\"ID\":\"5954fffeb114\",\"MemPerc\":\"0.16%\",\"MemUsage\":\"48.62MiB / 30.57GiB\",\"Name\":\"gluetun\",\"NetIO\":\"115GB / 204GB\",\"PIDs\":\"14\"}\n{\"BlockIO\":\"143MB / 317MB\",\"CPUPerc\":\"0.18%\",\"Container\":\"be7238654926dfea8a13cb1b0059a62e27fdd96e5c8efb87dd25f55a5826c522\",\"ID\":\"be7238654926\",\"MemPerc\":\"0.12%\",\"MemUsage\":\"37.59MiB / 30.57GiB\",\"Name\":\"bazarr\",\"NetIO\":\"79.4MB / 3.26MB\",\"PIDs\":\"127\"}\n{\"BlockIO\":\"20.1GB / 10.2GB\",\"CPUPerc\":\"0.11%\",\"Container\":\"eb2f21ab995e33f7d01b5e243fb9a2358336b720218c4b70248c6f0daa1db57e\",\"ID\":\"eb2f21ab995e\",\"MemPerc\":\"3.80%\",\"MemUsage\":\"1.16GiB / 30.57GiB\",\"Name\":\"jellyfin\",\"NetIO\":\"115MB / 1.7GB\",\"PIDs\":\"29\"}\n{\"BlockIO\":\"267MB / 14.3GB\",\"CPUPerc\":\"0.07%\",\"Container\":\"108b33100355ce38bfeebdf939462b2a0d1a5a7a56ae301283e3850305f2bac3\",\"ID\":\"108b33100355\",\"MemPerc\":\"0.53%\",\"MemUsage\":\"166.8MiB / 30.57GiB\",\"Name\":\"sonarr\",\"NetIO\":\"952MB / 132MB\",\"PIDs\":\"24\"}\n{\"BlockIO\":\"294MB / 12.9GB\",\"CPUPerc\":\"0.10%\",\"Container\":\"18abf5fb7489c7644f423e52a17066100345a7148177e4bb3c5caa443124d34b\",\"ID\":\"18abf5fb7489\",\"MemPerc\":\"0.64%\",\"MemUsage\":\"199.8MiB / 30.57GiB\",\"Name\":\"radarr\",\"NetIO\":\"537MB / 131MB\",\"PIDs\":\"22\"}\n{\"BlockIO\":\"244MB / 421MB\",\"CPUPerc\":\"0.00%\",\"Container\":\"9b882985fbbb75c19d237af4df4c4d2617e5e67e5c240b27d3512821c66e76e7\",\"ID\":\"9b882985fbbb\",\"MemPerc\":\"0.62%\",\"MemUsage\":\"193.6MiB / 30.57GiB\",\"Name\":\"seerr\",\"NetIO\":\"200MB / 76.4MB\",\"PIDs\":\"23\"}\n{\"BlockIO\":\"8.2MB / 381kB\",\"CPUPerc\":\"0.00%\",\"Container\":\"f88542f6ffe4c2bd44871dce4a450495267494f1368a4e74a7ab28b48c61f1fc\",\"ID\":\"f88542f6ffe4\",\"MemPerc\":\"0.03%\",\"MemUsage\":\"10.8MiB / 30.57GiB\",\"Name\":\"deunhealth\",\"NetIO\":\"0B / 0B\",\"PIDs\":\"13\"}\n{\"BlockIO\":\"709MB / 3.98GB\",\"CPUPerc\":\"0.05%\",\"Container\":\"051e70b77c7088544ea2204af4fde54a0d2295991aa3973ba0a673164a68266d\",\"ID\":\"051e70b77c70\",\"MemPerc\":\"1.30%\",\"MemUsage\":\"406.1MiB / 30.57GiB\",\"Name\":\"immich_server\",\"NetIO\":\"14.9GB / 22GB\",\"PIDs\":\"32\"}\n{\"BlockIO\":\"342MB / 14GB\",\"CPUPerc\":\"0.00%\",\"Container\":\"59726e03cbb3a690db7633cb0529a144040bbc53d3bffc7b510d2805e91d8b3a\",\"ID\":\"59726e03cbb3\",\"MemPerc\":\"0.50%\",\"MemUsage\":\"155.7MiB / 30.57GiB\",\"Name\":\"immich_postgres\",\"NetIO\":\"44.6MB / 9.38GB\",\"PIDs\":\"10\"}\n{\"BlockIO\":\"62.8MB / 83.2MB\",\"CPUPerc\":\"0.02%\",\"Container\":\"b943c172223a8c9759a52306a993265f53af948b67caeb13f4ec49b9f39b8a0f\",\"ID\":\"b943c172223a\",\"MemPerc\":\"0.03%\",\"MemUsage\":\"8.223MiB / 30.57GiB\",\"Name\":\"immich_machine_learning\",\"NetIO\":\"217MB / 6.88MB\",\"PIDs\":\"12\"}\n{\"BlockIO\":\"20.1MB / 1.75GB\",\"CPUPerc\":\"0.58%\",\"Container\":\"51ac4fa635668509d3564536fdddaa7064e2b30095c3973274d156b6c40df812\",\"ID\":\"51ac4fa63566\",\"MemPerc\":\"0.03%\",\"MemUsage\":\"10.45MiB / 30.57GiB\",\"Name\":\"immich_redis\",\"NetIO\":\"21.7GB / 5.54GB\",\"PIDs\":\"8\"}",
+    "stderr": ""
+  },
+  "networks": [
+    {
+      "Name": "arrnetwork",
+      "Id": "8fe44263db2a4c04a7ebe89f965b761fa2ae5d506df8efdc1351a958457f0ecb",
+      "Created": "2026-08-14T15:02:12.728155737-07:00",
+      "Scope": "local",
+      "Driver": "bridge",
+      "EnableIPv4": true,
+      "EnableIPv6": false,
+      "IPAM": {
+        "Driver": "default",
+        "Options": null,
+        "Config": [
+          {
+            "Subnet": "172.39.0.0/24",
+            "Gateway": "172.39.0.1"
+          }
+        ]
+      },
+      "Internal": false,
+      "Attachable": false,
+      "Ingress": false,
+      "ConfigFrom": {
+        "Network": ""
+      },
+      "ConfigOnly": false,
+      "Options": {},
+      "Labels": {
+        "com.docker.compose.config-hash": "f17cd2ee7abdaf4e8397f982cf6cf75df816624a8f57dea6a8a3ecf9ae4fd945",
+        "com.docker.compose.network": "arrnetwork",
+        "com.docker.compose.project": "arrstack",
+        "com.docker.compose.version": "5.4.0"
+      },
+      "Containers": {
+        "108b33100355ce38bfeebdf939462b2a0d1a5a7a56ae301283e3850305f2bac3": {
+          "Name": "sonarr",
+          "EndpointID": "594414864e574833c124839e98e951bff80e9ee5ed894597a2651292ba7b05fe",
+          "MacAddress": "b6:0f:37:ae:8d:5c",
+          "IPv4Address": "172.39.0.4/24",
+          "IPv6Address": ""
+        },
+        "18abf5fb7489c7644f423e52a17066100345a7148177e4bb3c5caa443124d34b": {
+          "Name": "radarr",
+          "EndpointID": "2cc1a5804894779ad4517db9e8e7c41e1ee7bd3d0882649b5e3fe3cbea182d0b",
+          "MacAddress": "16:2a:26:42:f1:75",
+          "IPv4Address": "172.39.0.3/24",
+          "IPv6Address": ""
+        },
+        "5954fffeb11454453af7ccf7eeb5ea38b06a9b5ef6f16f05f58b12c732aa624f": {
+          "Name": "gluetun",
+          "EndpointID": "6c16f110aa40bb2e0f99461c30c2c3646749c6d41c8b821740a4f832350b7ccd",
+          "MacAddress": "2e:2e:e9:d0:7e:23",
+          "IPv4Address": "172.39.0.2/24",
+          "IPv6Address": ""
+        },
+        "9b882985fbbb75c19d237af4df4c4d2617e5e67e5c240b27d3512821c66e76e7": {
+          "Name": "seerr",
+          "EndpointID": "c1a65dde5eebf093f01a53b12925706308063aa8df17bcc2b0d10845312c1ea5",
+          "MacAddress": "de:b2:d3:39:6e:b0",
+          "IPv4Address": "172.39.0.8/24",
+          "IPv6Address": ""
+        },
+        "be7238654926dfea8a13cb1b0059a62e27fdd96e5c8efb87dd25f55a5826c522": {
+          "Name": "bazarr",
+          "EndpointID": "a3f56c758df19dc39382a87b8688557f5c7c63e0f1d310b77e106ab04608f5b9",
+          "MacAddress": "86:d4:11:6c:37:06",
+          "IPv4Address": "172.39.0.6/24",
+          "IPv6Address": ""
+        },
+        "eb2f21ab995e33f7d01b5e243fb9a2358336b720218c4b70248c6f0daa1db57e": {
+          "Name": "jellyfin",
+          "EndpointID": "2c23adf8da12b214b0a78d83cc16493310be64cd1ebf457d42d3290e36148e1d",
+          "MacAddress": "4e:94:88:61:be:22",
+          "IPv4Address": "172.39.0.7/24",
+          "IPv6Address": ""
+        }
+      },
+      "Status": {
+        "IPAM": {
+          "Subnets": {
+            "172.39.0.0/24": {
+              "IPsInUse": 9,
+              "DynamicIPsAvailable": 247
+            }
+          }
+        }
+      }
+    },
+    {
+      "Name": "bridge",
+      "Id": "53dc9ec14abc652ee83b96f790519605a6eb29302c90fd8727b10ac463ff00b8",
+      "Created": "2026-08-29T10:39:44.371269261-07:00",
+      "Scope": "local",
+      "Driver": "bridge",
+      "EnableIPv4": true,
+      "EnableIPv6": false,
+      "IPAM": {
+        "Driver": "default",
+        "Options": null,
+        "Config": [
+          {
+            "Subnet": "172.17.0.0/16",
+            "Gateway": "172.17.0.1"
+          }
+        ]
+      },
+      "Internal": false,
+      "Attachable": false,
+      "Ingress": false,
+      "ConfigFrom": {
+        "Network": ""
+      },
+      "ConfigOnly": false,
+      "Options": {
+        "com.docker.network.bridge.default_bridge": "true",
+        "com.docker.network.bridge.enable_icc": "true",
+        "com.docker.network.bridge.enable_ip_masquerade": "true",
+        "com.docker.network.bridge.host_binding_ipv4": "0.0.0.0",
+        "com.docker.network.bridge.name": "docker0",
+        "com.docker.network.driver.mtu": "1500"
+      },
+      "Labels": {},
+      "Containers": {
+        "bcdeb2f37986185a559396c3e90a2be41260d0b8ac71b77e5660d09929c04017": {
+          "Name": "okc-postgres",
+          "EndpointID": "4af29568d6c06ba76763795a07e90fa919f87610ed1cf4e82e3f60f8ce8f3b65",
+          "MacAddress": "06:4f:d8:88:f9:f0",
+          "IPv4Address": "172.17.0.2/16",
+          "IPv6Address": ""
+        }
+      },
+      "Status": {
+        "IPAM": {
+          "Subnets": {
+            "172.17.0.0/16": {
+              "IPsInUse": 4,
+              "DynamicIPsAvailable": 65532
+            }
+          }
+        }
+      }
+    },
+    {
+      "Name": "host",
+      "Id": "bd7a9ce5201380dab7de2eae891c41c83233a10ab77e6e80c4e52ed701af8f76",
+      "Created": "2026-06-27T15:11:38.526257419-07:00",
+      "Scope": "local",
+      "Driver": "host",
+      "EnableIPv4": true,
+      "EnableIPv6": false,
+      "IPAM": {
+        "Driver": "default",
+        "Options": null,
+        "Config": null
+      },
+      "Internal": false,
+      "Attachable": false,
+      "Ingress": false,
+      "ConfigFrom": {
+        "Network": ""
+      },
+      "ConfigOnly": false,
+      "Options": {},
+      "Labels": {},
+      "Containers": {},
+      "Status": {
+        "IPAM": {}
+      }
+    },
+    {
+      "Name": "immich_default",
+      "Id": "f1ef28f05c77ce3532e085316cd56cb4b91eb22b16dfffb2fa91be8d691f0958",
+      "Created": "2026-08-14T14:51:39.734498943-07:00",
+      "Scope": "local",
+      "Driver": "bridge",
+      "EnableIPv4": true,
+      "EnableIPv6": false,
+      "IPAM": {
+        "Driver": "default",
+        "Options": null,
+        "Config": [
+          {
+            "Subnet": "172.18.0.0/16",
+            "Gateway": "172.18.0.1"
+          }
+        ]
+      },
+      "Internal": false,
+      "Attachable": false,
+      "Ingress": false,
+      "ConfigFrom": {
+        "Network": ""
+      },
+      "ConfigOnly": false,
+      "Options": {},
+      "Labels": {
+        "com.docker.compose.config-hash": "261ce6b1aa11636c525c2f7b6d090301dd8b2838801d975c0e02b50f89308900",
+        "com.docker.compose.network": "default",
+        "com.docker.compose.project": "immich",
+        "com.docker.compose.version": "5.4.0"
+      },
+      "Containers": {
+        "051e70b77c7088544ea2204af4fde54a0d2295991aa3973ba0a673164a68266d": {
+          "Name": "immich_server",
+          "EndpointID": "58488efeb76cf0dd13a93fe36440d64a1e2192d00a1ac336575c8849c1fe19da",
+          "MacAddress": "5a:0b:e1:8a:26:0c",
+          "IPv4Address": "172.18.0.2/16",
+          "IPv6Address": ""
+        },
+        "51ac4fa635668509d3564536fdddaa7064e2b30095c3973274d156b6c40df812": {
+          "Name": "immich_redis",
+          "EndpointID": "81f0808a93fdff7328149fe9e35ddd8dccc27aa6d1f9b106b7355ed871a84c2d",
+          "MacAddress": "4a:4d:de:4e:74:60",
+          "IPv4Address": "172.18.0.3/16",
+          "IPv6Address": ""
+        },
+        "59726e03cbb3a690db7633cb0529a144040bbc53d3bffc7b510d2805e91d8b3a": {
+          "Name": "immich_postgres",
+          "EndpointID": "48bbc6b6b771cdc42c749c2995bc6ef03611b8f028bc5a71e5af28464eadad6f",
+          "MacAddress": "ae:0c:e8:f0:9e:a6",
+          "IPv4Address": "172.18.0.5/16",
+          "IPv6Address": ""
+        },
+        "b943c172223a8c9759a52306a993265f53af948b67caeb13f4ec49b9f39b8a0f": {
+          "Name": "immich_machine_learning",
+          "EndpointID": "012fc6c3e6db3b36e388d18cb3641dbd5e3edf6daec4a67d61b8e71e85eb09ab",
+          "MacAddress": "a6:9a:e2:14:10:fa",
+          "IPv4Address": "172.18.0.4/16",
+          "IPv6Address": ""
+        }
+      },
+      "Status": {
+        "IPAM": {
+          "Subnets": {
+            "172.18.0.0/16": {
+              "IPsInUse": 7,
+              "DynamicIPsAvailable": 65529
+            }
+          }
+        }
+      }
+    },
+    {
+      "Name": "none",
+      "Id": "f0e89e7b028f3e344e59f92890ab5d18752c3a97e0fe9ff816b4c3abefb44d48",
+      "Created": "2026-06-27T15:11:38.522801477-07:00",
+      "Scope": "local",
+      "Driver": "null",
+      "EnableIPv4": true,
+      "EnableIPv6": false,
+      "IPAM": {
+        "Driver": "default",
+        "Options": null,
+        "Config": null
+      },
+      "Internal": false,
+      "Attachable": false,
+      "Ingress": false,
+      "ConfigFrom": {
+        "Network": ""
+      },
+      "ConfigOnly": false,
+      "Options": {},
+      "Labels": {},
+      "Containers": {
+        "f88542f6ffe4c2bd44871dce4a450495267494f1368a4e74a7ab28b48c61f1fc": {
+          "Name": "deunhealth",
+          "EndpointID": "2b7d9cb78b4d0a840f57fa0a5298d27635178ecd74376f2f856cd10922078135",
+          "MacAddress": "",
+          "IPv4Address": "",
+          "IPv6Address": ""
+        }
+      },
+      "Status": {
+        "IPAM": {}
+      }
+    }
+  ],
+  "volumes": {
+    "command": [
+      "docker",
+      "volume",
+      "ls",
+      "--format",
+      "{{json .}}"
+    ],
+    "returncode": 0,
+    "stdout": "{\"Availability\":\"N/A\",\"Driver\":\"local\",\"Group\":\"N/A\",\"Labels\":\"com.docker.volume.anonymous=\",\"Links\":\"N/A\",\"Mountpoint\":\"/var/lib/docker/volumes/3d773478bc6fdef18fbb67f0ad02d95866a3a187d7806528b049b9044b46d868/_data\",\"Name\":\"3d773478bc6fdef18fbb67f0ad02d95866a3a187d7806528b049b9044b46d868\",\"Scope\":\"local\",\"Size\":\"N/A\",\"Status\":\"N/A\"}\n{\"Availability\":\"N/A\",\"Driver\":\"local\",\"Group\":\"N/A\",\"Labels\":\"com.docker.volume.anonymous=\",\"Links\":\"N/A\",\"Mountpoint\":\"/var/lib/docker/volumes/7b81807696bdcaf08289290eea660d186727fd6e6412f4ce58afe9bb0c257558/_data\",\"Name\":\"7b81807696bdcaf08289290eea660d186727fd6e6412f4ce58afe9bb0c257558\",\"Scope\":\"local\",\"Size\":\"N/A\",\"Status\":\"N/A\"}\n{\"Availability\":\"N/A\",\"Driver\":\"local\",\"Group\":\"N/A\",\"Labels\":\"com.docker.volume.anonymous=\",\"Links\":\"N/A\",\"Mountpoint\":\"/var/lib/docker/volumes/787934a1106d87aa7d84414464d25ba217b98448b0ea39103288d4e93373729f/_data\",\"Name\":\"787934a1106d87aa7d84414464d25ba217b98448b0ea39103288d4e93373729f\",\"Scope\":\"local\",\"Size\":\"N/A\",\"Status\":\"N/A\"}\n{\"Availability\":\"N/A\",\"Driver\":\"local\",\"Group\":\"N/A\",\"Labels\":\"com.docker.compose.config-hash=04d6c1fbdb7da5f2950aa69b97a68abebbd9abf35275ea7b471d6063aefc9d62,com.docker.compose.project=arrstack,com.docker.compose.version=5.4.0,com.docker.compose.volume=seerr_config\",\"Links\":\"N/A\",\"Mountpoint\":\"/var/lib/docker/volumes/arrstack_seerr_config/_data\",\"Name\":\"arrstack_seerr_config\",\"Scope\":\"local\",\"Size\":\"N/A\",\"Status\":\"N/A\"}\n{\"Availability\":\"N/A\",\"Driver\":\"local\",\"Group\":\"N/A\",\"Labels\":\"com.docker.compose.config-hash=f9b1e6c118142cab8e2dc4356da9a09ffca54c5e0f80145d438e4c4a9bc909a8,com.docker.compose.project=immich,com.docker.compose.version=2.40.3,com.docker.compose.volume=model-cache\",\"Links\":\"N/A\",\"Mountpoint\":\"/var/lib/docker/volumes/immich_model-cache/_data\",\"Name\":\"immich_model-cache\",\"Scope\":\"local\",\"Size\":\"N/A\",\"Status\":\"N/A\"}\n{\"Availability\":\"N/A\",\"Driver\":\"local\",\"Group\":\"N/A\",\"Labels\":\"com.docker.compose.config-hash=ada6a48a1e9f0c9d89eea6d00b10d906cf70d0903985c147fc943f6d90d41f6f,com.docker.compose.project=sprinty,com.docker.compose.version=5.4.0,com.docker.compose.volume=sprinty_mongo_data\",\"Links\":\"N/A\",\"Mountpoint\":\"/var/lib/docker/volumes/sprinty_sprinty_mongo_data/_data\",\"Name\":\"sprinty_sprinty_mongo_data\",\"Scope\":\"local\",\"Size\":\"N/A\",\"Status\":\"N/A\"}\n{\"Availability\":\"N/A\",\"Driver\":\"local\",\"Group\":\"N/A\",\"Labels\":\"com.docker.compose.project=PartSync,com.supabase.cli.project=PartSync\",\"Links\":\"N/A\",\"Mountpoint\":\"/var/lib/docker/volumes/supabase_db_PartSync/_data\",\"Name\":\"supabase_db_PartSync\",\"Scope\":\"local\",\"Size\":\"N/A\",\"Status\":\"N/A\"}\n{\"Availability\":\"N/A\",\"Driver\":\"local\",\"Group\":\"N/A\",\"Labels\":\"com.docker.compose.project=PartSync,com.supabase.cli.project=PartSync\",\"Links\":\"N/A\",\"Mountpoint\":\"/var/lib/docker/volumes/supabase_storage_PartSync/_data\",\"Name\":\"supabase_storage_PartSync\",\"Scope\":\"local\",\"Size\":\"N/A\",\"Status\":\"N/A\"}",
+    "stderr": ""
+  },
+  "routes": [
+    {
+      "dst": "default",
+      "gateway": "192.168.1.1",
+      "dev": "wlp2s0",
+      "protocol": "dhcp",
+      "prefsrc": "192.168.1.201",
+      "metric": 600,
+      "flags": []
+    },
+    {
+      "dst": "10.42.0.0/24",
+      "dev": "cni0",
+      "protocol": "kernel",
+      "scope": "link",
+      "prefsrc": "10.42.0.1",
+      "flags": []
+    },
+    {
+      "dst": "172.17.0.0/16",
+      "dev": "docker0",
+      "protocol": "kernel",
+      "scope": "link",
+      "prefsrc": "172.17.0.1",
+      "flags": []
+    },
+    {
+      "dst": "172.18.0.0/16",
+      "dev": "br-f1ef28f05c77",
+      "protocol": "kernel",
+      "scope": "link",
+      "prefsrc": "172.18.0.1",
+      "flags": []
+    },
+    {
+      "dst": "172.39.0.0/24",
+      "dev": "br-8fe44263db2a",
+      "protocol": "kernel",
+      "scope": "link",
+      "prefsrc": "172.39.0.1",
+      "flags": []
+    },
+    {
+      "dst": "192.168.1.0/24",
+      "dev": "wlp2s0",
+      "protocol": "kernel",
+      "scope": "link",
+      "prefsrc": "192.168.1.201",
+      "metric": 600,
+      "flags": []
+    }
+  ],
+  "listeners": {
+    "command": [
+      "ss",
+      "-lnt"
+    ],
+    "returncode": 0,
+    "stdout": "State  Recv-Q Send-Q               Local Address:Port  Peer Address:Port\nLISTEN 0      4096                  100.98.78.15:47430      0.0.0.0:*   \nLISTEN 0      4096                       0.0.0.0:2283       0.0.0.0:*   \nLISTEN 0      4096                     127.0.0.1:631        0.0.0.0:*   \nLISTEN 0      128                      127.0.0.1:34289      0.0.0.0:*   \nLISTEN 0      4096                       0.0.0.0:22         0.0.0.0:*   \nLISTEN 0      2048                     127.0.0.1:50319      0.0.0.0:*   \nLISTEN 0      4096                 127.0.0.53%lo:53         0.0.0.0:*   \nLISTEN 0      4096                       0.0.0.0:7878       0.0.0.0:*   \nLISTEN 0      4096                       0.0.0.0:8080       0.0.0.0:*   \nLISTEN 0      4096                       0.0.0.0:8096       0.0.0.0:*   \nLISTEN 0      4096                       0.0.0.0:8191       0.0.0.0:*   \nLISTEN 0      4096                     127.0.0.1:6444       0.0.0.0:*   \nLISTEN 0      4096                       0.0.0.0:6881       0.0.0.0:*   \nLISTEN 0      4096                       0.0.0.0:6767       0.0.0.0:*   \nLISTEN 0      4096                       0.0.0.0:5432       0.0.0.0:*   \nLISTEN 0      4096                       0.0.0.0:5055       0.0.0.0:*   \nLISTEN 0      128                      127.0.0.1:37975      0.0.0.0:*   \nLISTEN 0      4096                     127.0.0.1:10257      0.0.0.0:*   \nLISTEN 0      4096                     127.0.0.1:10256      0.0.0.0:*   \nLISTEN 0      4096                     127.0.0.1:10259      0.0.0.0:*   \nLISTEN 0      4096                     127.0.0.1:10258      0.0.0.0:*   \nLISTEN 0      4096                     127.0.0.1:10249      0.0.0.0:*   \nLISTEN 0      4096                     127.0.0.1:10248      0.0.0.0:*   \nLISTEN 0      4096                     127.0.0.1:11434      0.0.0.0:*   \nLISTEN 0      4096                       0.0.0.0:9696       0.0.0.0:*   \nLISTEN 0      4096                     127.0.0.1:10010      0.0.0.0:*   \nLISTEN 0      4096                       0.0.0.0:8989       0.0.0.0:*   \nLISTEN 0      4096                    127.0.0.54:53         0.0.0.0:*   \nLISTEN 0      2048                       0.0.0.0:8501       0.0.0.0:*   \nLISTEN 0      4096                          [::]:2283          [::]:*   \nLISTEN 0      4096                          [::]:22            [::]:*   \nLISTEN 0      4096                         [::1]:631           [::]:*   \nLISTEN 0      4096                          [::]:7878          [::]:*   \nLISTEN 0      4096                          [::]:8080          [::]:*   \nLISTEN 0      4096                          [::]:8096          [::]:*   \nLISTEN 0      4096                          [::]:8191          [::]:*   \nLISTEN 0      4096                          [::]:6881          [::]:*   \nLISTEN 0      4096                          [::]:6767          [::]:*   \nLISTEN 0      4096                             *:6443             *:*   \nLISTEN 0      4096                          [::]:5432          [::]:*   \nLISTEN 0      4096                          [::]:5055          [::]:*   \nLISTEN 0      4096                             *:10250            *:*   \nLISTEN 0      4096                          [::]:9696          [::]:*   \nLISTEN 0      4096                          [::]:8989          [::]:*   \nLISTEN 0      4096   [fd7a:115c:a1e0::dc33:4e10]:61492         [::]:*",
+    "stderr": ""
+  },
+  "ollama_connections": {
+    "command": [
+      "ss",
+      "-nt",
+      "( sport = :11434 or dport = :11434 )"
+    ],
+    "returncode": 0,
+    "stdout": "State Recv-Q Send-Q Local Address:Port Peer Address:Port",
+    "stderr": ""
+  },
+  "ollama_version": {
+    "version": "0.40.13"
+  },
+  "ollama_tags": {
+    "models": [
+      {
+        "name": "qwen3.5:9b",
+        "model": "qwen3.5:9b",
+        "modified_at": "2026-11-02T08:33:14.640965959-08:00",
+        "size": 6550825550,
+        "digest": "56671c2ab9385f9cfcb404638e32cd62d88e3501d44822208363c010179a3c90",
+        "details": {
+          "parent_model": "model.gguf",
+          "format": "gguf",
+          "family": "qwen35",
+          "families": [
+            "qwen35"
+          ],
+          "parameter_size": "9.0B",
+          "quantization_level": "Q4_K_M",
+          "context_length": 262144,
+          "embedding_length": 4096,
+          "runner": "llamacpp"
+        },
+        "capabilities": [
+          "completion",
+          "vision",
+          "tools",
+          "thinking"
+        ]
+      }
+    ]
+  },
+  "ollama_show": {
+    "details": {
+      "parent_model": "model.gguf",
+      "format": "gguf",
+      "family": "qwen35",
+      "families": [
+        "qwen35"
+      ],
+      "parameter_size": "9.0B",
+      "quantization_level": "Q4_K_M",
+      "runner": "llamacpp"
+    },
+    "capabilities": [
+      "completion",
+      "vision",
+      "tools",
+      "thinking"
+    ],
+    "model_info": {
+      "general.architecture": "qwen35",
+      "general.base_model.0.name": "Qwen3.5 9B Base",
+      "general.base_model.0.organization": "Qwen",
+      "general.base_model.0.repo_url": "https://huggingface.co/Qwen/Qwen3.5-9B-Base",
+      "general.base_model.count": 1,
+      "general.file_type": 15,
+      "general.license": "apache-2.0",
+      "general.license.link": "https://huggingface.co/Qwen/Qwen3.5-9B/blob/main/LICENSE",
+      "general.parameter_count": 8953803264,
+      "general.quantization_version": 2,
+      "general.size_label": "9.0B",
+      "general.tags": [
+        "image-text-to-text"
+      ],
+      "general.type": "model",
+      "qwen35.attention.head_count": 16,
+      "qwen35.attention.head_count_kv": 4,
+      "qwen35.attention.key_length": 256,
+      "qwen35.attention.layer_norm_rms_epsilon": 1e-06,
+      "qwen35.attention.recurrent_layers": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        false
+      ],
+      "qwen35.attention.value_length": 256,
+      "qwen35.block_count": 32,
+      "qwen35.context_length": 262144,
+      "qwen35.embedding_length": 4096,
+      "qwen35.feed_forward_length": 12288,
+      "qwen35.full_attention_interval": 4,
+      "qwen35.rope.dimension_count": 64,
+      "qwen35.rope.dimension_sections": [
+        11,
+        11,
+        10,
+        0
+      ],
+      "qwen35.rope.freq_base": 10000000,
+      "qwen35.ssm.conv_kernel": 4,
+      "qwen35.ssm.group_count": 16,
+      "qwen35.ssm.inner_size": 4096,
+      "qwen35.ssm.state_size": 128,
+      "qwen35.ssm.time_step_rank": 32,
+      "tokenizer.ggml.add_bos_token": false,
+      "tokenizer.ggml.eos_token_id": 248046,
+      "tokenizer.ggml.merges": [],
+      "tokenizer.ggml.model": "gpt2",
+      "tokenizer.ggml.padding_token_id": 248044,
+      "tokenizer.ggml.pre": "qwen35",
+      "tokenizer.ggml.token_type": [],
+      "tokenizer.ggml.tokens": []
+    }
+  },
+  "ollama_ps_before": {
+    "models": []
+  },
+  "gpu": {
+    "command": [
+      "nvidia-smi"
+    ],
+    "returncode": 18,
+    "stdout": "Failed to initialize NVML: Driver/library version mismatch\nNVML library version: 580.178",
+    "stderr": ""
+  },
+  "proposal": {
+    "compose_project": "mcpbench",
+    "network": "mcpbench_db",
+    "volume": "mcpbench_pgdata",
+    "subnet": "172.30.77.0/24",
+    "mcp_binding": "127.0.0.1:18081",
+    "database_published": false
+  },
+  "samples": [
+    {
+      "utc": "2026-11-08T15:26:16.424704+00:00",
+      "monotonic": 6055635.224787222,
+      "mem_available_bytes": 26987950080,
+      "pswpin_pages": 573789,
+      "pswpout_pages": 2195877,
+      "cpu_ticks": [
+        138224188,
+        126599,
+        67790063,
+        4546979048,
+        544830,
+        0,
+        10852286,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.37890625,
+        0.4365234375,
+        0.4404296875
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.00 avg300=0.00 total=9315457\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=9071688"
+    },
+    {
+      "utc": "2026-11-08T15:26:18.426214+00:00",
+      "monotonic": 6055637.226319621,
+      "mem_available_bytes": 26986373120,
+      "pswpin_pages": 573789,
+      "pswpout_pages": 2195877,
+      "cpu_ticks": [
+        138224254,
+        126599,
+        67790094,
+        4546980521,
+        544830,
+        0,
+        10852289,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.4287109375,
+        0.4462890625,
+        0.44384765625
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.00 avg300=0.00 total=9315457\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=9071688"
+    },
+    {
+      "utc": "2026-11-08T15:26:20.428032+00:00",
+      "monotonic": 6055639.228136371,
+      "mem_available_bytes": 26997538816,
+      "pswpin_pages": 573791,
+      "pswpout_pages": 2195877,
+      "cpu_ticks": [
+        138224337,
+        126599,
+        67790123,
+        4546981973,
+        544830,
+        0,
+        10852292,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.4287109375,
+        0.4462890625,
+        0.44384765625
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.00 avg300=0.00 total=9315457\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=9071688"
+    },
+    {
+      "utc": "2026-11-08T15:26:22.429877+00:00",
+      "monotonic": 6055641.229982052,
+      "mem_available_bytes": 26996748288,
+      "pswpin_pages": 573791,
+      "pswpout_pages": 2195877,
+      "cpu_ticks": [
+        138224408,
+        126599,
+        67790146,
+        4546983445,
+        544830,
+        0,
+        10852295,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.39404296875,
+        0.4384765625,
+        0.44140625
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.00 avg300=0.00 total=9315457\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=9071688"
+    },
+    {
+      "utc": "2026-11-08T15:26:24.432148+00:00",
+      "monotonic": 6055643.23225583,
+      "mem_available_bytes": 26995601408,
+      "pswpin_pages": 573791,
+      "pswpout_pages": 2195877,
+      "cpu_ticks": [
+        138224473,
+        126599,
+        67790165,
+        4546984930,
+        544830,
+        0,
+        10852298,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.39404296875,
+        0.4384765625,
+        0.44140625
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.00 avg300=0.00 total=9315457\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=9071688"
+    },
+    {
+      "utc": "2026-11-08T15:26:26.434087+00:00",
+      "monotonic": 6055645.234192797,
+      "mem_available_bytes": 26990080000,
+      "pswpin_pages": 573791,
+      "pswpout_pages": 2195877,
+      "cpu_ticks": [
+        138224561,
+        126599,
+        67790197,
+        4546986371,
+        544830,
+        0,
+        10852303,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.39404296875,
+        0.4384765625,
+        0.44140625
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.00 avg300=0.00 total=9315457\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=9071688"
+    },
+    {
+      "utc": "2026-11-08T15:26:28.435797+00:00",
+      "monotonic": 6055647.235900518,
+      "mem_available_bytes": 26991144960,
+      "pswpin_pages": 573791,
+      "pswpout_pages": 2195877,
+      "cpu_ticks": [
+        138224651,
+        126599,
+        67790223,
+        4546987822,
+        544830,
+        0,
+        10852307,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.3623046875,
+        0.43115234375,
+        0.43896484375
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.00 avg300=0.00 total=9315457\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=9071688"
+    },
+    {
+      "utc": "2026-11-08T15:26:30.437586+00:00",
+      "monotonic": 6055649.237691484,
+      "mem_available_bytes": 26952159232,
+      "pswpin_pages": 573791,
+      "pswpout_pages": 2195877,
+      "cpu_ticks": [
+        138224783,
+        126599,
+        67790250,
+        4546989232,
+        544831,
+        0,
+        10852312,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.3623046875,
+        0.43115234375,
+        0.43896484375
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.00 avg300=0.00 total=9315457\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=9071688"
+    },
+    {
+      "utc": "2026-11-08T15:26:32.439260+00:00",
+      "monotonic": 6055651.239362333,
+      "mem_available_bytes": 26948460544,
+      "pswpin_pages": 573791,
+      "pswpout_pages": 2195877,
+      "cpu_ticks": [
+        138224875,
+        126599,
+        67790277,
+        4546990676,
+        544831,
+        0,
+        10852314,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.3330078125,
+        0.423828125,
+        0.4365234375
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.00 avg300=0.00 total=9315457\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=9071688"
+    },
+    {
+      "utc": "2026-11-08T15:26:34.440879+00:00",
+      "monotonic": 6055653.240981935,
+      "mem_available_bytes": 26974199808,
+      "pswpin_pages": 573791,
+      "pswpout_pages": 2195877,
+      "cpu_ticks": [
+        138224954,
+        126599,
+        67790299,
+        4546992144,
+        544831,
+        0,
+        10852318,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.3330078125,
+        0.423828125,
+        0.4365234375
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.00 avg300=0.00 total=9315457\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=9071688"
+    },
+    {
+      "utc": "2026-11-08T15:26:36.442836+00:00",
+      "monotonic": 6055655.242941846,
+      "mem_available_bytes": 26980540416,
+      "pswpin_pages": 573791,
+      "pswpout_pages": 2195877,
+      "cpu_ticks": [
+        138225055,
+        126599,
+        67790321,
+        4546993586,
+        544831,
+        0,
+        10852321,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.3330078125,
+        0.423828125,
+        0.4365234375
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.00 avg300=0.00 total=9315457\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=9071688"
+    },
+    {
+      "utc": "2026-11-08T15:26:38.444901+00:00",
+      "monotonic": 6055657.245023899,
+      "mem_available_bytes": 26987057152,
+      "pswpin_pages": 573791,
+      "pswpout_pages": 2195877,
+      "cpu_ticks": [
+        138225161,
+        126599,
+        67790351,
+        4546995012,
+        544831,
+        0,
+        10852326,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.30615234375,
+        0.41650390625,
+        0.43408203125
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.00 avg300=0.00 total=9315457\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=9071688"
+    },
+    {
+      "utc": "2026-11-08T15:26:40.446602+00:00",
+      "monotonic": 6055659.246704647,
+      "mem_available_bytes": 26983743488,
+      "pswpin_pages": 573791,
+      "pswpout_pages": 2195877,
+      "cpu_ticks": [
+        138225266,
+        126599,
+        67790382,
+        4546996438,
+        544831,
+        0,
+        10852331,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.30615234375,
+        0.41650390625,
+        0.43408203125
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.00 avg300=0.00 total=9315457\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=9071688"
+    },
+    {
+      "utc": "2026-11-08T15:26:42.448247+00:00",
+      "monotonic": 6055661.248350684,
+      "mem_available_bytes": 26983649280,
+      "pswpin_pages": 573791,
+      "pswpout_pages": 2195877,
+      "cpu_ticks": [
+        138225341,
+        126599,
+        67790410,
+        4546997906,
+        544831,
+        0,
+        10852335,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.28125,
+        0.4091796875,
+        0.431640625
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.00 avg300=0.00 total=9315457\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=9071688"
+    },
+    {
+      "utc": "2026-11-08T15:26:44.449949+00:00",
+      "monotonic": 6055663.250055607,
+      "mem_available_bytes": 26983079936,
+      "pswpin_pages": 573791,
+      "pswpout_pages": 2195877,
+      "cpu_ticks": [
+        138225409,
+        126599,
+        67790432,
+        4546999387,
+        544831,
+        0,
+        10852337,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.28125,
+        0.4091796875,
+        0.431640625
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.00 avg300=0.00 total=9315457\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=9071688"
+    },
+    {
+      "utc": "2026-11-08T15:26:46.451830+00:00",
+      "monotonic": 6055665.251934454,
+      "mem_available_bytes": 26984837120,
+      "pswpin_pages": 573791,
+      "pswpout_pages": 2195877,
+      "cpu_ticks": [
+        138225473,
+        126599,
+        67790455,
+        4547000870,
+        544831,
+        0,
+        10852340,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.28125,
+        0.4091796875,
+        0.431640625
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.00 avg300=0.00 total=9315457\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=9071688"
+    },
+    {
+      "utc": "2026-11-08T15:26:48.453862+00:00",
+      "monotonic": 6055667.253968233,
+      "mem_available_bytes": 26990551040,
+      "pswpin_pages": 573791,
+      "pswpout_pages": 2195877,
+      "cpu_ticks": [
+        138225560,
+        126599,
+        67790480,
+        4547002333,
+        544831,
+        0,
+        10852342,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.25830078125,
+        0.40234375,
+        0.42919921875
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.00 avg300=0.00 total=9315457\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=9071688"
+    },
+    {
+      "utc": "2026-11-08T15:26:50.455698+00:00",
+      "monotonic": 6055669.255800849,
+      "mem_available_bytes": 26989867008,
+      "pswpin_pages": 573791,
+      "pswpout_pages": 2195877,
+      "cpu_ticks": [
+        138225659,
+        126599,
+        67790504,
+        4547003780,
+        544831,
+        0,
+        10852344,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.25830078125,
+        0.40234375,
+        0.42919921875
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.00 avg300=0.00 total=9315457\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=9071688"
+    },
+    {
+      "utc": "2026-11-08T15:26:52.457495+00:00",
+      "monotonic": 6055671.257600178,
+      "mem_available_bytes": 26988748800,
+      "pswpin_pages": 573791,
+      "pswpout_pages": 2195877,
+      "cpu_ticks": [
+        138225744,
+        126599,
+        67790528,
+        4547005245,
+        544832,
+        0,
+        10852347,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.39794921875,
+        0.42919921875,
+        0.43798828125
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.00 avg300=0.00 total=9315457\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=9071688"
+    },
+    {
+      "utc": "2026-11-08T15:26:54.459344+00:00",
+      "monotonic": 6055673.259449341,
+      "mem_available_bytes": 26988552192,
+      "pswpin_pages": 573791,
+      "pswpout_pages": 2195877,
+      "cpu_ticks": [
+        138225820,
+        126599,
+        67790550,
+        4547006719,
+        544832,
+        0,
+        10852349,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.39794921875,
+        0.42919921875,
+        0.43798828125
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.00 avg300=0.00 total=9315457\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=9071688"
+    },
+    {
+      "utc": "2026-11-08T15:26:56.461220+00:00",
+      "monotonic": 6055675.261324828,
+      "mem_available_bytes": 26993553408,
+      "pswpin_pages": 573791,
+      "pswpout_pages": 2195877,
+      "cpu_ticks": [
+        138225920,
+        126599,
+        67790574,
+        4547008164,
+        544832,
+        0,
+        10852351,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.39794921875,
+        0.42919921875,
+        0.43798828125
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.00 avg300=0.00 total=9315457\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=9071688"
+    },
+    {
+      "utc": "2026-11-08T15:26:58.463471+00:00",
+      "monotonic": 6055677.263590942,
+      "mem_available_bytes": 26987167744,
+      "pswpin_pages": 573791,
+      "pswpout_pages": 2195877,
+      "cpu_ticks": [
+        138226016,
+        126599,
+        67790604,
+        4547009609,
+        544832,
+        0,
+        10852353,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.36572265625,
+        0.421875,
+        0.435546875
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.00 avg300=0.00 total=9315457\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=9071688"
+    },
+    {
+      "utc": "2026-11-08T15:27:00.465410+00:00",
+      "monotonic": 6055679.265514435,
+      "mem_available_bytes": 26985209856,
+      "pswpin_pages": 573791,
+      "pswpout_pages": 2195877,
+      "cpu_ticks": [
+        138226101,
+        126599,
+        67790628,
+        4547011074,
+        544832,
+        0,
+        10852356,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.36572265625,
+        0.421875,
+        0.435546875
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.00 avg300=0.00 total=9315457\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=9071688"
+    },
+    {
+      "utc": "2026-11-08T15:27:02.466420+00:00",
+      "monotonic": 6055681.266506941,
+      "mem_available_bytes": 26985472000,
+      "pswpin_pages": 573791,
+      "pswpout_pages": 2195877,
+      "cpu_ticks": [
+        138226198,
+        126599,
+        67790657,
+        4547012517,
+        544832,
+        0,
+        10852359,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.33642578125,
+        0.41455078125,
+        0.43310546875
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.00 avg300=0.00 total=9315457\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=9071688"
+    },
+    {
+      "utc": "2026-11-08T15:27:04.467890+00:00",
+      "monotonic": 6055683.267993914,
+      "mem_available_bytes": 26955649024,
+      "pswpin_pages": 573791,
+      "pswpout_pages": 2195877,
+      "cpu_ticks": [
+        138226308,
+        126599,
+        67790678,
+        4547013965,
+        544832,
+        0,
+        10852361,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.33642578125,
+        0.41455078125,
+        0.43310546875
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.00 avg300=0.00 total=9315457\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=9071688"
+    },
+    {
+      "utc": "2026-11-08T15:27:06.469805+00:00",
+      "monotonic": 6055685.269910609,
+      "mem_available_bytes": 26955673600,
+      "pswpin_pages": 573791,
+      "pswpout_pages": 2195877,
+      "cpu_ticks": [
+        138226398,
+        126599,
+        67790699,
+        4547015428,
+        544832,
+        0,
+        10852364,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.33642578125,
+        0.41455078125,
+        0.43310546875
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.00 avg300=0.00 total=9315457\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=9071688"
+    },
+    {
+      "utc": "2026-11-08T15:27:08.472188+00:00",
+      "monotonic": 6055687.27230268,
+      "mem_available_bytes": 26982944768,
+      "pswpin_pages": 573791,
+      "pswpout_pages": 2195877,
+      "cpu_ticks": [
+        138226494,
+        126599,
+        67790727,
+        4547016874,
+        544832,
+        0,
+        10852366,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.4697265625,
+        0.44091796875,
+        0.44189453125
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.00 avg300=0.00 total=9315457\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=9071688"
+    },
+    {
+      "utc": "2026-11-08T15:27:10.474196+00:00",
+      "monotonic": 6055689.274301303,
+      "mem_available_bytes": 26986188800,
+      "pswpin_pages": 573791,
+      "pswpout_pages": 2195877,
+      "cpu_ticks": [
+        138226593,
+        126599,
+        67790754,
+        4547018320,
+        544832,
+        0,
+        10852368,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.4697265625,
+        0.44091796875,
+        0.44189453125
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.00 avg300=0.00 total=9315457\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=9071688"
+    },
+    {
+      "utc": "2026-11-08T15:27:12.476039+00:00",
+      "monotonic": 6055691.276144089,
+      "mem_available_bytes": 26988384256,
+      "pswpin_pages": 573791,
+      "pswpout_pages": 2195877,
+      "cpu_ticks": [
+        138226675,
+        126599,
+        67790773,
+        4547019790,
+        544832,
+        0,
+        10852371,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.51220703125,
+        0.45068359375,
+        0.4453125
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.00 avg300=0.00 total=9315457\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=9071688"
+    },
+    {
+      "utc": "2026-11-08T15:27:14.478134+00:00",
+      "monotonic": 6055693.278249773,
+      "mem_available_bytes": 26991915008,
+      "pswpin_pages": 573791,
+      "pswpout_pages": 2195877,
+      "cpu_ticks": [
+        138226752,
+        126599,
+        67790793,
+        4547021265,
+        544832,
+        0,
+        10852373,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.51220703125,
+        0.45068359375,
+        0.4453125
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.00 avg300=0.00 total=9315457\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=9071688"
+    },
+    {
+      "utc": "2026-11-08T15:27:16.480239+00:00",
+      "monotonic": 6055695.280344234,
+      "mem_available_bytes": 26991816704,
+      "pswpin_pages": 573791,
+      "pswpout_pages": 2195877,
+      "cpu_ticks": [
+        138226832,
+        126599,
+        67790812,
+        4547022736,
+        544833,
+        0,
+        10852375,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.51220703125,
+        0.45068359375,
+        0.4453125
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.00 avg300=0.00 total=9315457\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=9071688"
+    }
+  ],
+  "containers_after": [
+    {
+      "name": "/okc-postgres",
+      "id": "bcdeb2f37986185a559396c3e90a2be41260d0b8ac71b77e5660d09929c04017",
+      "image": "postgres:16",
+      "state": {
+        "Status": "running",
+        "Running": true,
+        "OOMKilled": false,
+        "StartedAt": "2026-09-29T19:59:38.54835241Z"
+      },
+      "health": null,
+      "project": null,
+      "limits": {
+        "Memory": 0,
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0
+      },
+      "ports": {
+        "5432/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "5432"
+          },
+          {
+            "HostIp": "::",
+            "HostPort": "5432"
+          }
+        ]
+      }
+    },
+    {
+      "name": "/qbittorrent",
+      "id": "671e4768a7f3574d594711d7dcdca843b5e1a4637d6917fc5baa63ac925ff93c",
+      "image": "lscr.io/linuxserver/qbittorrent:latest",
+      "state": {
+        "Status": "running",
+        "Running": true,
+        "OOMKilled": false,
+        "StartedAt": "2026-08-29T17:39:45.2744453Z"
+      },
+      "health": "healthy",
+      "project": "arrstack",
+      "limits": {
+        "Memory": 0,
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0
+      },
+      "ports": {}
+    },
+    {
+      "name": "/flaresolverr",
+      "id": "0fa5d9a69c99e841f6f69c6fa157c50f76a72a2deb7644d3b8180f7c4084129f",
+      "image": "ghcr.io/flaresolverr/flaresolverr:latest",
+      "state": {
+        "Status": "running",
+        "Running": true,
+        "OOMKilled": false,
+        "StartedAt": "2026-08-29T17:39:45.287016892Z"
+      },
+      "health": null,
+      "project": "arrstack",
+      "limits": {
+        "Memory": 0,
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0
+      },
+      "ports": {}
+    },
+    {
+      "name": "/prowlarr",
+      "id": "919839159a8bd5142998468131bc9ab07fcd538626b4d9d3779b6ff214f0f312",
+      "image": "lscr.io/linuxserver/prowlarr:latest",
+      "state": {
+        "Status": "running",
+        "Running": true,
+        "OOMKilled": false,
+        "StartedAt": "2026-08-29T17:39:45.272876156Z"
+      },
+      "health": null,
+      "project": "arrstack",
+      "limits": {
+        "Memory": 0,
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0
+      },
+      "ports": {}
+    },
+    {
+      "name": "/gluetun",
+      "id": "5954fffeb11454453af7ccf7eeb5ea38b06a9b5ef6f16f05f58b12c732aa624f",
+      "image": "qmcgaw/gluetun:latest",
+      "state": {
+        "Status": "running",
+        "Running": true,
+        "OOMKilled": false,
+        "StartedAt": "2026-08-29T17:39:44.423519911Z"
+      },
+      "health": "healthy",
+      "project": "arrstack",
+      "limits": {
+        "Memory": 0,
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0
+      },
+      "ports": {
+        "1080/tcp": null,
+        "1080/udp": null,
+        "6881/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "6881"
+          },
+          {
+            "HostIp": "::",
+            "HostPort": "6881"
+          }
+        ],
+        "6881/udp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "6881"
+          },
+          {
+            "HostIp": "::",
+            "HostPort": "6881"
+          }
+        ],
+        "8000/tcp": null,
+        "8080/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "8080"
+          },
+          {
+            "HostIp": "::",
+            "HostPort": "8080"
+          }
+        ],
+        "8191/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "8191"
+          },
+          {
+            "HostIp": "::",
+            "HostPort": "8191"
+          }
+        ],
+        "8388/tcp": null,
+        "8388/udp": null,
+        "8888/tcp": null,
+        "9696/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "9696"
+          },
+          {
+            "HostIp": "::",
+            "HostPort": "9696"
+          }
+        ]
+      }
+    },
+    {
+      "name": "/bazarr",
+      "id": "be7238654926dfea8a13cb1b0059a62e27fdd96e5c8efb87dd25f55a5826c522",
+      "image": "lscr.io/linuxserver/bazarr:latest",
+      "state": {
+        "Status": "running",
+        "Running": true,
+        "OOMKilled": false,
+        "StartedAt": "2026-08-29T17:39:44.427879966Z"
+      },
+      "health": null,
+      "project": "arrstack",
+      "limits": {
+        "Memory": 0,
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0
+      },
+      "ports": {
+        "6767/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "6767"
+          },
+          {
+            "HostIp": "::",
+            "HostPort": "6767"
+          }
+        ]
+      }
+    },
+    {
+      "name": "/jellyfin",
+      "id": "eb2f21ab995e33f7d01b5e243fb9a2358336b720218c4b70248c6f0daa1db57e",
+      "image": "lscr.io/linuxserver/jellyfin:latest",
+      "state": {
+        "Status": "running",
+        "Running": true,
+        "OOMKilled": false,
+        "StartedAt": "2026-08-29T17:39:44.431117231Z"
+      },
+      "health": null,
+      "project": "arrstack",
+      "limits": {
+        "Memory": 0,
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0
+      },
+      "ports": {
+        "8096/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "8096"
+          },
+          {
+            "HostIp": "::",
+            "HostPort": "8096"
+          }
+        ],
+        "8920/tcp": null
+      }
+    },
+    {
+      "name": "/sonarr",
+      "id": "108b33100355ce38bfeebdf939462b2a0d1a5a7a56ae301283e3850305f2bac3",
+      "image": "lscr.io/linuxserver/sonarr:latest",
+      "state": {
+        "Status": "running",
+        "Running": true,
+        "OOMKilled": false,
+        "StartedAt": "2026-08-29T17:39:44.425472153Z"
+      },
+      "health": null,
+      "project": "arrstack",
+      "limits": {
+        "Memory": 0,
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0
+      },
+      "ports": {
+        "8989/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "8989"
+          },
+          {
+            "HostIp": "::",
+            "HostPort": "8989"
+          }
+        ]
+      }
+    },
+    {
+      "name": "/radarr",
+      "id": "18abf5fb7489c7644f423e52a17066100345a7148177e4bb3c5caa443124d34b",
+      "image": "lscr.io/linuxserver/radarr:latest",
+      "state": {
+        "Status": "running",
+        "Running": true,
+        "OOMKilled": false,
+        "StartedAt": "2026-08-29T17:39:44.428631722Z"
+      },
+      "health": null,
+      "project": "arrstack",
+      "limits": {
+        "Memory": 0,
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0
+      },
+      "ports": {
+        "7878/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "7878"
+          },
+          {
+            "HostIp": "::",
+            "HostPort": "7878"
+          }
+        ]
+      }
+    },
+    {
+      "name": "/lidarr",
+      "id": "a7409a82b53119f882fd0c802c16506e8f3c43df96addc3c4e195e8bd3e6a8c1",
+      "image": "lscr.io/linuxserver/lidarr:latest",
+      "state": {
+        "Status": "exited",
+        "Running": false,
+        "OOMKilled": false,
+        "StartedAt": "2026-08-14T22:02:13.22699214Z"
+      },
+      "health": null,
+      "project": "arrstack",
+      "limits": {
+        "Memory": 0,
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0
+      },
+      "ports": {}
+    },
+    {
+      "name": "/seerr",
+      "id": "9b882985fbbb75c19d237af4df4c4d2617e5e67e5c240b27d3512821c66e76e7",
+      "image": "ghcr.io/seerr-team/seerr:v3.0.1",
+      "state": {
+        "Status": "running",
+        "Running": true,
+        "OOMKilled": false,
+        "StartedAt": "2026-08-29T17:39:44.431610941Z"
+      },
+      "health": "healthy",
+      "project": "arrstack",
+      "limits": {
+        "Memory": 0,
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0
+      },
+      "ports": {
+        "5055/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "5055"
+          },
+          {
+            "HostIp": "::",
+            "HostPort": "5055"
+          }
+        ]
+      }
+    },
+    {
+      "name": "/deunhealth",
+      "id": "f88542f6ffe4c2bd44871dce4a450495267494f1368a4e74a7ab28b48c61f1fc",
+      "image": "qmcgaw/deunhealth",
+      "state": {
+        "Status": "running",
+        "Running": true,
+        "OOMKilled": false,
+        "StartedAt": "2026-08-29T17:39:44.427264907Z"
+      },
+      "health": "healthy",
+      "project": "arrstack",
+      "limits": {
+        "Memory": 0,
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0
+      },
+      "ports": {}
+    },
+    {
+      "name": "/immich_server",
+      "id": "051e70b77c7088544ea2204af4fde54a0d2295991aa3973ba0a673164a68266d",
+      "image": "ghcr.io/immich-app/immich-server:v2",
+      "state": {
+        "Status": "running",
+        "Running": true,
+        "OOMKilled": false,
+        "StartedAt": "2026-08-29T17:39:44.43535444Z"
+      },
+      "health": "healthy",
+      "project": "immich",
+      "limits": {
+        "Memory": 0,
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0
+      },
+      "ports": {
+        "2283/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "2283"
+          },
+          {
+            "HostIp": "::",
+            "HostPort": "2283"
+          }
+        ]
+      }
+    },
+    {
+      "name": "/immich_postgres",
+      "id": "59726e03cbb3a690db7633cb0529a144040bbc53d3bffc7b510d2805e91d8b3a",
+      "image": "ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0",
+      "state": {
+        "Status": "running",
+        "Running": true,
+        "OOMKilled": false,
+        "StartedAt": "2026-08-29T17:39:44.433607343Z"
+      },
+      "health": "healthy",
+      "project": "immich",
+      "limits": {
+        "Memory": 0,
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0
+      },
+      "ports": {
+        "5432/tcp": null
+      }
+    },
+    {
+      "name": "/immich_machine_learning",
+      "id": "b943c172223a8c9759a52306a993265f53af948b67caeb13f4ec49b9f39b8a0f",
+      "image": "ghcr.io/immich-app/immich-machine-learning:v2",
+      "state": {
+        "Status": "running",
+        "Running": true,
+        "OOMKilled": false,
+        "StartedAt": "2026-08-29T17:39:44.435409492Z"
+      },
+      "health": "unhealthy",
+      "project": "immich",
+      "limits": {
+        "Memory": 0,
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0
+      },
+      "ports": {}
+    },
+    {
+      "name": "/immich_redis",
+      "id": "51ac4fa635668509d3564536fdddaa7064e2b30095c3973274d156b6c40df812",
+      "image": "valkey/valkey:9",
+      "state": {
+        "Status": "running",
+        "Running": true,
+        "OOMKilled": false,
+        "StartedAt": "2026-08-29T17:39:44.422343977Z"
+      },
+      "health": "healthy",
+      "project": "immich",
+      "limits": {
+        "Memory": 0,
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0
+      },
+      "ports": {
+        "6379/tcp": null
+      }
+    },
+    {
+      "name": "/wonderful_thompson",
+      "id": "5733101a9f86251f24bdd1c3debc87bffe510b57f1b7fb7156d95802f1e48c5b",
+      "image": "hello-world",
+      "state": {
+        "Status": "exited",
+        "Running": false,
+        "OOMKilled": false,
+        "StartedAt": "2026-06-30T22:17:35.371138871Z"
+      },
+      "health": null,
+      "project": null,
+      "limits": {
+        "Memory": 0,
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0
+      },
+      "ports": {}
+    },
+    {
+      "name": "/clever_hamilton",
+      "id": "41719cce4f9b69feafa2be71c917a942c5a196316978db1b36f34578f15515a4",
+      "image": "nginx",
+      "state": {
+        "Status": "exited",
+        "Running": false,
+        "OOMKilled": false,
+        "StartedAt": "2026-06-28T23:03:46.700110168Z"
+      },
+      "health": null,
+      "project": null,
+      "limits": {
+        "Memory": 0,
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0
+      },
+      "ports": {}
+    },
+    {
+      "name": "/sad_wright",
+      "id": "ac862b1a6c71fd2020ffb200862e58a51dc8088681586299bfeb99350500a79a",
+      "image": "hello-world",
+      "state": {
+        "Status": "exited",
+        "Running": false,
+        "OOMKilled": false,
+        "StartedAt": "2026-06-28T23:03:29.512683913Z"
+      },
+      "health": null,
+      "project": null,
+      "limits": {
+        "Memory": 0,
+        "NanoCpus": 0,
+        "CpuQuota": 0,
+        "CpuPeriod": 0
+      },
+      "ports": {}
+    }
+  ],
+  "ollama_ps_after": {
+    "models": []
+  },
+  "finished_utc": "2026-11-08T15:27:16.581234+00:00",
+  "sample_summary": {
+    "elapsed_seconds": 60.05555701162666,
+    "min_available_bytes": 26948460544,
+    "swap_in_pages": 2,
+    "swap_out_pages": 0,
+    "cpu_busy_percent": 7.381341021346957
+  },
+  "checks": {
+    "memory_at_least_20_GiB": true,
+    "sample_at_least_60_seconds": true,
+    "no_sustained_swap": true,
+    "disk_at_least_20_GiB": true,
+    "no_container_regression": true,
+    "no_resident_models": true,
+    "no_active_ollama_connections": true,
+    "subnet_unused": true,
+    "project_unused": true,
+    "network_volume_names_unused": true,
+    "port_18081_unused": true,
+    "ollama_loopback_listener": true,
+    "tools_advertised": true
+  },
+  "admission_scope": "One bounded T040 probe after independent review/testing; refresh resources/residency immediately before request. Not permission for Compose startup before its own gates."
+}

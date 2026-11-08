@@ -102,3 +102,38 @@ The user subsequently authorized routine eligible DAG execution, including T040
 after full admission. Earlier separate-wave approval limits above are historical;
 no factual observation, filesystem restriction, resource threshold or security
 boundary changed. Consult TASK_GRAPH and state/CURRENT for live task statuses.
+
+## T001/T007 refreshed candidate — 2026-11-08T15:27:16.581234+00:00
+
+The user supplied authenticated `sudo -u ollama readlink -e` and `df -hT`
+output for `/usr/share/ollama/.ollama/models`: it resolves to that same path on
+`/dev/nvme0n1p2`, ext4, mounted `/`, with 229G available. This is user-provided
+host evidence, not an independent sfkim traversal; no access boundary changed.
+Fresh project/Docker/model-parent disk observation identifies that same device
+with 245558616064 bytes available.
+
+Agent read-only evidence: `state/audits/2026-11-08-admission.json`.
+The 60.06-second sample retained all 31 readings:
+minimum MemAvailable 25.10 GiB;
+two swap-in pages in one interval, zero swap-out, no sustained swapping;
+CPU busy 7.38%. All 19 container states and declared health
+were unchanged (15 running, 4 exited). Pre-existing unhealthy Immich ML and NVML
+driver/library mismatch persist; GPU offload is not assumed or repaired.
+Docker stats/limits, listeners, routes, volumes and networks are retained.
+
+No MCPBench project/container/network/volume exists. Candidate `mcpbench_db`,
+`mcpbench_pgdata`, subnet `172.30.77.0/24`, and loopback port 18081 are unused
+and nonoverlapping with observed routes/networks; this does not reserve them.
+Native Ollama 0.40.13 listens on 127.0.0.1:11434, with no active connections at
+inspection and no resident models before/after sampling. Installed qwen3.5:9b
+Q4_K_M digest remains `56671c2ab9385f9cfcb404638e32cd62d88e3501d44822208363c010179a3c90`;
+metadata advertises tools, not proof of actual valid calls. Its API size is
+6,550,825,550 bytes; actual inference memory remains to be measured.
+
+All numeric and inventory T007 checks pass for one bounded T040 probe, subject
+to independent review/testing and immediate pre-call refresh. T040 retains a
+120-second request deadline, 4096-token context and 512-token output cap, with
+2-second resource/health monitoring and existing abort thresholds. CPU-only
+execution may time out; timeout is recorded honestly and cannot be waived.
+No service, configuration, permission, container, model residency or volume was
+modified. T001/T007 are candidates until R/V approval and O integration.
