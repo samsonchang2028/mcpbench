@@ -20,4 +20,6 @@ DAG verified acyclic with no missing prerequisites: 6 DONE, 1 BLOCKED,
 No new runtime implementation, builds, containers, model loads or inference.
 
 Full v1 remains incomplete; see state/GOAL_AUDIT.md. No requirement was waived.
-First confirmed blocker audit since goal resumed (1 of 3); goal stays active.
+Second confirmed blocker audit since goal resumed (2 of 3), 2026-11-08T15:17:09.909532+00:00.
+Both narrow sudo checks still require interactive authentication; no new host
+evidence received. No eligible DAG work; goal stays active pending host evidence.
