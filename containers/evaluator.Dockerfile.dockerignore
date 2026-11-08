@@ -1,0 +1,12 @@
+**
+!uv.lock
+!containers/
+!containers/install_locked.py
+!eval/
+!eval/**
+!contracts/
+!contracts/**
+!db/
+!db/**
+**/__pycache__/
+**/*.pyc

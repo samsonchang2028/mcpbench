@@ -1,0 +1,206 @@
+name: mcpbench
+
+x-hardened: &hardened
+  platform: linux/amd64
+  restart: "no"
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  pids_limit: 128
+  logging:
+    driver: local
+    options:
+      max-size: 1m
+      max-file: "2"
+
+x-agent: &agent
+  <<: *hardened
+  image: mcpbench-agent:t015
+  pull_policy: never
+  build:
+    context: .
+    dockerfile: containers/go.Dockerfile
+    target: agent
+  user: "1000:1000"
+  network_mode: host
+  mem_limit: 512m
+  memswap_limit: 512m
+  cpus: 1.0
+  environment:
+    PATH: /usr/local/bin:/usr/bin:/bin
+    LANG: C.UTF-8
+    TZ: UTC
+    HOME: /nonexistent
+    TMPDIR: /tmp
+  tmpfs:
+    - /tmp:rw,noexec,nosuid,nodev,size=16777216,mode=1777
+  # Cleared environment also removes base-image variables. No shell invocation.
+  entrypoint: ["/usr/bin/env", "-i", "PATH=/usr/local/bin:/usr/bin:/bin", "LANG=C.UTF-8", "TZ=UTC", "HOME=/nonexistent", "TMPDIR=/tmp", "/app/agent"]
+  command: [run, --request, /run/mcpbench/request.json, --auth, /run/secrets/auth.json, --output, /run/mcpbench/output]
+
+services:
+  db:
+    <<: *hardened
+    image: docker.io/library/postgres:17-bookworm@sha256:73bedc9eaa0121b92b9b26bb52e5141b3f6f37479c7ef913c0160455763ca80a
+    user: "999:999"
+    mem_limit: 512m
+    memswap_limit: 512m
+    cpus: 0.5
+    networks: [db]
+    environment:
+      POSTGRES_DB: mcpbench
+      POSTGRES_USER: mcpbench_bootstrap
+      POSTGRES_PASSWORD_FILE: /run/secrets/bootstrap-password
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - type: volume
+        source: db-data
+        target: /var/lib/postgresql/data
+      - type: bind
+        source: ${MCPBENCH_BOOTSTRAP_PASSWORD_FILE:-/nonexistent/mcpbench/bootstrap-password}
+        target: /run/secrets/bootstrap-password
+        read_only: true
+        bind:
+          create_host_path: false
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=16777216,mode=1777
+      - /var/run/postgresql:rw,noexec,nosuid,nodev,size=1048576,uid=999,gid=999,mode=0700
+    # Connection liveness ONLY. No schema/seed or least-privilege claim.
+    healthcheck:
+      test: [CMD, pg_isready, -h, /var/run/postgresql, -U, mcpbench_bootstrap, -d, mcpbench]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+    stop_grace_period: 10s
+
+  mcp:
+    <<: *hardened
+    image: mcpbench-mcp:t015
+    pull_policy: never
+    build:
+      context: .
+      dockerfile: containers/go.Dockerfile
+      target: mcp
+    user: "1000:1000"
+    mem_limit: 256m
+    memswap_limit: 256m
+    cpus: 0.5
+    networks: [db]
+    ports:
+      - "127.0.0.1:18081:8080"
+    environment:
+      PGHOST: db
+      PGDATABASE: mcpbench
+      PGUSER: mcpbench_service
+      PGPASSFILE: /run/secrets/service.pgpass
+      HOME: /nonexistent
+      TMPDIR: /tmp
+    volumes:
+      - type: bind
+        source: ${MCPBENCH_SERVICE_PGPASS_FILE:-/nonexistent/mcpbench/service.pgpass}
+        target: /run/secrets/service.pgpass
+        read_only: true
+        bind:
+          create_host_path: false
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=16777216,mode=1777
+    # Stub exits 2; no fabricated ready endpoint. T019 must add real readiness.
+    healthcheck:
+      disable: true
+    stop_grace_period: 5s
+
+  agent:
+    <<: *agent
+    profiles: [agent]
+    volumes:
+      - type: bind
+        source: ${MCPBENCH_AGENT_REQUEST_FILE:-/nonexistent/mcpbench/agent-request.json}
+        target: /run/mcpbench/request.json
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${MCPBENCH_AGENT_AUTH_FILE:-/nonexistent/mcpbench/agent-auth.json}
+        target: /run/secrets/auth.json
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${MCPBENCH_AGENT_OUTPUT_DIR:-/nonexistent/mcpbench/agent-output}
+        target: /run/mcpbench/output
+        bind:
+          create_host_path: false
+
+  verifier:
+    <<: *agent
+    profiles: [verifier]
+    command: [verify, --request, /run/mcpbench/request.json, --auth, /run/secrets/auth.json, --output, /run/mcpbench/output]
+    volumes:
+      - type: bind
+        source: ${MCPBENCH_VERIFIER_REQUEST_FILE:-/nonexistent/mcpbench/verifier-request.json}
+        target: /run/mcpbench/request.json
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${MCPBENCH_VERIFIER_AUTH_FILE:-/nonexistent/mcpbench/verifier-auth.json}
+        target: /run/secrets/auth.json
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${MCPBENCH_VERIFIER_OUTPUT_DIR:-/nonexistent/mcpbench/verifier-output}
+        target: /run/mcpbench/output
+        bind:
+          create_host_path: false
+
+  evaluator:
+    <<: *hardened
+    profiles: [evaluator]
+    image: mcpbench-evaluator:t015
+    pull_policy: never
+    build:
+      context: .
+      dockerfile: containers/evaluator.Dockerfile
+    user: "1000:1000"
+    mem_limit: 512m
+    memswap_limit: 512m
+    cpus: 0.5
+    networks: [db]
+    entrypoint: [python, -m, eval.runner]
+    command: [prepare]
+    environment:
+      PATH: /usr/local/bin:/usr/bin:/bin
+      LANG: C.UTF-8
+      TZ: UTC
+      HOME: /nonexistent
+      TMPDIR: /tmp
+      PYTHONDONTWRITEBYTECODE: "1"
+      PGHOST: db
+      PGDATABASE: mcpbench
+      # Role/PGPASSFILE are selected per connection by private phase config.
+    volumes:
+      - type: bind
+        source: ${MCPBENCH_EVALUATOR_CONTROL_DIR:-/nonexistent/mcpbench/evaluator-control}
+        target: /run/mcpbench/control
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${MCPBENCH_EVALUATOR_OUTPUT_DIR:-/nonexistent/mcpbench/evaluator-output}
+        target: /run/mcpbench/output
+        bind:
+          create_host_path: false
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=16777216,mode=1777
+
+networks:
+  db:
+    internal: true
+    driver: bridge
+    # Docker selects a subnet; verify routes/allocation before admitted startup.
+
+volumes:
+  db-data:
+    # Project-owned persistent data. No external volume or host data directory.
