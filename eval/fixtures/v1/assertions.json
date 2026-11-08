@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "fixture_version": "1",
+  "invoice": {
+    "original": {
+      "status": "draft",
+      "invoice_count_delta": 1,
+      "invoice_line_count_delta": 1,
+      "idempotency_count_delta": 1,
+      "line_number": 1,
+      "line_total_cents": 25000,
+      "answer": "same_saved_invoice_id"
+    },
+    "unchanged_seed_tables": [
+      "customers",
+      "items",
+      "projects",
+      "timesheets"
+    ],
+    "replay": {
+      "same_payload": "same_saved_invoice_id",
+      "changed_payload": "idempotency_conflict",
+      "changed_quantity": 3,
+      "application_state": "equal_agent_only_snapshot",
+      "may_create_missing_invoice": false
+    }
+  },
+  "read_only": {
+    "application_state": "equal_seed",
+    "answer": "exact_required_record_ids",
+    "evidence": "successful_authorized_read_trace",
+    "verifier_calls": 0
+  }
+}

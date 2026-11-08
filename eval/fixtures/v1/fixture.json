@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "fixture_id": "fictional-billing-dev",
+  "fixture_version": "1",
+  "migration_version": "1",
+  "tenant_id": "TENANT-001",
+  "seed_hash": "8303fb14daf4ae93b75a9df9b2faa56ff9f28ab2d0c489689e9159ad848f9c78",
+  "seed": {
+    "customers": [
+      {
+        "customer_id": "CUST-001",
+        "name": "Juniper Lantern Studio",
+        "active": true
+      },
+      {
+        "customer_id": "CUST-002",
+        "name": "Juniper Lantern Workshop",
+        "active": true
+      }
+    ],
+    "items": [
+      {
+        "item_id": "SVC-CONSULT",
+        "name": "Consulting",
+        "unit": "hour",
+        "currency": "USD",
+        "unit_price_cents": 12500,
+        "active": true
+      },
+      {
+        "item_id": "SVC-ADVISORY",
+        "name": "Advisory consulting",
+        "unit": "hour",
+        "currency": "USD",
+        "unit_price_cents": 17500,
+        "active": true
+      }
+    ],
+    "projects": [
+      {
+        "project_id": "PRJ-7F3A",
+        "customer_id": "CUST-001",
+        "name": "Lantern Launch",
+        "active": true
+      },
+      {
+        "project_id": "PRJ-9C2E",
+        "customer_id": "CUST-002",
+        "name": "Lantern Refresh",
+        "active": true
+      }
+    ],
+    "timesheets": [
+      {
+        "timesheet_id": "TS-8B4D",
+        "project_id": "PRJ-7F3A",
+        "item_id": "SVC-CONSULT",
+        "work_date": "2026-11-06",
+        "minutes": 120,
+        "billable": true
+      },
+      {
+        "timesheet_id": "TS-2E9A",
+        "project_id": "PRJ-9C2E",
+        "item_id": "SVC-ADVISORY",
+        "work_date": "2026-11-06",
+        "minutes": 180,
+        "billable": true
+      }
+    ],
+    "invoices": [],
+    "invoice_lines": [],
+    "idempotency_records": []
+  },
+  "expected_state_rules": {
+    "currency": "USD",
+    "draft_only": true,
+    "integer_cents": true
+  }
+}

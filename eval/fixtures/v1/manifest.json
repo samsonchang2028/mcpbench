@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "dataset_id": "fictional-billing-dev",
+  "dataset_version": "1",
+  "split": "development",
+  "contracts": {
+    "schema_version": 1,
+    "catalog_version": "1",
+    "schema_sha256": "12a0353cb97eb1bdfab779de90a98a97b2616ef95d8b16a698c559bf8face223",
+    "catalog_sha256": "64e6b0ec54b2242747373ef1a567d9ec8c59f033f47c02afbe715d184a31ae36"
+  },
+  "seed_hash": "8303fb14daf4ae93b75a9df9b2faa56ff9f28ab2d0c489689e9159ad848f9c78",
+  "files": {
+    "assertions.json": "96756336a39780692b53f740a9830f32519f6b63ca9205bc9fd2a793e7cc4d80",
+    "fixture.json": "d44eb33a0fbdb08b735af1b159bd67a1bbbd262ff31e0bddcc9c175ede8b5c15",
+    "tasks/baseline-invoice.json": "3f404c5ec5335c59960a47a77573465d2a9b504a3053db7d2ef60083c19a7f33",
+    "tasks/baseline-project.json": "8e24c5d64085706107937bbeeea1d5340ce500c39bba38d883fd48b3328abfb8",
+    "tasks/baseline-time.json": "a9ea1545d555d031cbd1eeee26859bdb9a6afd8670454b0dd2838ae7c061bda8",
+    "tasks/smoke-invoice.json": "ae26839682abfbfa61c81f9b86a98d32ff812386882d9597fa244f33da8c9ce0"
+  },
+  "tasks": {
+    "smoke-invoice": "smoke3",
+    "baseline-invoice": "baseline10",
+    "baseline-project": "baseline9-reader",
+    "baseline-time": "baseline9-reader"
+  }
+}

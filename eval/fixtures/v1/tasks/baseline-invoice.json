@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "task_id": "baseline-invoice",
+  "task_version": "1",
+  "fixture_id": "fictional-billing-dev",
+  "fixture_version": "1",
+  "prompt": "Create a draft invoice for customer CUST-001 for two hours of SVC-CONSULT, dated 2026-11-07, due 2026-11-21. Do not send it.",
+  "split": "development",
+  "principal_id": "billing-drafter",
+  "permitted_tools": [
+    "billing_list_customers",
+    "billing_list_items",
+    "billing_create_draft_invoice",
+    "billing_get_customer",
+    "billing_list_projects",
+    "billing_get_project",
+    "billing_list_timesheets",
+    "billing_get_timesheet",
+    "billing_list_invoices",
+    "billing_get_invoice"
+  ],
+  "required_tool_ids": [
+    "billing_create_draft_invoice"
+  ],
+  "relevant_tool_ids": [
+    "billing_list_customers",
+    "billing_list_items",
+    "billing_create_draft_invoice",
+    "billing_get_customer"
+  ],
+  "expected_state": {
+    "kind": "draft_invoice",
+    "customer_id": "CUST-001",
+    "invoice_date": "2026-11-07",
+    "due_date": "2026-11-21",
+    "currency": "USD",
+    "lines": [
+      {
+        "item_id": "SVC-CONSULT",
+        "quantity": 2,
+        "unit_price_cents": 12500
+      }
+    ],
+    "subtotal_cents": 25000,
+    "tax_cents": 0,
+    "total_cents": 25000,
+    "invoice_count_delta": 1,
+    "allowed_changed_tables": [
+      "invoices",
+      "invoice_lines",
+      "idempotency_records"
+    ]
+  },
+  "final_answer_rule": "saved_invoice_id",
+  "budgets": {
+    "context_tokens": 4096,
+    "output_tokens": 512,
+    "model_turns": 8,
+    "tool_calls": 12,
+    "tool_timeout_ms": 5000,
+    "db_timeout_ms": 5000,
+    "model_timeout_ms": 120000,
+    "task_timeout_ms": 300000,
+    "transient_retries": 1,
+    "post_agent_timeout_ms": 30000,
+    "verification_operation_ms": 5000,
+    "verification_calls": 2,
+    "verification_retries": 0,
+    "artifact_bytes": 104857600,
+    "document_bytes": 1048576
+  }
+}
