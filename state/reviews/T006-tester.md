@@ -1,217 +1,232 @@
-# T006 independent tester report
+# T006 independent tester — frozen v2
 
-Verdict: **FAIL** for frozen candidate `64faec8858ce2b4e5ef0b026f841008664c1cbc1`.
-No P0 observed. P1 semantic defects below prevent contract acceptance. This is
-independent of the expected absence of runtime evidence.
+Verdict: **FAIL**. Candidate `f18638770218147ff67c90c17df5f2037466efd7`
+fixes the v1 counterexamples but retains independently reproduced P1 safety and
+deadline consistency gaps. No P0 observed. Runtime absence is expected and is not
+the cause of this static-task FAIL.
 
-## Candidate and execution scope
+## Identity and scope
 
-- Source read only: `/home/sfkim/projects/mcpbench/.worktrees/T006/contracts`.
-- Verified worktree HEAD against `state/candidates/T006-v1.json`; all 22 listed
-  SHA-256 source hashes matched. Schema ID is
-  `https://mcpbench.local/contracts/v1/schema.json`.
-- Read AGENTS.md, agents/tester.md, both T006 context packs, accepted architecture,
-  evaluation/security contracts, candidate README/protocol/schema/validator/tests.
-- Used token-efficient-coding. No source/test edits, commits, package installation,
-  network, DB, Docker, model, build, or application execution. Only this main-tree
-  report was written. All Python commands used `PYTHONDONTWRITEBYTECODE=1`.
-- No persistent tests added or changed; independent mutants ran from stdin.
+Verified candidate HEAD and all **41 contract source hashes** in
+`state/candidates/T006-v2.json`; verified its **3 governance hashes** against MAIN
+EVALUATION_PLAN, ARCHITECTURE and SECURITY_RESOURCE_CONTRACT. Source inspected in
+`.worktrees/T006/contracts`, read only. Read the validator changes, new schemas,
+protocol sections, examples, tests and main evaluation clarification/event example.
+The v1 report is archived as `state/reviews/T006-tester-v1.md`.
 
-## Observed commands and results
+Only this report was written. No source or test changes, commits, packages,
+network, runtime services, DB, Docker, builds, or models. All Python invocations
+used `PYTHONDONTWRITEBYTECODE=1`; independent mutants ran from stdin. Rechecked all
+41 candidate source hashes unchanged after testing. Token-efficient-coding used.
 
-Working directory for commands below: `.worktrees/T006`.
+## Commands and observed results
+
+From `/home/sfkim/projects/mcpbench/.worktrees/T006`:
 
 ```sh
 PYTHONDONTWRITEBYTECODE=1 python3 -m unittest contracts.tests.test_contracts -v
-PYTHONDONTWRITEBYTECODE=1 python3 -m contracts.validate Catalog contracts/v1/catalog.json
-PYTHONDONTWRITEBYTECODE=1 python3 -m contracts.validate Task contracts/v1/task.example.json
 ```
 
-Actual: **15/15 unit tests PASS** (`Ran 15 tests in 0.342s`, `OK`);
-CLI outputs `VALID: Catalog` and `VALID: Task`, both exit 0. The unit suite executes
-all 90 registered cases: 45 valid accepted and 45 invalid rejected, with six
-input/output/error cases per named tool.
+Observed **27/27 PASS**, `Ran 27 tests in 1.124s`, `OK`. This executes all **110**
+registered positive/adversarial cases, ten-tool input/output/error coverage,
+canonical hashes, shape/semantic checks, mappings, examples, lifecycle streams,
+read workflow and transport tests.
 
-Additional `PYTHONDONTWRITEBYTECODE=1 python3 - <<'PY'` probes imported
-`contracts.validate`, used deep copies of committed examples, and observed:
+The following loop was executed from a `PYTHONDONTWRITEBYTECODE=1 python3 - <<'PY'`
+stdin probe, with imports `subprocess, sys` and `contracts.validate as c`:
 
-- **PASS** all 11 standalone major-object examples accepted with socket creation
-  patched to raise; all 206 schema `$ref`s are registered local definition refs;
-  unregistered external registry retrieval raises `NoSuchResource` without network.
-- **PASS** independent duplicate-key, NaN, Infinity, numeric overflow-to-Infinity,
-  surrogate, invalid UTF-8 and >1 MiB wire samples rejected.
-- **PASS** leap second, >6 fractional UTC digits, timezone offset and invalid month
-  rejected. Quantity wire forms `2.0`, `2e0`, `true`, `1001`, and `0` rejected.
-  Duplicate invoice items rejected.
-- **PASS** additional public request oracle field and event authorization field
-  rejected. Unknown major version 2 rejected in AgentRequest, Task, RunManifest,
-  Event. Float durations and ratios accepted in declared metric fields.
-- **PASS** mutated snapshot total remains shape-valid under StrictValidator, but
-  `validate("Snapshot", ...)` rejects its arithmetic inconsistency, demonstrating
-  the required schema-versus-semantic distinction.
-- **PASS** existing complete event example from EVALUATION_PLAN remains valid;
-  its incomplete task projection is explicitly documented as incomplete.
-- **PASS** canonical hash vector for `{"z":"Café","a":[1,true,null]}` is
-  `5daf43031d869ecb4785ac7172a26fe3a1ba31a2c3cd57acade3d40fc4e05ad7`;
-  supplied tests independently exercise key/seed order, changed payload/price,
-  float rejection and manifest file hashes.
-- **FAIL** accepted/rejected mutants are reproduced below.
+```python
+manifest = c.load_file(c.ROOT / "manifest.json")
+for row in manifest["examples"]:
+    result = subprocess.run(
+        [sys.executable, "-m", "contracts.validate", row["contract"],
+         str(c.ROOT / row["file"])], text=True, capture_output=True)
+    assert result.returncode == 0, (row, result.stderr)
+```
 
-## P1 findings and reproduction
+Observed **30/30 CLI example invocations PASS**. Separately validated those same
+30 examples with `socket.socket` patched to raise: **PASS offline**.
 
-Run this exact read-only reproduction in the candidate root. `ACCEPTED` denotes
-an observed invalid contract that should reject; the final line demonstrates a
-legitimate read-only outcome that is rejected.
+Independent stdin probes also observed:
+
+- **PASS** all **312** schema refs target known local `$defs`; external registry
+  lookup rejects with `NoSuchResource` while sockets are forbidden. Schema ID
+  remains `https://mcpbench.local/contracts/v1/schema.json`.
+- **PASS** eight additional duplicate-key/nonfinite/UTF-8/surrogate/size/depth
+  wire samples rejected. Independent UTC leap-second, excessive fractional
+  precision, offset and impossible-date samples rejected. Quantities 2.0, true,
+  string 2, zero and 1001 rejected; author suite retains lexical/exponent tests.
+- **PASS** public request oracle and database_url fields rejected. Existing strict
+  versions, references, money, array limits and budget tests all pass.
+- **PASS** a shape-valid snapshot with inconsistent invoice total rejects under
+  full validation; canonical hash vector for `{"z":"Café","a":[1,true,null]}`
+  remains `5daf43031d869ecb4785ac7172a26fe3a1ba31a2c3cd57acade3d40fc4e05ad7`.
+- **PASS** prior failed original/verification assertions, zero-call replay,
+  truncated/reordered catalogs, retryable authorization/conflict envelopes and
+  nonexistent read fixture IDs all now reject.
+- **PASS** exact successful read-only task/fixture/mapping/evaluation/agent bundle;
+  legitimate failed-agent evaluation remains comparison-valid with no verifier;
+  missing-result failed-agent ControlChain accepted as a measured failure.
+- **PASS** a fully internally aligned unknown-settlement summary with cleanup and
+  comparison still true rejects. Changing it to quarantine, null cleanup/final
+  state, no verification assertions and invalid comparison accepts even without
+  a redundant failure record. This directly rechecks the prior unknown loophole.
+- **PASS** restarted/regressing deadline, zero-check completed verifier and false
+  fence acknowledgment mutants reject. EventStream open-operation loss, duplicate
+  event ID, source sequence gap and wrong interruption correlation reject.
+  Empty tool/model/DB/grading/fence/process payloads reject as typed evidence.
+- **FAIL** counterexamples below are accepted despite contradictory trusted facts.
+
+## P1 reproductions
+
+This exact read-only script reproduces the new defects in the candidate root:
 
 ```sh
 PYTHONDONTWRITEBYTECODE=1 python3 - <<'PY'
 from contracts import validate as c
-from copy import deepcopy
 
 def example(name):
     return c.load_file(c.ROOT / "v1" / (name + ".example.json"))
 
-def probe(label, name, value):
+def probe(label, contract, value):
     try:
-        c.validate(name, value)
+        c.validate(contract, value)
     except c.ContractError as error:
-        print(label, "REJECTED:", error)
+        print(label, "REJECTED", error)
     else:
         print(label, "ACCEPTED")
 
-for key in ["original_assertions", "verification_assertions"]:
-    s = example("evaluation-result")
-    s[key][0]["pass"] = False
-    probe("failed " + key, "EvaluationResult", s)
+for change in [
+    {"exit_code": 1},
+    {"termination": "timed_out"},
+    {"termination": "terminated", "exit_code": None, "signal": "SIGTERM"},
+    {"duration_ms": 300001},
+]:
+    chain = example("control-chain")
+    agent_exit = next(x for x in chain["exits"] if x["child"] == "agent")
+    agent_exit.update(change)
+    probe("original PASS despite " + str(change), "ControlChain", chain)
 
-s = example("evaluation-result")
-s["metrics"]["verifier_calls"] = 0
-probe("replay PASS with zero calls", "EvaluationResult", s)
+summary = example("evaluation-result")
+summary["metrics"].update(task_latency_ms=300001, lifecycle_latency_ms=300500)
+probe("PASS with measured task budget overrun", "EvaluationResult", summary)
 
-s = example("evaluation-result")
-s.update(overall_status="failed", task_success=False)
-unknown = ["agent_settlement_pass", "db_oracle_pass", "answer_pass",
-           "verifier_settlement_pass", "replay_pass"]
-for key in unknown:
-    s[key] = None
-s["null_reasons"] = {key: "settlement unknown" for key in unknown}
-# cleanup_pass=True, comparison_valid=True, quarantined=False remain unchanged.
-probe("unknown settlement permits cleanup/comparison", "EvaluationResult", s)
-
-s = example("evaluation-result")
-s.update(verifier_settlement_pass=None, replay_pass=None)
-s["null_reasons"] = {
-    "verifier_settlement_pass": "read-only task, verifier not applicable",
-    "replay_pass": "read-only task, no invoice/key replay",
-}
-s["metrics"]["verifier_calls"] = 0
-probe("successful read-only run", "EvaluationResult", s)
+summary = example("evaluation-result")
+summary.update(task_success=False, overall_status="failed",
+               db_oracle_pass=False, answer_pass=False,
+               verifier_settlement_pass=None, replay_pass=None)
+summary["null_reasons"] = {"verifier_settlement_pass": "original_failed",
+                           "replay_pass": "original_failed"}
+summary["original_assertions"] = [
+    {"name": name, "pass": False, "reason": "Incorrect state/answer."}
+    for name in ["db-oracle", "answer"]]
+summary["verification_assertions"] = [
+    row for row in summary["verification_assertions"]
+    if row["name"] == "unchanged-state"]
+summary["metrics"].update(verifier_calls=0, unauthorized_executions=1)
+# comparison_valid remains True, cleanup known successful, state unchanged.
+probe("unsafe failed attempt admitted to comparison", "EvaluationResult", summary)
 PY
 ```
 
-1. **P1: failed assertions can coexist with task/overall PASS.** First two probes
-   print `ACCEPTED`; task_success, comparison_valid, overall_status remain true,
-   true, passed. `validate.py:298–326` derives success from headline booleans and
-   ignores failed original/verification assertion records. This admits internally
-   contradictory authoritative grading evidence. Aggregate verdict consistency
-   must be enforced for both assertion sets; a failed assertion cannot be hidden
-   behind PASS flags.
+Actual: **all six probes print ACCEPTED**. Expected: each must reject the claimed
+advancement, PASS, or comparison validity; retain the observed host/metric data and
+represent a legitimate failure instead.
 
-2. **P1: unknown settlement can claim safe cleanup and valid comparison.** Fourth
-   probe prints `ACCEPTED`. The only unknown detector at `validate.py:306–308`
-   depends on an explicitly supplied failure code or a *false* settlement flag.
-   Null unknown settlement plus explicit null reasons bypasses quarantine and
-   cleanup protections. Although overall PASS is rejected for null settlement,
-   this accepted object still claims cleanup succeeded and admits a comparison
-   without any known agent settlement. The validator must distinguish skipped
-   verifier settlement from unknown settlement and reject cleanup/comparison
-   unless applicable revocation/drain evidence is positive. No reset is allowed
-   merely because an emitter omitted the redundant failure record.
+1. **P1 — ControlChain ignores failed/late agent host outcome when authorizing
+   verifier.** `validate_control_chain` validates host agent ProcessExit shape,
+   result delivery and `reaped`; only the *verifier* branch checks normal exit/
+   zero code/time limit. A chain with original_pass true, action verify and final
+   complete remains valid after agent exit_code 1, timeout, signal termination,
+   or observed duration 300001 ms. Normative PROTOCOL explicitly says complete
+   delivery cannot convert nonzero exit into success and requires original
+   within-budget success before verifier. Bind these trusted host facts to the
+   original verdict/allowed transition; a failed original may still settle and
+   safely finalize without verifier. This is a pure JSON semantic defect, not a
+   missing real-process experiment.
 
-3. **P1: complete replay is accepted with zero verifier calls.** Third probe
-   prints `ACCEPTED` with replay_pass and overall_status still true/passed.
-   `validate.py:326` checks only `verifier_calls <= 2`, while the protocol's passed
-   draft replay requires both same-payload and changed-payload checks. A success
-   summary must require evidence/counts consistent with both checks; zero calls
-   cannot prove either.
+2. **P1 — reported agent budget and measured latency can contradict PASS.**
+   EvaluationResult uses `agent_budget_pass=True` without checking a present
+   task_latency_ms against the fixed 300000-ms budget. The fifth probe still has
+   task_success true, comparison_valid true, overall_status passed with measured
+   task latency 300001 ms. Do not clip/drop observations; enforce consistency and
+   fail original task success on known overrun. The analogous host-duration
+   counterexample in finding 1 demonstrates this at the transport boundary too.
 
-4. **P1: read-only baseline has no truthful successful terminal result.** Final
-   probe prints `REJECTED: smoke PASS lacks required safety evidence`. Task and
-   final-answer schemas explicitly support read_only/read_result_ids and the
-   ten-tool catalog includes reads, but EvaluationResult has no task-kind/replay-
-   applicability discriminator and unconditionally requires replay/verifier
-   settlement true for every passed result. Read-only tasks have no created
-   invoice/idempotency binding to replay; they must not fabricate such evidence.
-   Add an explicit, cross-validated applicability/terminal-state contract, keeping
-   the draft smoke gate's mandatory replay and both fences intact.
+3. **P1 — unauthorized execution can remain a valid comparison after original
+   failure.** Setting unauthorized_executions to 1 makes original success false,
+   but the comparison_valid safety predicate never checks that metric. A properly
+   settled and cleaned failed-agent result is allowed as a controlled comparison;
+   actual unauthorized execution is outside comparable permissions and must
+   invalidate comparison independently of whether task_success was already false.
+   Do not conflate a denied unauthorized *attempt* with actual execution.
 
-## Additional observed contract gaps
+## Structural reference consistency versus deferred byte proof
 
-These are lower-priority than the P1 gate failures, but should be resolved or
-explicitly scoped before downstream consumers rely on the freeze.
+**P2 observed:** `ControlChain` accepts a next-phase `prior_phase_result` reference
+that disagrees with the previous evaluator's complete-delivery `result_ref`, even
+though both objects are present and identify the same prior message:
 
-- **P2 catalog identity/order:** both `cat=deepcopy(c.CATALOG);
-  cat["tools"]=cat["tools"][:3]` and a copy with `cat["tools"].reverse()` are
-  accepted by `validate("Catalog",cat)`, preserving the frozen baseline catalog
-  ID/version. `_semantics("Catalog")` checks entries/uniqueness but not exact
-  ten-tool membership/order. The committed artifact is correct; the validator
-  does not enforce its advertised ordered baseline identity.
-- **P2 retry taxonomy:** `validate("ToolError", {"code":"authorization_denied",
-  "message":"denied","retryable":True})` is accepted. A ToolResult error with
-  code idempotency_conflict and retryable true is also accepted. PROTOCOL explicitly
-  prohibits retries for authorization/domain/conflict errors. ToolError needs a
-  semantic/code constraint, applied through error envelopes as well as directly.
-- **P2 read fixture consistency:** take task.example, set principal billing-reader,
-  permitted/required/relevant tools to `["billing_get_customer"]`, expected_state
-  to `{"kind":"read_only","required_record_ids":["MISSING"],
-  "allowed_changed_tables":[]}`, final_answer_rule to read_result_ids. Calling
-  `validate_task_fixture(task,fixture.example)` accepts the nonexistent expected
-  record. Its pair validation currently checks seeded existence/prices only for
-  draft_invoice; read-only expected IDs need a typed table/tool-aware fixture check.
+```python
+chain = example("control-chain")
+chain["requests"][1]["inputs"]["prior_phase_result"]["sha256"] = "f" * 64
+previous = next(x for x in chain["exits"]
+                if x["child"] == "evaluator" and x["phase"] == "prepare")
+assert chain["requests"][1]["inputs"]["prior_phase_result"] != previous["result_ref"]
+c.validate("ControlChain", chain)  # Observed accepted.
+```
+
+This equality is checkable from the supplied JSON records. Existing checks bind
+prior_result_id/message IDs, but not these two representations of the same artifact.
+The helper should either enforce equality or state that limited scope explicitly.
+
+Other mutated agent_exit/final-result reference hashes were also accepted. There
+is no corresponding self-reference/raw file byte input in the chain object from
+which to establish those hashes; their acceptance is **not** claimed as proof of
+an actual wrong file being consumed. PROTOCOL explicitly requires actual path,
+symlink, byte count and hash verification in future loading code. Those checks,
+mount protections and source authenticity are **UNRUN**, separate from the
+purely structural equality above.
 
 ## Acceptance mapping
 
-| Criterion | Result | Evidence / limit |
+| Criterion | Result | Evidence / remaining gap |
 | --- | --- | --- |
-| Ten named tools, smoke3, input/output/error shapes | PASS artifact; FAIL full semantics | All tools/cases present; catalog identity/order and retry gaps above |
-| Strict versioned loader, dates, lexical integers, unknown fields, bounded documents | PASS | Author and independent adversarial parsing/date/bound checks |
-| Local-only schema references, IDs and deterministic hashes | PASS static | 206 local refs, offline registry refusal, pinned hashes/vector/schema derivation tests |
-| Fixture/task/expected state arithmetic and smoke oracle | PASS draft; FAIL read completeness | Exact 25,000 cents retained, create-only required and three relevant tools; read-pair gap |
-| Public request/result versus private auth/control mapping | PASS static | Closed envelopes, secret-key probes, separate AuthInput and immutable registered mapping |
-| Run manifests, comparable budgets and four strategy IDs | PASS static | Pinned dependency record, explicit unavailable versions, fixed budgets; no ranking freeze |
-| Typed events, grading/metrics, missing values and terminal validity | FAIL | Events/examples/null token handling pass; four P1 summary/result defects |
-| Concrete fence/receipt/drain/replay/reset protocol | PASS normative; runtime UNRUN | Protocol includes the required invariants below; summary enforcement remains FAIL |
-| Valid/invalid major objects and every tool; meaningful local tests | PASS supplied coverage; FAIL adversarial gate | 15 tests/90 cases/11 examples pass, independent counterexamples reproduced |
-| Architectural/security boundary preserved | PASS static | Fixed launcher/evaluator/Go roles, narrow paths/env/args; no new runtime permission exercised |
+| Ten tools, smoke subset, inputs/outputs/errors/ACL contracts | PASS static | Full case coverage; exact catalog order and retry taxonomy repairs pass |
+| Strict wire parser/version/date/integer/unknown-field bounds | PASS | Existing and independent parser/format/size checks |
+| Offline refs, registered IDs, canonical hashes | PASS static | 312 local refs, offline rejection, frozen hashes and stable hash vector |
+| Fixture/task/expected state, exact 25000-cent oracle | PASS static | Draft oracle retained; required create-only vs optional lists; typed read-table fixture validation |
+| Read-only success and legitimate failed comparison | PASS ordinary cases; FAIL unsafe comparison | Successful read bundle and measured failed-agent path pass; unauthorized metric loophole |
+| Public/private envelopes and trusted schema mapping | PASS static | Closed fields, separate auth/control, schema derivation and phase checks |
+| Typed phase/exit/verifier transport and shared deadline | FAIL | New transport shapes and regression examples pass; host outcome/latency contradiction plus ref consistency gap |
+| Typed events and complete operation streams | PASS static | Required evidence, lifecycle closure/correlation, null token availability tests |
+| Summary grading, terminal status and safety validity | FAIL | Prior assertion/unknown/replay repairs pass; known budget and unauthorized-comparison gaps |
+| Normative fence/drain/replay/reset protocol | PASS design | Required invariants present; actual SQL/runtime proof UNRUN |
+| Four strategy IDs, equal budgets, v1 scope | PASS static | Existing budgets/strategy definitions retained; no retrieval engine/ranking or OTel expansion |
+| Valid/invalid examples and deterministic checks | PASS supplied coverage; FAIL independent gate | 27 tests, 110 cases, 30 CLI examples pass; reproducible P1 mutants accepted |
 
-## Protocol assessment and missing runtime evidence
+## Security and expected missing evidence
 
-The normative fence design follows the approved boundary: opaque 32-byte capability
-outside model/public logs; immutable server-controlled run/schema routing; ACL on
-all methods; shared run-row lock held for the whole tool transaction; exclusive
-seal/drain followed by positive COMMIT acknowledgment before authoritative snapshot;
-unknown means quarantine and no reset/reuse. Original state/answer/outcome success
-precedes verifier capability. Verifier is a separate no-model mode, constrained to
-existing invoice/key and never creates an absent invoice; exactly the two declared
-checks, no retries, final seal before final snapshot/reset. The 30-second absolute
-post-agent budget includes transport/snapshots/grading, each operation <=5 seconds,
-and cannot rescue/extend the 300-second agent budget.
+Protocol retains approved Python private evaluator, trusted host launcher and Go
+agent/MCP split; exact commands/env/mount allowlists; loopback targets; opaque
+non-model capabilities and server ACLs; trusted immutable run/schema registration.
+Whole-transaction shared run fences, exclusive seal/drain with positive COMMIT
+acknowledgment, unknown quarantine/no reset, original snapshot before verifier,
+read-only existing-invoice verifier branch, <=2 calls/no retries, second fence and
+final unchanged snapshot are explicit. PostgreSQL lock privilege caveat is handled
+by inert-column-only UPDATE with no state/token/routing mutation grant. Read-only
+and failed-original paths now skip verifier explicitly and preserve positive
+agent fence evidence for cleanup. One absolute 30-second post-agent deadline and
+<=5-second operations remain separate from the 300-second agent budget.
 
-The PostgreSQL row-lock privilege caveat is explicitly addressed with UPDATE only
-on an inert lock_marker column, no service UPDATE on state/capability/routing,
-and a distinct read-only grader connection. Protocol documents no actual grants
-or concurrency proof. Host launcher alone starts children; evaluator private DB
-access, host-loopback Go agent/MCP, fixed endpoints, cleared env, read-only/narrow
-mounts and separate auth files stay within the approved design. No actual security
-boundary expansion requiring approval was observed. OpenTelemetry/Jaeger/dashboard,
-retrieval implementations and ranking knobs remain deferred.
+No additional architecture/security permission expansion observed or performed.
+Main evaluation clarification and typed event-example update match these v2
+contracts. No documentation or schema test is taken as authentication/DB proof.
 
-**UNRUN / prerequisite BLOCKED, expected for T006:** actual SQL grants/lock ordering,
-concurrent drain and late-commit behavior, acknowledged/uncertain COMMIT handling,
-credential/mount isolation, MCP negotiation/server ACL execution, real JSONL capture,
-model behavior, resource monitoring, replay DB nonmutation and safe scoped reset.
-These require admitted later T018–T023/T040 work; T001/T007 resource gates remain
-blocked. No local JSON test is claimed as PostgreSQL/runtime evidence. Missing
-runtime evidence is not the cause of this static FAIL.
-
-The orchestrator owns integration/status changes. Candidate was not modified.
+**UNRUN; prerequisite BLOCKED as expected:** actual SQL/grants/lock concurrency,
+late commit and uncertain COMMIT handling, mount/credential/source isolation,
+real artifact byte verification, MCP lifecycle/ACL calls, JSONL capture under
+failure, model behavior, real deadlines/resource monitoring and safe reset.
+These remain admitted T018–T023/T040 obligations; T001/T007 are not bypassed.
+No downstream implementation/runtime task was started. Orchestrator owns status
+and integration; source remains frozen and unchanged.

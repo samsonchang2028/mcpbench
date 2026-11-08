@@ -17,3 +17,8 @@ T006 v1 independent gates CHANGES REQUIRED/FAIL: contradictory verdicts, read-on
 applicability, incomplete phase/exit/verifier transport and typed event evidence.
 Repair pass1 in same worktree under t006_finish; no integration or T009 dispatch.
 O owns the EVALUATION_PLAN read-only/comparison clarification for re-review.
+
+T006 v2 f186387: prior findings repaired, but independent gates still FAIL on
+actual-unauthorized-execution comparison validity, agent host outcome gating and
+known-latency/budget contradiction. Repair pass2 is active, contracts-only; v2
+reports archived. T009 remains WAITING; no app/runtime task advanced.
