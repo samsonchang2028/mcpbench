@@ -41,3 +41,7 @@ in state/audits/2026-11-08-T040-recovery-candidate.json.
 
 Final blocker verification UTC: 2026-11-08T15:39:58.880243+00:00.
 Prospective controller hash unchanged; no second request/result artifacts exist.
+
+New goal resumption 2026-11-08T18:51:45.712489+00:00: first blocker audit
+(1 of3). No explicit retry authorization received, candidate unchanged, no
+second request artifacts, zero eligible tasks. Goal active pending decision.
