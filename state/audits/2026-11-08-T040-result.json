@@ -1,0 +1,56 @@
+{
+  "artifact_directory": "artifacts/probes/t040-20261108-01",
+  "outcome": "FAIL",
+  "task_status": "BLOCKED",
+  "reason": "Resource stop policy triggered; actual Qwen tool capability remains unverified after aborted request",
+  "status": {
+    "finished_utc": "2026-11-08T15:34:55.751821+00:00",
+    "elapsed_seconds": 36.20435513649136,
+    "curl_returncode": -15,
+    "abort_reason": "sustained swapping for three samples",
+    "outcome": "FAIL",
+    "validation_error": "sustained swapping for three samples"
+  },
+  "hash_manifest": {
+    "after.json": "deffdf1fe7cd1125f76f5dd3f5ac0dc59f928e41863a78eb0334b192ebcd121c",
+    "before.json": "15a925368193cf43248a7207e91b15bcc72fc54a5322b83edf9dda6ba813c4bf",
+    "controller.py": "cdccf2562534762f9ba2c5755bbaeaf905dc8b1ee13e9beab29beb1b2794a1fc",
+    "curl-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "metadata.json": "4081d3a16ff5651eda632653b3703daa927aa96b02338fefa1e364a83cc04aa5",
+    "model-tags-before.json": "5635c9ab3a87e05d365e36c35f0071dba9a0e8a507c0ebf633d69f118431900f",
+    "request.json": "b81fb74304337e3ae8489c2ce8d8acc167b91ec082aa15049326333f699714a8",
+    "resources.jsonl": "6ca184dce41e5e7a3f813eec28a34a1b493694acf5c7a229157f293c3e010293",
+    "status.json": "036a2ce9dac4983f85f364bf79bd4271cca234ecde0cba221bd770769fcd3ecd"
+  },
+  "minimum_available_bytes": 26614947840,
+  "swap_in_pages": 104,
+  "swap_out_pages": 68606,
+  "page_size_bytes": 4096,
+  "last_three_swap_deltas": [
+    {
+      "in_pages": 0,
+      "out_pages": 8155
+    },
+    {
+      "in_pages": 3,
+      "out_pages": 43527
+    },
+    {
+      "in_pages": 66,
+      "out_pages": 12390
+    }
+  ],
+  "container_health_unchanged": true,
+  "recovery_utc": "2026-11-08T15:35:46.972208+00:00",
+  "recovery_resident_models": [],
+  "recovery_file_sha256": "0a10b02ff84aba43d2845bc3de638de382c22f9924ea417c085c52158729260e",
+  "resource_policy_changed": false,
+  "retry_attempted": false,
+  "forced_unload": false,
+  "inference_response_captured": false,
+  "prompt_tokens": null,
+  "output_tokens": null,
+  "ollama_readonly_diagnostic": "ActiveState=active\nMemoryCurrent=6151950336\nMemoryPeak=11491008512\nMemorySwapCurrent=4472832\nCPUQuotaPerSecUSec=infinity\nMemoryHigh=infinity\nMemoryMax=infinity\nMemorySwapMax=infinity",
+  "host_swappiness": 60,
+  "diagnostic_limit": "Host-global swap counters do not prove causality. Native service memory peak/current include non-model memory/cache; no service setting changed."
+}

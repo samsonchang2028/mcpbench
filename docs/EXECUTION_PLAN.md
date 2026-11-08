@@ -1,7 +1,7 @@
 # MCPBench execution plan
 
 Current milestone: T001/T007 admission, T006 contracts and T009 fixtures DONE
-with independent review/testing. T040 is READY for a bounded tool-call probe. The
+with independent review/testing. T040 is BLOCKED after its first bounded probe triggered the sustained-swap stop rule. The
 active-goal authorization section supersedes historical per-wave approval stops.
 
 This document schedules [TASK_GRAPH.md](TASK_GRAPH.md), which owns IDs, edges,
