@@ -533,6 +533,16 @@ class Contracts(unittest.TestCase):
                 host["result_ref"][field] = replacement
                 c.validate("ControlChain", chain)  # Matching metadata still does not prove external bytes.
 
+    def test_failure_event_survives_complete_stream_validation(self):
+        event = self.example("event")
+        event.update(event_type="failure", phase="execution", status="error", sequence=1,
+                     elapsed_ms=0, data={"failure": self.failure("unauthorized_attempt", "execution", "recovered")})
+        event.pop("call_id", None)
+        event.pop("parent_call_id", None)
+        c.validate("Event", event)
+        c.validate_event_stream([event])
+        self.reject("EventStream", [{**event, "event_type": "unknown"}])
+
     def test_observed_parsed_counts_cannot_exceed_passing_budget(self):
         for key, limit in c.AGENT_COUNT_LIMITS.items():
             chain = self.example("control-chain")

@@ -540,7 +540,7 @@ def validate_event_stream(events: list[dict[str, Any]]) -> None:
         _require(event["sequence"] == sequence.get(source, 0) + 1, "source sequence gap or reorder")
         _require(event["elapsed_ms"] >= elapsed.get(source, 0), "source monotonic time regressed")
         sequence[source], elapsed[source] = event["sequence"], event["elapsed_ms"]
-        kind, suffix = event["event_type"].split(".")
+        kind, _, suffix = event["event_type"].partition(".")
         if kind in {"model", "tool", "db"}:
             key = (source, kind, event["call_id"])
             if suffix == "started":
