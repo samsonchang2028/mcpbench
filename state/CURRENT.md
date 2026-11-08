@@ -12,3 +12,8 @@ V1 excludes OpenTelemetry, Jaeger and dashboard; Python evaluator + Go MCP/agent
 Continuation: original T006 worker no longer listed; complete-looking untracked
 contract bundle preserved and resumed in-place. Await frozen candidate commit,
 then independent review/test. Previous turn made concrete contract/goal progress.
+
+T006 v1 independent gates CHANGES REQUIRED/FAIL: contradictory verdicts, read-only
+applicability, incomplete phase/exit/verifier transport and typed event evidence.
+Repair pass1 in same worktree under t006_finish; no integration or T009 dispatch.
+O owns the EVALUATION_PLAN read-only/comparison clarification for re-review.

@@ -116,6 +116,21 @@ conflict without mutation. The final settled snapshot must equal the agent-only
 application state. Verification failure fails the run gate even if the original
 invoice was correct.
 
+Read-only project/timesheet tasks use an explicit non-invoice applicability path.
+After acknowledged agent revocation/settlement, grade the original answer's record
+IDs against the exact declared set and prove application state unchanged. No
+verifier capability or invoice call is issued; replay and verifier-settlement
+verdicts are null with a typed read-only/not-applicable reason, and verifier calls
+are zero. The registry remains sealed while a final unchanged-state snapshot and
+safe scoped cleanup complete. The same post-agent 30-second bound applies. This
+does not relax the draft-invoice smoke's two-call/two-fence verification gate.
+
+A controlled comparison may contain a failed agent task: wrong answers, invalid
+calls and model timeouts remain measured failures when setup, settlement, evidence
+and cleanup are complete. Operational uncertainty, quarantine, failed verification
+or incomplete evidence cannot be labeled comparison-valid. Recovered agent/tool
+errors are retained without automatically invalidating a later correct task.
+
 Expected state uses stable business keys and explicit totals. Generated IDs and
 timestamps may vary but must satisfy declared reference/type/date constraints.
 Never take model-generated totals as expected values. Include the idempotency

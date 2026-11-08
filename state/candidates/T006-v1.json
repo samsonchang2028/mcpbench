@@ -1,0 +1,38 @@
+{
+  "task": "T006",
+  "worktree": "/home/sfkim/projects/mcpbench/.worktrees/T006",
+  "base_commit": "3ae33c0",
+  "candidate_commit": "64faec8858ce2b4e5ef0b026f841008664c1cbc1",
+  "source_hashes": {
+    "contracts/PROTOCOL.md": "9f23384e7c57fe8a985d8efb75d9c7629c7b4161c71033ccb7fe7124f8669463",
+    "contracts/README.md": "7083a72d8eb29dfe19cfaef2d33fd65ef8a51533a7f6b6c7a1fb5bf567cbe38d",
+    "contracts/__init__.py": "70ef3993b61fdba9e731e644c4daf504cc1f46af56f4369d8a5436e1012710d5",
+    "contracts/manifest.json": "1eaf51bcdb8f12be099bb57a89234ad8f8b7df50b53b3eabf0279805938dc5f4",
+    "contracts/requirements.txt": "71d5c0accd97088fcce60ca73c5d4a4ebcf0c86c10ac535bb8608a810ab74fdb",
+    "contracts/tests/__init__.py": "debdaed5b2df5f044bb8e4d441cbf8b3cd91d533c2416a28f34f3d492d1f8046",
+    "contracts/tests/test_contracts.py": "8223a9168f57b3361ba476029360f4f4dc6b4113a4f5ed73b6efbad7f92ff554",
+    "contracts/v1/agent-request.example.json": "0718596d8828a8de67fdd91e0ac53adb7807b1a8b451cee2da99f5bd96a8b654",
+    "contracts/v1/agent-result.example.json": "801ac8691d721176941ba07138779233c44df83902e79824308cd0dbcf0b288a",
+    "contracts/v1/cases.json": "6f08e4494431b18ad0887ad8563c2bac0dc7fc202a21d4c15cc9ce4c96a039d1",
+    "contracts/v1/catalog.json": "64e6b0ec54b2242747373ef1a567d9ec8c59f033f47c02afbe715d184a31ae36",
+    "contracts/v1/evaluation-result.example.json": "a809216aa9a9266dc2628fddd93883bc1b2405fff953773ab870104161da9790",
+    "contracts/v1/event.example.json": "3413aede5afde2cf2c076a16b8dfe714b61fa5902801b33b00c29d09119d0dff",
+    "contracts/v1/fence-receipt.example.json": "8b4714db2f306a19827f8f12eae6b3721f31f97d52c93a8f8a864bef869cd4c9",
+    "contracts/v1/fixture.example.json": "6fc9ea5b125bdc0008056272c24beaa5793d8d3890a6f1fc21e8e72b7d79fa81",
+    "contracts/v1/run-manifest.example.json": "04c142b75f80c03912f3be85afc130337ab34f1392dff7fbf14e7863cb7bf149",
+    "contracts/v1/run-mapping.example.json": "ffc5c47f7e03f7913aa310f678b179cc0070849b56190e9e7fdd5ae473df30f0",
+    "contracts/v1/schema.json": "3efa86730eef48ae897c2674cbd58b7982ef70040278788677fc5d7e19f19889",
+    "contracts/v1/snapshot.example.json": "c21c99503d223e2a2b4afe7d2dc81ee3e09250d966db3af7a5c5ac4823240eb3",
+    "contracts/v1/task.example.json": "3a03dea7deb25699031d9747b9e0e0cd6983889510761e577aaa111c8438e727",
+    "contracts/v1/verification-request.example.json": "336a80265468af51b34885b9078ed76684ed93a5bd4feb04bf6c1e5d1b2740bf",
+    "contracts/validate.py": "d8c0522a45371fbea9e4161f65e5ac5ce04d158d7403cd090038830023a288a4"
+  },
+  "author_checks": {
+    "unit_tests": 15,
+    "cases": 90,
+    "valid_cases": 45,
+    "invalid_cases": 45,
+    "standalone_examples": 11,
+    "runtime": "UNRUN"
+  }
+}
