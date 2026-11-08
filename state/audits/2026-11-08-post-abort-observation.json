@@ -1,0 +1,1418 @@
+{
+  "scope": "Read-only post-abort investigation; no inference or new runtime admission claimed",
+  "resumed_swap_blocker_audit": 2,
+  "samples": [
+    {
+      "utc": "2026-11-08T15:38:08.249773+00:00",
+      "monotonic": 6056347.049861025,
+      "mem_available_bytes": 27253399552,
+      "swap_in_pages": 577216,
+      "swap_out_pages": 2264483,
+      "cpu_ticks": [
+        138250515,
+        126599,
+        67799662,
+        4547499639,
+        546865,
+        0,
+        10853216,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.328125,
+        0.50830078125,
+        0.517578125
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.23 avg300=0.76 total=14153773\nfull avg10=0.00 avg60=0.23 avg300=0.75 total=13858715",
+      "cgroups": {
+        "system.slice": {
+          "memory.current": "22236991488",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "1861607424",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 2424",
+          "memory.pressure": "some avg10=0.00 avg60=0.20 avg300=0.68 total=5961724\nfull avg10=0.00 avg60=0.20 avg300=0.67 total=5890088"
+        },
+        "system.slice/ollama.service": {
+          "memory.current": "6151213056",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "4472832",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 56",
+          "memory.pressure": "some avg10=0.00 avg60=0.24 avg300=0.77 total=5371429\nfull avg10=0.00 avg60=0.24 avg300=0.77 total=5368838"
+        }
+      }
+    },
+    {
+      "utc": "2026-11-08T15:38:10.251085+00:00",
+      "monotonic": 6056349.0511728,
+      "mem_available_bytes": 27251363840,
+      "swap_in_pages": 577216,
+      "swap_out_pages": 2264483,
+      "cpu_ticks": [
+        138250620,
+        126599,
+        67799686,
+        4547501090,
+        546865,
+        0,
+        10853218,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.328125,
+        0.50830078125,
+        0.517578125
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.22 avg300=0.76 total=14153773\nfull avg10=0.00 avg60=0.22 avg300=0.75 total=13858715",
+      "cgroups": {
+        "system.slice": {
+          "memory.current": "22238175232",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "1861607424",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 2424",
+          "memory.pressure": "some avg10=0.00 avg60=0.20 avg300=0.68 total=5961724\nfull avg10=0.00 avg60=0.20 avg300=0.67 total=5890088"
+        },
+        "system.slice/ollama.service": {
+          "memory.current": "6150692864",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "4472832",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 56",
+          "memory.pressure": "some avg10=0.00 avg60=0.23 avg300=0.76 total=5371429\nfull avg10=0.00 avg60=0.23 avg300=0.76 total=5368838"
+        }
+      }
+    },
+    {
+      "utc": "2026-11-08T15:38:12.254262+00:00",
+      "monotonic": 6056351.054365558,
+      "mem_available_bytes": 27250585600,
+      "swap_in_pages": 577216,
+      "swap_out_pages": 2264483,
+      "cpu_ticks": [
+        138250676,
+        126599,
+        67799704,
+        4547502589,
+        546866,
+        0,
+        10853221,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.328125,
+        0.50830078125,
+        0.517578125
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.22 avg300=0.75 total=14153773\nfull avg10=0.00 avg60=0.21 avg300=0.74 total=13858715",
+      "cgroups": {
+        "system.slice": {
+          "memory.current": "22238433280",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "1861607424",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 2424",
+          "memory.pressure": "some avg10=0.00 avg60=0.19 avg300=0.67 total=5961724\nfull avg10=0.00 avg60=0.19 avg300=0.66 total=5890088"
+        },
+        "system.slice/ollama.service": {
+          "memory.current": "6150692864",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "4472832",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 56",
+          "memory.pressure": "some avg10=0.00 avg60=0.22 avg300=0.76 total=5371429\nfull avg10=0.00 avg60=0.22 avg300=0.76 total=5368838"
+        }
+      }
+    },
+    {
+      "utc": "2026-11-08T15:38:14.257904+00:00",
+      "monotonic": 6056353.058025122,
+      "mem_available_bytes": 27252998144,
+      "swap_in_pages": 577216,
+      "swap_out_pages": 2264483,
+      "cpu_ticks": [
+        138250739,
+        126599,
+        67799726,
+        4547504073,
+        546866,
+        0,
+        10853224,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.3017578125,
+        0.49951171875,
+        0.5146484375
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.21 avg300=0.75 total=14153773\nfull avg10=0.00 avg60=0.21 avg300=0.73 total=13858715",
+      "cgroups": {
+        "system.slice": {
+          "memory.current": "22239264768",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "1861607424",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 2424",
+          "memory.pressure": "some avg10=0.00 avg60=0.18 avg300=0.67 total=5961724\nfull avg10=0.00 avg60=0.18 avg300=0.66 total=5890088"
+        },
+        "system.slice/ollama.service": {
+          "memory.current": "6150688768",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "4472832",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 56",
+          "memory.pressure": "some avg10=0.00 avg60=0.22 avg300=0.75 total=5371429\nfull avg10=0.00 avg60=0.22 avg300=0.75 total=5368838"
+        }
+      }
+    },
+    {
+      "utc": "2026-11-08T15:38:16.261446+00:00",
+      "monotonic": 6056355.061548973,
+      "mem_available_bytes": 27252166656,
+      "swap_in_pages": 577216,
+      "swap_out_pages": 2264483,
+      "cpu_ticks": [
+        138250773,
+        126599,
+        67799742,
+        4547505599,
+        546867,
+        0,
+        10853226,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.3017578125,
+        0.49951171875,
+        0.5146484375
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.20 avg300=0.74 total=14153773\nfull avg10=0.00 avg60=0.20 avg300=0.73 total=13858715",
+      "cgroups": {
+        "system.slice": {
+          "memory.current": "22238572544",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "1861607424",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 2424",
+          "memory.pressure": "some avg10=0.00 avg60=0.18 avg300=0.66 total=5961724\nfull avg10=0.00 avg60=0.18 avg300=0.65 total=5890088"
+        },
+        "system.slice/ollama.service": {
+          "memory.current": "6150688768",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "4472832",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 56",
+          "memory.pressure": "some avg10=0.00 avg60=0.21 avg300=0.74 total=5371429\nfull avg10=0.00 avg60=0.21 avg300=0.74 total=5368838"
+        }
+      }
+    },
+    {
+      "utc": "2026-11-08T15:38:18.264898+00:00",
+      "monotonic": 6056357.065016518,
+      "mem_available_bytes": 27258339328,
+      "swap_in_pages": 577216,
+      "swap_out_pages": 2264483,
+      "cpu_ticks": [
+        138250804,
+        126599,
+        67799760,
+        4547507125,
+        546867,
+        0,
+        10853228,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.27734375,
+        0.4912109375,
+        0.51171875
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.20 avg300=0.74 total=14153773\nfull avg10=0.00 avg60=0.19 avg300=0.72 total=13858715",
+      "cgroups": {
+        "system.slice": {
+          "memory.current": "22233657344",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "1861607424",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 2424",
+          "memory.pressure": "some avg10=0.00 avg60=0.17 avg300=0.66 total=5961724\nfull avg10=0.00 avg60=0.17 avg300=0.65 total=5890088"
+        },
+        "system.slice/ollama.service": {
+          "memory.current": "6150688768",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "4472832",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 56",
+          "memory.pressure": "some avg10=0.00 avg60=0.20 avg300=0.74 total=5371429\nfull avg10=0.00 avg60=0.20 avg300=0.74 total=5368838"
+        }
+      }
+    },
+    {
+      "utc": "2026-11-08T15:38:20.268465+00:00",
+      "monotonic": 6056359.068568582,
+      "mem_available_bytes": 27257262080,
+      "swap_in_pages": 577216,
+      "swap_out_pages": 2264483,
+      "cpu_ticks": [
+        138250846,
+        126599,
+        67799779,
+        4547508634,
+        546867,
+        0,
+        10853231,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.27734375,
+        0.4912109375,
+        0.51171875
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.19 avg300=0.73 total=14153773\nfull avg10=0.00 avg60=0.18 avg300=0.72 total=13858715",
+      "cgroups": {
+        "system.slice": {
+          "memory.current": "22226595840",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "1861607424",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 2424",
+          "memory.pressure": "some avg10=0.00 avg60=0.16 avg300=0.65 total=5961724\nfull avg10=0.00 avg60=0.16 avg300=0.64 total=5890088"
+        },
+        "system.slice/ollama.service": {
+          "memory.current": "6150688768",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "4472832",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 56",
+          "memory.pressure": "some avg10=0.00 avg60=0.19 avg300=0.73 total=5371429\nfull avg10=0.00 avg60=0.19 avg300=0.73 total=5368838"
+        }
+      }
+    },
+    {
+      "utc": "2026-11-08T15:38:22.271854+00:00",
+      "monotonic": 6056361.07195736,
+      "mem_available_bytes": 27257303040,
+      "swap_in_pages": 577216,
+      "swap_out_pages": 2264483,
+      "cpu_ticks": [
+        138250872,
+        126599,
+        67799798,
+        4547510163,
+        546868,
+        0,
+        10853234,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.27734375,
+        0.4912109375,
+        0.51171875
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.18 avg300=0.73 total=14153773\nfull avg10=0.00 avg60=0.18 avg300=0.71 total=13858715",
+      "cgroups": {
+        "system.slice": {
+          "memory.current": "22227169280",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "1861607424",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 2424",
+          "memory.pressure": "some avg10=0.00 avg60=0.16 avg300=0.65 total=5961724\nfull avg10=0.00 avg60=0.16 avg300=0.64 total=5890088"
+        },
+        "system.slice/ollama.service": {
+          "memory.current": "6150688768",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "4472832",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 56",
+          "memory.pressure": "some avg10=0.00 avg60=0.19 avg300=0.73 total=5371429\nfull avg10=0.00 avg60=0.19 avg300=0.73 total=5368838"
+        }
+      }
+    },
+    {
+      "utc": "2026-11-08T15:38:24.275329+00:00",
+      "monotonic": 6056363.075432108,
+      "mem_available_bytes": 27256983552,
+      "swap_in_pages": 577216,
+      "swap_out_pages": 2264483,
+      "cpu_ticks": [
+        138250917,
+        126599,
+        67799822,
+        4547511663,
+        546868,
+        0,
+        10853237,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.2548828125,
+        0.48291015625,
+        0.5087890625
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.18 avg300=0.72 total=14153855\nfull avg10=0.00 avg60=0.17 avg300=0.71 total=13858797",
+      "cgroups": {
+        "system.slice": {
+          "memory.current": "22227337216",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "1861607424",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 2424",
+          "memory.pressure": "some avg10=0.00 avg60=0.15 avg300=0.64 total=5961814\nfull avg10=0.00 avg60=0.15 avg300=0.63 total=5890178"
+        },
+        "system.slice/ollama.service": {
+          "memory.current": "6150688768",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "4472832",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 56",
+          "memory.pressure": "some avg10=0.00 avg60=0.18 avg300=0.72 total=5371429\nfull avg10=0.00 avg60=0.18 avg300=0.72 total=5368838"
+        }
+      }
+    },
+    {
+      "utc": "2026-11-08T15:38:26.278862+00:00",
+      "monotonic": 6056365.078964599,
+      "mem_available_bytes": 27259793408,
+      "swap_in_pages": 577216,
+      "swap_out_pages": 2264483,
+      "cpu_ticks": [
+        138250953,
+        126599,
+        67799839,
+        4547513183,
+        546868,
+        0,
+        10853240,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.2548828125,
+        0.48291015625,
+        0.5087890625
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.17 avg300=0.72 total=14153855\nfull avg10=0.00 avg60=0.17 avg300=0.70 total=13858797",
+      "cgroups": {
+        "system.slice": {
+          "memory.current": "22227566592",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "1861607424",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 2424",
+          "memory.pressure": "some avg10=0.00 avg60=0.15 avg300=0.64 total=5961814\nfull avg10=0.00 avg60=0.15 avg300=0.63 total=5890178"
+        },
+        "system.slice/ollama.service": {
+          "memory.current": "6150688768",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "4472832",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 56",
+          "memory.pressure": "some avg10=0.00 avg60=0.18 avg300=0.72 total=5371429\nfull avg10=0.00 avg60=0.18 avg300=0.72 total=5368838"
+        }
+      }
+    },
+    {
+      "utc": "2026-11-08T15:38:28.282681+00:00",
+      "monotonic": 6056367.082784579,
+      "mem_available_bytes": 27259363328,
+      "swap_in_pages": 577220,
+      "swap_out_pages": 2264483,
+      "cpu_ticks": [
+        138250990,
+        126599,
+        67799865,
+        4547514693,
+        546868,
+        0,
+        10853242,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.234375,
+        0.474609375,
+        0.505859375
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.16 avg300=0.71 total=14153855\nfull avg10=0.00 avg60=0.16 avg300=0.70 total=13858797",
+      "cgroups": {
+        "system.slice": {
+          "memory.current": "22229180416",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "1861607424",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 2424",
+          "memory.pressure": "some avg10=0.00 avg60=0.14 avg300=0.63 total=5961814\nfull avg10=0.00 avg60=0.14 avg300=0.62 total=5890178"
+        },
+        "system.slice/ollama.service": {
+          "memory.current": "6150688768",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "4472832",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 56",
+          "memory.pressure": "some avg10=0.00 avg60=0.17 avg300=0.71 total=5371429\nfull avg10=0.00 avg60=0.17 avg300=0.71 total=5368838"
+        }
+      }
+    },
+    {
+      "utc": "2026-11-08T15:38:30.286383+00:00",
+      "monotonic": 6056369.086486974,
+      "mem_available_bytes": 27261935616,
+      "swap_in_pages": 577220,
+      "swap_out_pages": 2264483,
+      "cpu_ticks": [
+        138251039,
+        126599,
+        67799890,
+        4547516191,
+        546869,
+        0,
+        10853245,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.234375,
+        0.474609375,
+        0.505859375
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.16 avg300=0.71 total=14153855\nfull avg10=0.00 avg60=0.15 avg300=0.69 total=13858797",
+      "cgroups": {
+        "system.slice": {
+          "memory.current": "22227644416",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "1861607424",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 2424",
+          "memory.pressure": "some avg10=0.00 avg60=0.14 avg300=0.63 total=5961814\nfull avg10=0.00 avg60=0.14 avg300=0.62 total=5890178"
+        },
+        "system.slice/ollama.service": {
+          "memory.current": "6150688768",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "4472832",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 56",
+          "memory.pressure": "some avg10=0.00 avg60=0.16 avg300=0.71 total=5371429\nfull avg10=0.00 avg60=0.16 avg300=0.71 total=5368838"
+        }
+      }
+    },
+    {
+      "utc": "2026-11-08T15:38:32.289992+00:00",
+      "monotonic": 6056371.090094857,
+      "mem_available_bytes": 27251769344,
+      "swap_in_pages": 577220,
+      "swap_out_pages": 2264483,
+      "cpu_ticks": [
+        138251102,
+        126599,
+        67799919,
+        4547517669,
+        546869,
+        0,
+        10853248,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.234375,
+        0.474609375,
+        0.505859375
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.15 avg300=0.70 total=14153855\nfull avg10=0.00 avg60=0.15 avg300=0.69 total=13858797",
+      "cgroups": {
+        "system.slice": {
+          "memory.current": "22227910656",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "1861607424",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 2424",
+          "memory.pressure": "some avg10=0.00 avg60=0.13 avg300=0.62 total=5961814\nfull avg10=0.00 avg60=0.13 avg300=0.62 total=5890178"
+        },
+        "system.slice/ollama.service": {
+          "memory.current": "6150688768",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "4472832",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 56",
+          "memory.pressure": "some avg10=0.00 avg60=0.16 avg300=0.70 total=5371429\nfull avg10=0.00 avg60=0.16 avg300=0.70 total=5368838"
+        }
+      }
+    },
+    {
+      "utc": "2026-11-08T15:38:34.291298+00:00",
+      "monotonic": 6056373.091382354,
+      "mem_available_bytes": 27245510656,
+      "swap_in_pages": 577220,
+      "swap_out_pages": 2264483,
+      "cpu_ticks": [
+        138251174,
+        126599,
+        67799947,
+        4547519140,
+        546869,
+        0,
+        10853250,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.21533203125,
+        0.46630859375,
+        0.5029296875
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.15 avg300=0.70 total=14153855\nfull avg10=0.00 avg60=0.14 avg300=0.68 total=13858797",
+      "cgroups": {
+        "system.slice": {
+          "memory.current": "22244597760",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "1861607424",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 2424",
+          "memory.pressure": "some avg10=0.00 avg60=0.13 avg300=0.62 total=5961814\nfull avg10=0.00 avg60=0.13 avg300=0.61 total=5890178"
+        },
+        "system.slice/ollama.service": {
+          "memory.current": "6150688768",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "4472832",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 56",
+          "memory.pressure": "some avg10=0.00 avg60=0.15 avg300=0.70 total=5371429\nfull avg10=0.00 avg60=0.15 avg300=0.70 total=5368838"
+        }
+      }
+    },
+    {
+      "utc": "2026-11-08T15:38:36.294497+00:00",
+      "monotonic": 6056375.094599887,
+      "mem_available_bytes": 27238293504,
+      "swap_in_pages": 577220,
+      "swap_out_pages": 2264483,
+      "cpu_ticks": [
+        138251241,
+        126599,
+        67799970,
+        4547520624,
+        546870,
+        0,
+        10853252,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.21533203125,
+        0.46630859375,
+        0.5029296875
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.14 avg300=0.69 total=14153855\nfull avg10=0.00 avg60=0.14 avg300=0.68 total=13858797",
+      "cgroups": {
+        "system.slice": {
+          "memory.current": "22253297664",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "1861607424",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 2424",
+          "memory.pressure": "some avg10=0.00 avg60=0.12 avg300=0.61 total=5961814\nfull avg10=0.00 avg60=0.12 avg300=0.61 total=5890178"
+        },
+        "system.slice/ollama.service": {
+          "memory.current": "6150688768",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "4472832",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 56",
+          "memory.pressure": "some avg10=0.00 avg60=0.15 avg300=0.69 total=5371429\nfull avg10=0.00 avg60=0.15 avg300=0.69 total=5368838"
+        }
+      }
+    },
+    {
+      "utc": "2026-11-08T15:38:38.297970+00:00",
+      "monotonic": 6056377.098074336,
+      "mem_available_bytes": 27251109888,
+      "swap_in_pages": 577220,
+      "swap_out_pages": 2264483,
+      "cpu_ticks": [
+        138251277,
+        126599,
+        67799990,
+        4547522140,
+        546870,
+        0,
+        10853254,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.19775390625,
+        0.45849609375,
+        0.5
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.14 avg300=0.69 total=14155621\nfull avg10=0.00 avg60=0.13 avg300=0.67 total=13860562",
+      "cgroups": {
+        "system.slice": {
+          "memory.current": "22254166016",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "1861607424",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 2424",
+          "memory.pressure": "some avg10=0.00 avg60=0.12 avg300=0.61 total=5961814\nfull avg10=0.00 avg60=0.12 avg300=0.60 total=5890178"
+        },
+        "system.slice/ollama.service": {
+          "memory.current": "6150688768",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "4472832",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 56",
+          "memory.pressure": "some avg10=0.00 avg60=0.14 avg300=0.69 total=5371429\nfull avg10=0.00 avg60=0.14 avg300=0.69 total=5368838"
+        }
+      }
+    },
+    {
+      "utc": "2026-11-08T15:38:40.301767+00:00",
+      "monotonic": 6056379.101870624,
+      "mem_available_bytes": 27264122880,
+      "swap_in_pages": 577220,
+      "swap_out_pages": 2264483,
+      "cpu_ticks": [
+        138251321,
+        126599,
+        67800014,
+        4547523646,
+        546870,
+        0,
+        10853256,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.19775390625,
+        0.45849609375,
+        0.5
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.13 avg300=0.68 total=14155621\nfull avg10=0.00 avg60=0.13 avg300=0.67 total=13860562",
+      "cgroups": {
+        "system.slice": {
+          "memory.current": "22228975616",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "1861607424",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 2424",
+          "memory.pressure": "some avg10=0.00 avg60=0.12 avg300=0.61 total=5961814\nfull avg10=0.00 avg60=0.11 avg300=0.60 total=5890178"
+        },
+        "system.slice/ollama.service": {
+          "memory.current": "6150688768",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "4472832",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 56",
+          "memory.pressure": "some avg10=0.00 avg60=0.14 avg300=0.68 total=5371429\nfull avg10=0.00 avg60=0.14 avg300=0.68 total=5368838"
+        }
+      }
+    },
+    {
+      "utc": "2026-11-08T15:38:42.305243+00:00",
+      "monotonic": 6056381.10534662,
+      "mem_available_bytes": 27263934464,
+      "swap_in_pages": 577220,
+      "swap_out_pages": 2264483,
+      "cpu_ticks": [
+        138251374,
+        126599,
+        67800032,
+        4547525149,
+        546870,
+        0,
+        10853259,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.19775390625,
+        0.45849609375,
+        0.5
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.13 avg300=0.68 total=14155621\nfull avg10=0.00 avg60=0.12 avg300=0.66 total=13860562",
+      "cgroups": {
+        "system.slice": {
+          "memory.current": "22228992000",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "1861607424",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 2424",
+          "memory.pressure": "some avg10=0.00 avg60=0.11 avg300=0.60 total=5961814\nfull avg10=0.00 avg60=0.11 avg300=0.59 total=5890178"
+        },
+        "system.slice/ollama.service": {
+          "memory.current": "6150688768",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "4472832",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 56",
+          "memory.pressure": "some avg10=0.00 avg60=0.13 avg300=0.68 total=5371429\nfull avg10=0.00 avg60=0.13 avg300=0.68 total=5368838"
+        }
+      }
+    },
+    {
+      "utc": "2026-11-08T15:38:44.308067+00:00",
+      "monotonic": 6056383.108165626,
+      "mem_available_bytes": 27256872960,
+      "swap_in_pages": 577220,
+      "swap_out_pages": 2264483,
+      "cpu_ticks": [
+        138251430,
+        126599,
+        67800067,
+        4547526623,
+        546870,
+        0,
+        10853262,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.34228515625,
+        0.484375,
+        0.50830078125
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.12 avg300=0.67 total=14155621\nfull avg10=0.00 avg60=0.12 avg300=0.66 total=13860562",
+      "cgroups": {
+        "system.slice": {
+          "memory.current": "22228668416",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "1861607424",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 2424",
+          "memory.pressure": "some avg10=0.00 avg60=0.11 avg300=0.60 total=5961814\nfull avg10=0.00 avg60=0.11 avg300=0.59 total=5890178"
+        },
+        "system.slice/ollama.service": {
+          "memory.current": "6150688768",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "4472832",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 56",
+          "memory.pressure": "some avg10=0.00 avg60=0.13 avg300=0.67 total=5371429\nfull avg10=0.00 avg60=0.13 avg300=0.67 total=5368838"
+        }
+      }
+    },
+    {
+      "utc": "2026-11-08T15:38:46.311519+00:00",
+      "monotonic": 6056385.111622081,
+      "mem_available_bytes": 27258437632,
+      "swap_in_pages": 577220,
+      "swap_out_pages": 2264483,
+      "cpu_ticks": [
+        138251467,
+        126599,
+        67800083,
+        4547528146,
+        546870,
+        0,
+        10853264,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.34228515625,
+        0.484375,
+        0.50830078125
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.12 avg300=0.67 total=14155621\nfull avg10=0.00 avg60=0.12 avg300=0.65 total=13860562",
+      "cgroups": {
+        "system.slice": {
+          "memory.current": "22228897792",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "1861607424",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 2424",
+          "memory.pressure": "some avg10=0.00 avg60=0.10 avg300=0.59 total=5961814\nfull avg10=0.00 avg60=0.10 avg300=0.59 total=5890178"
+        },
+        "system.slice/ollama.service": {
+          "memory.current": "6150688768",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "4472832",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 56",
+          "memory.pressure": "some avg10=0.00 avg60=0.12 avg300=0.67 total=5371429\nfull avg10=0.00 avg60=0.12 avg300=0.67 total=5368838"
+        }
+      }
+    },
+    {
+      "utc": "2026-11-08T15:38:48.315274+00:00",
+      "monotonic": 6056387.115378287,
+      "mem_available_bytes": 27258765312,
+      "swap_in_pages": 577220,
+      "swap_out_pages": 2264483,
+      "cpu_ticks": [
+        138251507,
+        126599,
+        67800106,
+        4547529658,
+        546871,
+        0,
+        10853266,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.314453125,
+        0.47607421875,
+        0.50537109375
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.11 avg300=0.66 total=14155621\nfull avg10=0.00 avg60=0.11 avg300=0.65 total=13860562",
+      "cgroups": {
+        "system.slice": {
+          "memory.current": "22229270528",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "1861607424",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 2424",
+          "memory.pressure": "some avg10=0.00 avg60=0.10 avg300=0.59 total=5961814\nfull avg10=0.00 avg60=0.10 avg300=0.58 total=5890178"
+        },
+        "system.slice/ollama.service": {
+          "memory.current": "6150688768",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "4472832",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 56",
+          "memory.pressure": "some avg10=0.00 avg60=0.12 avg300=0.66 total=5371429\nfull avg10=0.00 avg60=0.12 avg300=0.66 total=5368838"
+        }
+      }
+    },
+    {
+      "utc": "2026-11-08T15:38:50.318842+00:00",
+      "monotonic": 6056389.11894607,
+      "mem_available_bytes": 27259846656,
+      "swap_in_pages": 577220,
+      "swap_out_pages": 2264483,
+      "cpu_ticks": [
+        138251560,
+        126599,
+        67800127,
+        4547531156,
+        546871,
+        0,
+        10853269,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.314453125,
+        0.47607421875,
+        0.50537109375
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.11 avg300=0.66 total=14155621\nfull avg10=0.00 avg60=0.11 avg300=0.64 total=13860562",
+      "cgroups": {
+        "system.slice": {
+          "memory.current": "22229442560",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "1861607424",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 2424",
+          "memory.pressure": "some avg10=0.00 avg60=0.10 avg300=0.58 total=5961814\nfull avg10=0.00 avg60=0.10 avg300=0.58 total=5890178"
+        },
+        "system.slice/ollama.service": {
+          "memory.current": "6150688768",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "4472832",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 56",
+          "memory.pressure": "some avg10=0.00 avg60=0.11 avg300=0.66 total=5371429\nfull avg10=0.00 avg60=0.11 avg300=0.66 total=5368838"
+        }
+      }
+    },
+    {
+      "utc": "2026-11-08T15:38:52.322337+00:00",
+      "monotonic": 6056391.122440541,
+      "mem_available_bytes": 27259486208,
+      "swap_in_pages": 577220,
+      "swap_out_pages": 2264483,
+      "cpu_ticks": [
+        138251589,
+        126599,
+        67800146,
+        4547532684,
+        546871,
+        0,
+        10853272,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.314453125,
+        0.47607421875,
+        0.50537109375
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.11 avg300=0.65 total=14155621\nfull avg10=0.00 avg60=0.10 avg300=0.64 total=13860562",
+      "cgroups": {
+        "system.slice": {
+          "memory.current": "22229143552",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "1861607424",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 2424",
+          "memory.pressure": "some avg10=0.00 avg60=0.09 avg300=0.58 total=5961814\nfull avg10=0.00 avg60=0.09 avg300=0.57 total=5890178"
+        },
+        "system.slice/ollama.service": {
+          "memory.current": "6150688768",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "4472832",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 56",
+          "memory.pressure": "some avg10=0.00 avg60=0.11 avg300=0.65 total=5371429\nfull avg10=0.00 avg60=0.11 avg300=0.65 total=5368838"
+        }
+      }
+    },
+    {
+      "utc": "2026-11-08T15:38:54.326115+00:00",
+      "monotonic": 6056393.126216814,
+      "mem_available_bytes": 27265892352,
+      "swap_in_pages": 577220,
+      "swap_out_pages": 2264483,
+      "cpu_ticks": [
+        138251635,
+        126599,
+        67800173,
+        4547534186,
+        546871,
+        0,
+        10853274,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.2890625,
+        0.4677734375,
+        0.50244140625
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.10 avg300=0.65 total=14155621\nfull avg10=0.00 avg60=0.10 avg300=0.63 total=13860562",
+      "cgroups": {
+        "system.slice": {
+          "memory.current": "22228959232",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "1861607424",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 2424",
+          "memory.pressure": "some avg10=0.00 avg60=0.09 avg300=0.57 total=5961814\nfull avg10=0.00 avg60=0.09 avg300=0.57 total=5890178"
+        },
+        "system.slice/ollama.service": {
+          "memory.current": "6150688768",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "4472832",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 56",
+          "memory.pressure": "some avg10=0.00 avg60=0.11 avg300=0.65 total=5371429\nfull avg10=0.00 avg60=0.11 avg300=0.65 total=5368838"
+        }
+      }
+    },
+    {
+      "utc": "2026-11-08T15:38:56.329643+00:00",
+      "monotonic": 6056395.129747594,
+      "mem_available_bytes": 27254013952,
+      "swap_in_pages": 577220,
+      "swap_out_pages": 2264483,
+      "cpu_ticks": [
+        138251684,
+        126599,
+        67800198,
+        4547535682,
+        546871,
+        0,
+        10853277,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.2890625,
+        0.4677734375,
+        0.50244140625
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.10 avg300=0.64 total=14155621\nfull avg10=0.00 avg60=0.10 avg300=0.63 total=13860562",
+      "cgroups": {
+        "system.slice": {
+          "memory.current": "22229336064",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "1861607424",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 2424",
+          "memory.pressure": "some avg10=0.00 avg60=0.09 avg300=0.57 total=5961814\nfull avg10=0.00 avg60=0.08 avg300=0.56 total=5890178"
+        },
+        "system.slice/ollama.service": {
+          "memory.current": "6150688768",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "4472832",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 56",
+          "memory.pressure": "some avg10=0.00 avg60=0.10 avg300=0.64 total=5371429\nfull avg10=0.00 avg60=0.10 avg300=0.64 total=5368838"
+        }
+      }
+    },
+    {
+      "utc": "2026-11-08T15:38:58.333108+00:00",
+      "monotonic": 6056397.13321098,
+      "mem_available_bytes": 27255816192,
+      "swap_in_pages": 577223,
+      "swap_out_pages": 2264483,
+      "cpu_ticks": [
+        138251723,
+        126599,
+        67800222,
+        4547537193,
+        546871,
+        0,
+        10853280,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.265625,
+        0.4599609375,
+        0.49951171875
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.10 avg300=0.64 total=14155621\nfull avg10=0.00 avg60=0.09 avg300=0.63 total=13860562",
+      "cgroups": {
+        "system.slice": {
+          "memory.current": "22228656128",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "1861607424",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 2424",
+          "memory.pressure": "some avg10=0.00 avg60=0.08 avg300=0.57 total=5961814\nfull avg10=0.00 avg60=0.08 avg300=0.56 total=5890178"
+        },
+        "system.slice/ollama.service": {
+          "memory.current": "6150688768",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "4472832",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 56",
+          "memory.pressure": "some avg10=0.00 avg60=0.10 avg300=0.64 total=5371429\nfull avg10=0.00 avg60=0.10 avg300=0.64 total=5368838"
+        }
+      }
+    },
+    {
+      "utc": "2026-11-08T15:39:00.336797+00:00",
+      "monotonic": 6056399.136901507,
+      "mem_available_bytes": 27252789248,
+      "swap_in_pages": 577223,
+      "swap_out_pages": 2264483,
+      "cpu_ticks": [
+        138251783,
+        126599,
+        67800249,
+        4547538677,
+        546872,
+        0,
+        10853282,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.265625,
+        0.4599609375,
+        0.49951171875
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.09 avg300=0.63 total=14155621\nfull avg10=0.00 avg60=0.09 avg300=0.62 total=13860562",
+      "cgroups": {
+        "system.slice": {
+          "memory.current": "22228111360",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "1861607424",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 2424",
+          "memory.pressure": "some avg10=0.00 avg60=0.08 avg300=0.56 total=5961814\nfull avg10=0.00 avg60=0.08 avg300=0.56 total=5890178"
+        },
+        "system.slice/ollama.service": {
+          "memory.current": "6150688768",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "4472832",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 56",
+          "memory.pressure": "some avg10=0.00 avg60=0.09 avg300=0.63 total=5371429\nfull avg10=0.00 avg60=0.09 avg300=0.63 total=5368838"
+        }
+      }
+    },
+    {
+      "utc": "2026-11-08T15:39:02.340433+00:00",
+      "monotonic": 6056401.140537565,
+      "mem_available_bytes": 27252674560,
+      "swap_in_pages": 577223,
+      "swap_out_pages": 2264483,
+      "cpu_ticks": [
+        138251813,
+        126599,
+        67800265,
+        4547540206,
+        546872,
+        0,
+        10853284,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.265625,
+        0.4599609375,
+        0.49951171875
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.09 avg300=0.63 total=14155621\nfull avg10=0.00 avg60=0.09 avg300=0.62 total=13860562",
+      "cgroups": {
+        "system.slice": {
+          "memory.current": "22227255296",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "1861607424",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 2424",
+          "memory.pressure": "some avg10=0.00 avg60=0.08 avg300=0.56 total=5961814\nfull avg10=0.00 avg60=0.08 avg300=0.55 total=5890178"
+        },
+        "system.slice/ollama.service": {
+          "memory.current": "6150688768",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "4472832",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 56",
+          "memory.pressure": "some avg10=0.00 avg60=0.09 avg300=0.63 total=5371429\nfull avg10=0.00 avg60=0.09 avg300=0.63 total=5368838"
+        }
+      }
+    },
+    {
+      "utc": "2026-11-08T15:39:04.343925+00:00",
+      "monotonic": 6056403.144049376,
+      "mem_available_bytes": 27254931456,
+      "swap_in_pages": 577223,
+      "swap_out_pages": 2264483,
+      "cpu_ticks": [
+        138251865,
+        126599,
+        67800296,
+        4547541698,
+        546872,
+        0,
+        10853285,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.244140625,
+        0.4521484375,
+        0.49658203125
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.08 avg300=0.62 total=14155621\nfull avg10=0.00 avg60=0.08 avg300=0.61 total=13860562",
+      "cgroups": {
+        "system.slice": {
+          "memory.current": "22227595264",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "1861607424",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 2424",
+          "memory.pressure": "some avg10=0.00 avg60=0.07 avg300=0.55 total=5961814\nfull avg10=0.00 avg60=0.07 avg300=0.55 total=5890178"
+        },
+        "system.slice/ollama.service": {
+          "memory.current": "6150688768",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "4472832",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 56",
+          "memory.pressure": "some avg10=0.00 avg60=0.09 avg300=0.62 total=5371429\nfull avg10=0.00 avg60=0.09 avg300=0.62 total=5368838"
+        }
+      }
+    },
+    {
+      "utc": "2026-11-08T15:39:06.347580+00:00",
+      "monotonic": 6056405.147682626,
+      "mem_available_bytes": 27253870592,
+      "swap_in_pages": 577223,
+      "swap_out_pages": 2264483,
+      "cpu_ticks": [
+        138251898,
+        126599,
+        67800313,
+        4547543224,
+        546872,
+        0,
+        10853289,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.244140625,
+        0.4521484375,
+        0.49658203125
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.08 avg300=0.62 total=14155621\nfull avg10=0.00 avg60=0.08 avg300=0.61 total=13860562",
+      "cgroups": {
+        "system.slice": {
+          "memory.current": "22228189184",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "1861607424",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 2424",
+          "memory.pressure": "some avg10=0.00 avg60=0.07 avg300=0.55 total=5961814\nfull avg10=0.00 avg60=0.07 avg300=0.54 total=5890178"
+        },
+        "system.slice/ollama.service": {
+          "memory.current": "6150688768",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "4472832",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 56",
+          "memory.pressure": "some avg10=0.00 avg60=0.08 avg300=0.62 total=5371429\nfull avg10=0.00 avg60=0.08 avg300=0.62 total=5368838"
+        }
+      }
+    },
+    {
+      "utc": "2026-11-08T15:39:08.351127+00:00",
+      "monotonic": 6056407.151230514,
+      "mem_available_bytes": 27253006336,
+      "swap_in_pages": 577223,
+      "swap_out_pages": 2264483,
+      "cpu_ticks": [
+        138251927,
+        126599,
+        67800332,
+        4547544749,
+        546872,
+        0,
+        10853292,
+        0,
+        0,
+        0
+      ],
+      "load": [
+        0.384765625,
+        0.47802734375,
+        0.5048828125
+      ],
+      "memory_psi": "some avg10=0.00 avg60=0.08 avg300=0.62 total=14155996\nfull avg10=0.00 avg60=0.08 avg300=0.60 total=13860938",
+      "cgroups": {
+        "system.slice": {
+          "memory.current": "22228553728",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "1861607424",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 2424",
+          "memory.pressure": "some avg10=0.00 avg60=0.07 avg300=0.55 total=5962082\nfull avg10=0.00 avg60=0.07 avg300=0.54 total=5890446"
+        },
+        "system.slice/ollama.service": {
+          "memory.current": "6150688768",
+          "memory.high": "max",
+          "memory.max": "max",
+          "memory.swap.current": "4472832",
+          "memory.swap.max": "max",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 56",
+          "memory.pressure": "some avg10=0.00 avg60=0.08 avg300=0.62 total=5371429\nfull avg10=0.00 avg60=0.08 avg300=0.62 total=5368838"
+        }
+      }
+    }
+  ],
+  "ollama_ps_before": {
+    "models": []
+  },
+  "ollama_ps_after": {
+    "models": []
+  },
+  "host_swappiness": "60",
+  "summary": {
+    "elapsed_seconds": 60.101369488984346,
+    "min_available_bytes": 27238293504,
+    "swap_in_pages": 7,
+    "swap_out_pages": 0,
+    "longest_active_swap_streak": 1,
+    "cgroup_oom_events_unchanged": true,
+    "native_ollama_max_and_high_unlimited": true
+  },
+  "limits": "These observations cannot attribute swap during the prior attempt or prove a subsequent model load safe; no retry authorization received."
+}

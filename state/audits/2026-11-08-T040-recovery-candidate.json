@@ -1,0 +1,21 @@
+{
+  "observed_utc": "2026-11-08T15:39:39.110620+00:00",
+  "candidate_file": "artifacts/probes/t040-20261108-02/controller.py",
+  "candidate_sha256": "c9809246f788daa3f118c17de44f1a59e28ba2861af3a2f30de41e7ed29ba3b9",
+  "difference_from_attempt_01": "Adds raw CPU ticks and host load to resource samples; all safety controls unchanged",
+  "independent_review": "state/reviews/T040-recovery-reviewer.md",
+  "independent_test": "state/reviews/T040-recovery-tester.md",
+  "runtime_authorization": "PENDING explicit decision; async question unanswered",
+  "executed": false,
+  "new_request_count": 0,
+  "post_abort_resource_summary": {
+    "elapsed_seconds": 60.101369488984346,
+    "min_available_bytes": 27238293504,
+    "swap_in_pages": 7,
+    "swap_out_pages": 0,
+    "longest_active_swap_streak": 1,
+    "cgroup_oom_events_unchanged": true,
+    "native_ollama_max_and_high_unlimited": true
+  },
+  "scope_limit": "Quiet post-abort observation does not explain prior swap or establish safe model-load behavior; fresh admission remains mandatory"
+}

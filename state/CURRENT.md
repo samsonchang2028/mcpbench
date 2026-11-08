@@ -15,8 +15,10 @@ was repaired/reviewed/retested before inference; no open controller P0/P1.
 Actual swapping is an unresolved P1 resource gate; causal workload is unproven.
 Native Ollama limits/driver/config unchanged. Model expired under our own30sec
 keep-alive; later read-only api/ps empty. No forced unload or retry attempted.
-Runtime CPU telemetry was missing and cannot be reconstructed for this attempt;
-add /proc/stat/load fields to any future separately reviewed probe.
+Runtime CPU telemetry was missing and cannot be reconstructed for this attempt.
+Prospective second controller now adds /proc/stat/load fields; independent R
+implementation-ready/V offline PASS. This candidate remains UNRUN and does not
+change frozen attempt01 or any safety threshold.
 
 Evidence: state/audits/2026-11-08-T040-result.json and frozen local
 artifacts/probes/t040-20261108-01/hashes.json.
@@ -24,6 +26,13 @@ R: state/reviews/T040-result-reviewer.md approves failed evidence, gate BLOCKED.
 V: state/reviews/T040-result-tester.md capability FAIL, safety abort PASS.
 T008/application work WAITING; zero READY,31 WAITING,1 BLOCKED,8 DONE.
 No MCPBench containers/builds/dependency installs/app runtime were started.
-Full v1 remains incomplete. First confirmed audit of NEW swap-resource blocker;
+Full v1 remains incomplete. Second confirmed audit of swap-resource blocker;
 previous model-storage blocker was resolved. Goal remains active pending decision.
 Resource lease released; do not retry or alter stop thresholds automatically.
+
+Read-only post-abort investigation:60.10sec, min25.37GiB RAM,7 swap-in
+pages,0 swap-out,longest active streak1,no cgroup OOM counter change. Native
+Ollama MemoryHigh/Max unlimited; empty resident models before/after. This does
+not establish causal attribution or prove another model load safe. No retry
+approval received. Proposed second controller and R/V evidence are referenced
+in state/audits/2026-11-08-T040-recovery-candidate.json.
