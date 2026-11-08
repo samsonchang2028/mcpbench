@@ -2,8 +2,8 @@
 # MCPBench task graph
 
 Current status: T001–T011,T015,T017,T040 are DONE (14 tasks). BillingT012,
-agentT014 and evaluatorT016 are IMPLEMENTING in disjointworktrees. T018 is READY
-for fresh admission and ownedPostgreSQL validation. All integratedcandidates have
+agentT014 and evaluatorT016 are IMPLEMENTING in disjointworktrees. T018 is IMPLEMENTING
+fresh admission and ownedPostgreSQL validation. All integratedcandidates have
 independentreview/testing;93combinedPython tests andGo/Composechecks pass.
 SQLruntime,MCPinvoice andbenchmarkcampaign remainunproven;allgatesstillapply.
 The older access observations below are historical.
@@ -92,7 +92,7 @@ claims that workers are currently running.
 | T015 | Safe Compose/configuration / I | T008,T005 | P0 | DONE | compose.yaml and containers/ define separate project/volume/internal DB, loopback MCP candidate 18081, non-root agent with no listener, CPU/RAM limits, no privilege/socket/external volumes; render/static checks pass without startup. Candidatea5c0096 integrated039f990;R APPROVE/T015-reviewer.md,V PASS/T015-tester.md. Actual DB/container runtime remains UNRUN under later gates. |
 | T016 | Python lifecycle and artifacts / E | T010 | P0 | IMPLEMENTING | eval/runner runs reset-check-execute-snapshot-grade-save-reset; failed reset blocks execution and records failure; per-run DB/schema isolation with scoped cleanup, persisted artifacts outside reset scope; scripted agent process contract tests pass. |
 | T017 | Structured JSONL instrumentation / I | T008,T006 | P1 | DONE | observability/ library/adapters define correlated JSONL events with run/call IDs for retrieval/model/MCP/DB, redaction, monotonic durations and durable local artifacts, trace-size cap; logging failure preserves summary where possible and marks artifacts incomplete; no OpenTelemetry, Jaeger or collector in v1. Candidated443fee integratedad6833f;independentR APPROVE/V PASS inT017-reviewer.md/T017-tester.md. Go full-validatorcallback required;runtimewiring/fulltrace/aggregatecaps T019/T021 UNRUN. |
-| T018 | Build/start owned test stack and validate DB/oracle / O,V | T007,T010,T011,T015 | P0 | READY | Sequential bounded build/start of owned test DB only; actual seed/migration/reset/grader adversarial tests pass against PostgreSQL; existing-service health unchanged, ports/limits checked; record results, preserve unrelated volumes. |
+| T018 | Build/start owned test stack and validate DB/oracle / O,V | T007,T010,T011,T015 | P0 | IMPLEMENTING | Sequential bounded build/start of owned test DB only; actual seed/migration/reset/grader adversarial tests pass against PostgreSQL; existing-service health unchanged, ports/limits checked; record results, preserve unrelated volumes. |
 | T019 | Deterministic full-stack integration / O,V | T013,T014,T016,T017,T018 | P0 | WAITING | Integrate telemetry, run real MCP with scripted model and Python harness; exact 25,000-cent draft graded, wrong writes fail, reset restores seed hash, replay/concurrent duplicate create one row; timeout-after-commit retry safe. |
 | T020 | Runtime security negative tests / V | T019 | P0 | WAITING | tests/security prove agent cannot access grader secrets/admin APIs, rejected caller/tenant/unauthorized calls cause zero writes, no model-controlled network/shell tools; host-network broad reach explicitly documented and local services unpublished. |
 | T021 | Baseline observability/metrics verification / V | T019 | P0 | WAITING | tests/telemetry use known synthetic durations/counts to verify metric attribution, null unavailable tokens/energy, cost denominator and failure records; one complete correlated trace/summary per attempt; tracing failure is visible. |
