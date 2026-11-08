@@ -1,10 +1,11 @@
 # MCPBench project context
 
-Current execution: the user authorized autonomous routine DAG transitions. T006
-contracts are implemented and independently approved; T009 fixtures are independently approved.
-Go/MCP/DB/model runtime gates remain pending T001/T007/T040 and later task evidence.
-Older documentation-wave status below records that stage, not a continuing
-per-wave approval requirement. See state/CURRENT.md and TASK_GRAPH for live status.
+Current execution: T008 scaffold/pins,T010 independent oracle/reset,T011 DB
+helpers/migrations and T015 static Compose are approved and integrated. T040
+proved a harmless native Qwen tool call. T017 JSONL library is under independent
+testing. Runtime SQL,MCP invoice,evaluation orchestration and retrieval results
+are not yet proven. See state/CURRENT.md and TASK_GRAPH for live statuses;dated
+sections below retain historical observations rather than current access limits.
 
 ## Goal and scope
 

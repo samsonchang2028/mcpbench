@@ -15,7 +15,8 @@ completion. Authoritative file/process evidence was checked after integration.
 | Relevant independent gates | Static T006/T009 PASS; runtime gates UNRUN | Incomplete |
 | Existing homelab/native Ollama preserved | No runtime/container/config mutations; no project containers | Preserved |
 
-DAG recomputation:10 DONE;T010/T011/T015/T017 READY;26 WAITING;zero BLOCKED.
-T008 independently approved and integrated95d5a7c;package/dependency scaffold only.
-All end-to-end v1 requirements above remain incomplete. No DB runtime,MCP invoice,
-retrieval implementation or campaign results exist. Future runtime gates unchanged.
+DAG recomputation:13DONE;T017candidate;T012/T014/T016/T018READY;22WAITING.
+Main82offline tests+fixtureCLI+staticComposePASS. SQL/seed/reset/oracle code exists,
+but liveDB/runtimeworkflow remainsunproven. Allfourretrievalengines and measured
+comparison/reproduction remainincomplete. Priorfailureevidence preserved;no
+homelab/nativeOllamamutations or additionalinference. Fullv1notachieved.

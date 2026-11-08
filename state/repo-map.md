@@ -12,4 +12,7 @@
 - go.mod/go.sum,pyproject.toml/uv.lock,config/images.lock.json:approved T008 pins.
 - cmd/,internal/:compiling fail-closed command/package boundaries;no billing yet.
 - Makefile:admitted setup and offline-capable checks;docs/DEPENDENCIES.md versions.
-No SQL/Compose,live evaluator or working server/agent implementation yet.
+- db/:approved scoped migration/seed helpers,11 offline tests;PG tests gatedT018.
+- eval/grading/,eval/reset/:approved independentoracle+scopedresetcontract.
+- compose.yaml,containers/:approvedstaticisolation/buildconfiguration;runtimeunrun.
+No live evaluator or working MCP server/agent implementation yet.

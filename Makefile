@@ -36,5 +36,5 @@ check-go:
 	go build -mod=readonly -p 1 -o bin/billing-mcp ./cmd/billing-mcp
 
 check-python:
-	uv run --locked --offline --no-sync python -m unittest contracts.tests.test_contracts eval.fixtures.test_fixtures
+	uv run --locked --offline --no-sync python -m unittest contracts.tests.test_contracts eval.fixtures.test_fixtures db.tests.test_offline eval.grading.test_oracle eval.reset.test_contract
 	uv run --locked --offline --no-sync python -m eval.fixtures.validate

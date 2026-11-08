@@ -1,9 +1,8 @@
 # MCPBench execution plan
 
-Current milestone: T001/T007 admission, T006 contracts and T009 fixtures DONE
-with independent review/testing. T040 is DONE after an explicitly approved retry passed independent review/testing;
-its first safety-aborted attempt is retained. T008 is DONE; T010/T011/T015/T017 are READY. The
-active-goal authorization section supersedes historical per-wave approval stops.
+Current milestone: T010 independent oracle/reset, T011 SQL/seed and T015 static
+Compose configuration are integrated with independent review/testing. T017 logging
+is a frozen candidate. T012/T014/T016/T018 are READY;runtime gates remain binding.
 
 This document schedules [TASK_GRAPH.md](TASK_GRAPH.md), which owns IDs, edges,
 priorities, statuses and acceptance criteria. The user approved documentation-only T003–T005 execution. Application
