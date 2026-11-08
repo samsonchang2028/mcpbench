@@ -17,6 +17,9 @@
 
 ## Read by task
 
+- Use [task-classifier](agents/task-classifier.md) to choose LIGHT or FULL work.
+  Routine, bounded maintenance needs one implementer and a focused check;
+  core or sensitive changes retain independent review/testing and explicit gates.
 - When coordinating or delegating tasks, use [agents/orchestrator.md](agents/orchestrator.md).
   Assigned workers read [implementer](agents/implementer.md),
   [reviewer](agents/reviewer.md), or [tester](agents/tester.md) instructions for

@@ -14,6 +14,16 @@ T003. The graph owns dependencies/status; the execution plan owns file lanes.
 
 ## Dispatch and integration
 
+First apply [task-classifier](task-classifier.md). Classify obvious cases inline;
+spawn a classifier only when useful. LIGHT work uses one implementer (which may
+be the orchestrator), explicit allowed files, and a focused check. It needs no
+separate reviewer/tester, new context pack, reservation record or worktree when
+the current checkout has exclusive ownership. Update existing task/state records
+only when applicable. Report the actual check result. Escalate to FULL if scope
+grows or impact becomes uncertain. Explicit task acceptance gates still apply.
+
+The following full workflow applies to FULL tasks:
+
 1. Select a READY task whose prerequisites are DONE. Check unresolved contracts,
    external blockers and required resource gates; document work can proceed when
    runtime work is blocked. Do not treat a task's priority as permission to start.

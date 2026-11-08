@@ -97,6 +97,14 @@ branch T035→T036 before T037→T038.
 
 ## Delegation and exclusive file ownership
 
+Apply [task-classifier](../agents/task-classifier.md) before dispatch. LIGHT
+maintenance uses one implementer and a focused check; obvious cases are classified
+inline. No separate reviewer/tester, new worktree or context/state artifacts are
+required when file ownership is exclusive. FULL tasks use the workflow below.
+Explicit task acceptance gates and all resource/security gates remain binding;
+route uncertain or expanding work to FULL. This routing rule supersedes older
+blanket review/testing requirements for routine maintenance only.
+
 Role procedures: [orchestrator](../agents/orchestrator.md),
 [implementer](../agents/implementer.md), [reviewer](../agents/reviewer.md) and
 [tester](../agents/tester.md). These are instruction files, not running workers.
@@ -137,9 +145,10 @@ candidate. O serializes all shared doc/manifest changes. At most three workers
 plus O; no requirement to fill every slot. Coding may parallelize; costly host
 operations require one O-held resource lease, even across separate worktrees.
 
-Once Git works, O provisions one task branch/worktree per independent change.
+Once Git works, O provisions one task branch/worktree per independent FULL change.
 No worker merges or pushes main. DONE requires acceptance evidence, no open P0/P1,
-no unexplained test failures, handoff, and O integration/state update. Until Git
+no unexplained test failures, handoff, and O integration/state update; FULL tasks
+also require independent reviewer/tester approval. Until Git
 exists, this plan uses the graph as the task index. The role files above now
 exist; task/state files are created when dispatch begins. Keep MLB-specific ML
 invariants out of MCPBench.

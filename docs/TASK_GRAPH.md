@@ -48,21 +48,25 @@ approved wave. No builds or inference were run.
 Priority: P0 = safety, validity or prerequisite blocker; P1 = first baseline and
 credible comparison; P2 = later resilience/reporting. Status: READY = dependencies
 complete and current access sufficient; IMPLEMENTING/CANDIDATE = assigned or
-frozen documentation work; DONE = integrated with independent review/test evidence; BLOCKED = named external limitation;
+frozen documentation work; DONE = integrated with required validation evidence; BLOCKED = named external limitation;
 WAITING = prerequisites unfinished. No application implementation task is done; documentation outcomes are recorded below.
 Documentation-only T003–T005 assignments are expressly permitted while Git and
 host access are blocked, using exclusive writable paths and content hashes. This
 exception permits no application code, dependency installation, Docker operations
 or live Ollama execution. Dependencies are AND edges. Re-run time-sensitive admission immediately before
-costly actions even if an earlier gate passed. All tasks need a candidate, review,
-validation evidence and orchestrator integration before DONE. Reviewers/testers
-are distinct roles, with read-only access to the candidate while its author edits.
+costly actions even if an earlier gate passed. Apply
+[task-classifier](../agents/task-classifier.md): LIGHT maintenance needs one
+implementer, a focused check and orchestrator integration; FULL tasks need a
+frozen candidate and independent review/test evidence before DONE. Explicit row
+acceptance gates always apply. Reviewers/testers are distinct roles and inspect
+the frozen candidate while its author pauses edits. Routing changes no task IDs,
+dependencies, statuses or resource/security gates.
 
 Role codes: O orchestrator/integrator, H authorized host operator, C contracts,
 E Python evaluation, D database/billing, M MCP service, A Go agent/retrieval,
 I infrastructure/telemetry, R independent reviewer, V independent tester.
-Each row names its implementing role; R reviews every candidate and V validates
-it. H alone supplies inaccessible host observations; O alone owns shared manifests,
+Each row names its implementing role; R reviews FULL candidates and V validates
+them. H alone supplies inaccessible host observations; O alone owns shared manifests,
 state, task statuses and merges. Roles are assignments for later dispatch, not
 claims that workers are currently running.
 

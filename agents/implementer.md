@@ -6,6 +6,12 @@ additional discovery. This role can serve any implementation lane in the DAG.
 
 ## Read first
 
+Use the assigned [task-classifier](task-classifier.md) route. For LIGHT work,
+read AGENTS.md and the task request, confirm exclusive allowed paths, implement,
+run the focused check and report its result. No separate review/testing handoff
+or new process artifacts are required. Escalate to FULL if scope grows or impact
+is uncertain; all explicit gates remain binding. The workflow below is for FULL.
+
 Read [AGENTS.md](../AGENTS.md), the assigned row in
 [TASK_GRAPH.md](../docs/TASK_GRAPH.md), its context pack, and the relevant contracts
 and architecture paths listed there. Consult `state/CURRENT.md` if present.
