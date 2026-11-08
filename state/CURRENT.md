@@ -45,3 +45,8 @@ Prospective controller hash unchanged; no second request/result artifacts exist.
 New goal resumption 2026-11-08T18:51:45.712489+00:00: first blocker audit
 (1 of3). No explicit retry authorization received, candidate unchanged, no
 second request artifacts, zero eligible tasks. Goal active pending decision.
+
+Second blocker audit after latest resumption: no retry authorization, T040
+BLOCKED, no second request artifacts. Corrected table-only formatting so T007
+and T040 evidence stays inside their acceptance cells; dependencies/statuses
+unchanged. No runtime work authorized or attempted.
