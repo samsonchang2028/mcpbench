@@ -113,7 +113,9 @@
         }
       },
       "message_id": "prepare-result-001",
-      "request_id": "prepare-request-001"
+      "request_id": "prepare-request-001",
+      "failure": null,
+      "verifier_skip_reason": null
     },
     {
       "schema_version": 1,
@@ -156,7 +158,9 @@
         }
       },
       "message_id": "settle-grade-result-001",
-      "request_id": "settle-grade-request-001"
+      "request_id": "settle-grade-request-001",
+      "failure": null,
+      "verifier_skip_reason": "original_failed"
     },
     {
       "schema_version": 1,
@@ -204,7 +208,9 @@
         }
       },
       "message_id": "finalize-result-001",
-      "request_id": "finalize-request-001"
+      "request_id": "finalize-request-001",
+      "failure": null,
+      "verifier_skip_reason": "original_failed"
     }
   ],
   "exits": [

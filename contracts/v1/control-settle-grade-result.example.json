@@ -44,5 +44,7 @@
     }
   },
   "message_id": "settle-grade-result-001",
-  "request_id": "settle-grade-request-001"
+  "request_id": "settle-grade-request-001",
+  "failure": null,
+  "verifier_skip_reason": null
 }

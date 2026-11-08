@@ -4143,6 +4143,29 @@
         },
         "request_id": {
           "$ref": "#/$defs/Identifier"
+        },
+        "failure": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Failure"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "verifier_skip_reason": {
+          "anyOf": [
+            {
+              "enum": [
+                "read_only",
+                "original_failed"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "required": [
@@ -4161,7 +4184,9 @@
         "fence_receipt",
         "outputs",
         "message_id",
-        "request_id"
+        "request_id",
+        "failure",
+        "verifier_skip_reason"
       ],
       "additionalProperties": false
     },

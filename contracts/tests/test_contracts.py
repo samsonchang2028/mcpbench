@@ -402,6 +402,32 @@ class Contracts(unittest.TestCase):
         chain["exits"][0].update(reaped=False, signal=None)
         self.reject("ControlChain", chain)
 
+    def test_control_terminal_decisions_require_evidence_and_skip_reason(self):
+        for name in ["control-blocked-result", "control-quarantine-result"]:
+            result = self.example(name)
+            c.validate("ControlResult", result)
+            self.reject("ControlResult", {**result, "failure": None})
+        result = self.example("control-quarantine-result")
+        result["outputs"]["agent_snapshot"] = self.example("control-settle-grade-result")["outputs"]["agent_snapshot"]
+        self.reject("ControlResult", result)
+        chain = self.example("read-control-chain")
+        chain["results"][1]["verifier_skip_reason"] = "original_failed"
+        self.reject("ControlChain", chain)
+        chain = self.example("control-chain")
+        chain["requests"][2]["message_id"] = chain["requests"][0]["message_id"]
+        self.reject("ControlChain", chain)
+
+    def test_successful_timesheet_read_uses_the_same_read_only_gate(self):
+        bundle = [self.example(name) for name in ["read-task", "fixture", "read-run-mapping", "read-evaluation-result", "read-agent-result"]]
+        task, fixture, mapping, result, agent = bundle
+        record_id = fixture["seed"]["timesheets"][0]["timesheet_id"]
+        task.update(prompt="Read this synthetic timesheet.", required_tool_ids=["billing_get_timesheet"], relevant_tool_ids=["billing_get_timesheet"], permitted_tools=["billing_get_timesheet"])
+        task["expected_state"].update(record_table="timesheets", required_record_ids=[record_id])
+        result["task_hash"] = c.canonical_hash(task)
+        mapping["allowed_tools"] = ["billing_get_timesheet"]
+        agent["final_answer"]["record_ids"] = [record_id]
+        c.validate_run_bundle(*bundle)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -20,5 +20,7 @@
     }
   },
   "message_id": "prepare-result-001",
-  "request_id": "prepare-request-001"
+  "request_id": "prepare-request-001",
+  "failure": null,
+  "verifier_skip_reason": null
 }

@@ -27,7 +27,7 @@
     "ControlChain",
     "EventStream"
   ],
-  "schema_sha256": "4814085b2920b7fda92178a68e6e91f99e5255bb520d055cdfb3241e6980028a",
+  "schema_sha256": "7f0ff4b15e719c01ac08dac8387b15c1624cf32c0c87dc7a55e786d55b77b749",
   "catalog_sha256": "64e6b0ec54b2242747373ef1a567d9ec8c59f033f47c02afbe715d184a31ae36",
   "examples": [
     {
@@ -141,6 +141,14 @@
     {
       "contract": "ControlResult",
       "file": "v1/control-finalize-result.example.json"
+    },
+    {
+      "contract": "ControlResult",
+      "file": "v1/control-quarantine-result.example.json"
+    },
+    {
+      "contract": "ControlResult",
+      "file": "v1/control-blocked-result.example.json"
     }
   ]
 }

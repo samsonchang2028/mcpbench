@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "run_id": "run-example-001",
+  "attempt_id": "attempt-example-001",
+  "task_id": "draft-invoice-001",
+  "task_hash": "8eaafada99377f9a23a3762131dac6aa40eae3e10a139dc35e58d393fdb8a80f",
+  "config_hash": "7b34cc7e561ea147427b6987bdeada4fc695d2fd10481f20b82f404ec901931e",
+  "workflow_kind": "draft_invoice",
+  "phase": "prepare",
+  "budget": null,
+  "status": "failed",
+  "action": "blocked",
+  "original_pass": null,
+  "fence_receipt": null,
+  "outputs": {},
+  "message_id": "prepare-result-001",
+  "request_id": "prepare-request-001",
+  "failure": {
+    "stage": "admission",
+    "code": "admission_blocked",
+    "call_id": null,
+    "reason": "Synthetic unresolved resource gate.",
+    "attribution": "observed",
+    "disposition": "terminal"
+  },
+  "verifier_skip_reason": null
+}

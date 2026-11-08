@@ -435,6 +435,15 @@ def _transport_semantics(name: str, value: dict[str, Any]) -> None:
             allowed = {"prepare": {"execute_agent", "blocked", "quarantine"}, "settle-grade": {"verify", "finalize", "quarantine"}, "finalize": {"complete", "quarantine"}}
             _require(value["action"] in allowed[value["phase"]], "invalid phase transition")
             outputs = set(value["outputs"])
+            if value["failure"] is not None:
+                validate("Failure", value["failure"])
+                _require(value["failure"]["disposition"] == "terminal", "control failure marked recovered")
+            if value["action"] in {"blocked", "quarantine"}:
+                _require(value["status"] == "failed" and value["failure"] is not None, "terminal control decision lacks failure evidence")
+            if value["action"] in {"execute_agent", "verify"}:
+                _require(value["failure"] is None, "failed control action launched child")
+            skip = "read_only" if value["workflow_kind"] == "read_only" else "original_failed" if value["original_pass"] is False else None
+            _require(value["verifier_skip_reason"] == (skip if value["phase"] != "prepare" and value["action"] not in {"blocked", "quarantine"} else None), "verifier skip decision is inconsistent")
             allowed_outputs = {"prepare": {"agent_request"}, "settle-grade": {"agent_snapshot", "verification_request"}, "finalize": {"evaluation", "final_snapshot"}}
             _require(outputs <= allowed_outputs[value["phase"]], "control output from wrong phase")
             if prepare:
@@ -444,13 +453,20 @@ def _transport_semantics(name: str, value: dict[str, Any]) -> None:
             if value["action"] == "verify":
                 _require(value["workflow_kind"] == "draft_invoice" and value["original_pass"] is True and outputs == {"agent_snapshot", "verification_request"}, "verifier issued without passing original invoice")
             if value["phase"] == "settle-grade" and value["action"] in {"verify", "finalize"}:
+                _require(type(value["original_pass"]) is bool, "grade advances without original verdict")
+                if value["workflow_kind"] == "draft_invoice" and value["original_pass"]:
+                    _require(value["action"] == "verify", "passing invoice skipped verifier")
                 receipt = value["fence_receipt"]
                 _require(receipt is not None and receipt["status"] == "settled" and receipt["fence"] == "agent" and "agent_snapshot" in outputs, "grade advances without initial settled snapshot")
             if value["action"] == "complete":
-                _require(outputs == {"evaluation", "final_snapshot"}, "finalize lacks persisted terminal evidence")
+                _require(outputs == {"evaluation", "final_snapshot"} and type(value["original_pass"]) is bool, "finalize lacks persisted terminal evidence or original verdict")
             if value["fence_receipt"] is not None:
                 validate("FenceReceipt", value["fence_receipt"])
                 _require(all(value["fence_receipt"][key] == value[key] for key in ["run_id", "attempt_id"]), "control receipt identity mismatch")
+            if outputs & {"agent_snapshot", "final_snapshot"}:
+                _require(value["fence_receipt"] is not None and value["fence_receipt"]["status"] == "settled", "authoritative snapshot lacks acknowledged fence")
+            if value["phase"] == "settle-grade" and value["original_pass"] is not None:
+                _require(value["fence_receipt"] is not None and value["fence_receipt"]["status"] == "settled" and value["fence_receipt"]["fence"] == "agent", "original verdict precedes initial settlement")
             if value["action"] == "quarantine":
                 _require(value["status"] == "failed", "quarantine declared completed")
             elif value["action"] != "blocked":
@@ -544,6 +560,8 @@ def validate_control_chain(requests: list[dict[str, Any]], results: list[dict[st
     _require(len(requests) == len(results) and 1 <= len(requests) <= 3, "control chain length invalid")
     fields = ["run_id", "attempt_id", "task_id", "task_hash", "config_hash"]
     root = requests[0]
+    message_ids = [record["message_id"] for record in requests + results]
+    _require(len(set(message_ids)) == len(message_ids), "control message ID reused")
     anchor, last_elapsed = None, 0
 
     def bind(record: dict[str, Any], contract: str) -> None:
@@ -607,6 +625,7 @@ def validate_control_chain(requests: list[dict[str, Any]], results: list[dict[st
             _require(result["action"] in {"verify", "quarantine"}, "passing invoice skipped verifier")
         if index == 2 and result["action"] == "complete":
             _require(result["original_pass"] == prior["original_pass"], "finalize changed original verdict")
+            _require(result["verifier_skip_reason"] == prior["verifier_skip_reason"], "finalize changed verifier applicability")
             receipt = result["fence_receipt"]
             expected_fence = "verifier" if prior["action"] == "verify" else "agent"
             _require(receipt is not None and receipt["status"] == "settled" and receipt["fence"] == expected_fence, "finalize lacks applicable acknowledged fence")

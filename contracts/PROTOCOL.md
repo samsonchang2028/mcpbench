@@ -115,6 +115,13 @@ constraints and checked arithmetic. No partial successful state, send, payment,
 tax or discount capability is permitted. Retry only an explicitly transient
 transport/DB failure once inside the original task budget and keep the same key.
 Domain/authorization/validation/conflict failures are not retried.
+The only ToolError codes permitted to declare retryable are `db_error` and
+`tool_timeout`, and only when the server identifies a transient transport/DB fault
+(for example a serialization/deadlock abort or bounded transport timeout). Other
+codes always carry retryable=false, including nested ToolResult errors. Permanent
+DB constraint/configuration faults are not transient. Unknown write outcome does
+not authorize reset; any permitted write retry keeps its existing key/payload and
+remains inside the single original transient-retry budget. Verifier never retries.
 
 ## Concrete write settlement and least privilege
 
@@ -272,6 +279,10 @@ otherwise it returns finalize after known initial settlement or quarantine after
 uncertainty. Finalize returns complete only with preserved final snapshot/evaluation
 and the applicable acknowledged fence; quarantine never authorizes reset. A
 ControlChain is a statically checked prefix or completed sequence, not runtime proof.
+Blocked/quarantine decisions require a typed terminal Failure; successful launch
+decisions cannot carry one. A skipped verifier has a typed verifier_skip_reason
+(`read_only` or `original_failed`) carried unchanged through finalize. These decisions
+and unique message IDs are private control data, never model commands or prompts.
 
 `ProcessExit` is produced only by the launcher. It distinguishes child/phase,
 normal exit, timeout, termination and spawn failure; `reaped` states whether an

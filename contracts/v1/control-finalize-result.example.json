@@ -44,5 +44,7 @@
     }
   },
   "message_id": "finalize-result-001",
-  "request_id": "finalize-request-001"
+  "request_id": "finalize-request-001",
+  "failure": null,
+  "verifier_skip_reason": null
 }
