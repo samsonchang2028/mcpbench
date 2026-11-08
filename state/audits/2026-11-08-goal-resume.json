@@ -1,0 +1,43 @@
+{
+  "observed_utc": "2026-11-08T15:16:52.078373+00:00",
+  "scope": "read-only goal-resume access refresh; not runtime admission",
+  "git": {
+    "root": "/home/sfkim/projects/mcpbench",
+    "metadata_writable": true,
+    "working_tree_clean_before_refresh": true
+  },
+  "docker": {
+    "daemon_access": true,
+    "running_containers": 15,
+    "baseline_unhealthy": "immich_machine_learning",
+    "mutations": false
+  },
+  "ollama": {
+    "version": "0.40.13",
+    "model": "qwen3.5:9b",
+    "digest": "56671c2ab9385f9cfcb404638e32cd62d88e3501d44822208363c010179a3c90",
+    "loaded_models": [],
+    "generation_invoked": false,
+    "model_store_readlink": "not resolved as sfkim",
+    "model_store_df": "Permission denied",
+    "service_account_readlink_and_df": "sudo: interactive authentication is required"
+  },
+  "resources": {
+    "ram_available_display": "25Gi",
+    "project_docker_disk_available_display": "229G",
+    "full_60_second_admission": "NOT RUN; T001 remains blocked"
+  },
+  "dag": {
+    "tasks": 40,
+    "acyclic": true,
+    "missing_prerequisites": [],
+    "counts": {
+      "BLOCKED": 1,
+      "DONE": 6,
+      "WAITING": 33
+    },
+    "eligible_unfinished": []
+  },
+  "blocker": "T001 actual model-store target/filesystem/free-space requires authenticated host read-only evidence",
+  "resumed_goal_blocker_audit": 1
+}

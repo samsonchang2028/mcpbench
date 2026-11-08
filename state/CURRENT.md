@@ -1,22 +1,23 @@
 # Current state — full v1 goal, admission-blocked
 
-UTC: 2026-11-08T04:01:53.200485+00:00
-DONE: T002/T003/T004/T005/T006/T009. Static contracts and development fixture data
-approved by independent reviewer/tester, integrated normally. Main46 tests+corpus
-CLI PASS. Handoffs: state/handoffs/T006.md and T009.md; no active reservations.
-No open static P0/P1; failed rounds retained with concrete repairs/regressions.
+UTC: 2026-11-08T15:16:52.078373+00:00
+DONE: T002/T003/T004/T005/T006/T009. Independent static review/test
+and integration evidence remains in state/handoffs/T006.md and T009.md.
+Workflow maintenance da33d24 adds LIGHT routing; core DAG tasks remain FULL.
 
-BLOCKED: T001 actual model-store path/symlink/filesystem/free-space under ollama
-account. Fresh20:00 readlink/df sudo calls require interactive authentication.
-Git/Docker/Ollama metadata work; no benchmark containers or loaded models.
-33 WAITING, zero READY. T007 needs T001; T040 follows admission, T008 follows probe.
-T010/T011 and all remaining feature/strategy/benchmark/report tasks wait on that chain.
+Resumed-goal read-only refresh: Git metadata is writable, Docker daemon and
+Ollama metadata APIs work. Qwen3.5:9b digest unchanged; no models loaded.
+15 containers running; existing Immich ML remains unhealthy. About 25 GiB RAM
+available and 229 GiB on project/Docker filesystem. No runtime admission claimed.
+Evidence: state/audits/2026-11-08-goal-resume.json.
 
-Full v1 is NOT achieved. See state/GOAL_AUDIT.md for explicit missing requirements.
-No server/agent/SQL/Compose/evaluation runner/strategies/actual benchmark exists yet.
-No inference, Docker mutation, host service/config/driver/volume or permission change.
-Need authenticated service-account readlink+df output (async question already asked),
-not passwords or routine-wave approval. Do not relax/bypass the existing gate.
+BLOCKED T001: actual Ollama model-store target and filesystem/free-space.
+Direct traversal still denied; both narrow service-account sudo checks require
+interactive authentication. No permissions or service configurations changed.
+Requested authenticated readlink/df output from user; no password requested.
+DAG verified acyclic with no missing prerequisites: 6 DONE, 1 BLOCKED,
+33 WAITING, zero eligible unfinished tasks. T007 -> T040 -> T008 remains gated.
+No new runtime implementation, builds, containers, model loads or inference.
 
-Confirmed goal-blocker audits: user-triggered turn + this continuation (2);
-keep goal active until required blocked-audit threshold or external evidence arrives.
+Full v1 remains incomplete; see state/GOAL_AUDIT.md. No requirement was waived.
+First confirmed blocker audit since goal resumed (1 of 3); goal stays active.
