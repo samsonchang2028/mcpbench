@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "run_id": "run-example-001",
+  "attempt_id": "attempt-example-001",
+  "invoice_id": "INV-EXAMPLE-001",
+  "idempotency_key": "idem-example-001",
+  "original_arguments": {
+    "customer_id": "CUST-001",
+    "invoice_date": "2026-11-07",
+    "due_date": "2026-11-21",
+    "lines": [
+      {
+        "item_id": "SVC-CONSULT",
+        "quantity": 2
+      }
+    ]
+  },
+  "original_request_hash": "4afcbfba5ba2a4d075601bc2080ec33d122cc23369b4812c97dd42ad2a8ea8b6",
+  "conflict_arguments": {
+    "customer_id": "CUST-001",
+    "invoice_date": "2026-11-07",
+    "due_date": "2026-11-21",
+    "lines": [
+      {
+        "item_id": "SVC-CONSULT",
+        "quantity": 3
+      }
+    ]
+  },
+  "checks": [
+    "same_payload_replay",
+    "changed_payload_conflict"
+  ]
+}

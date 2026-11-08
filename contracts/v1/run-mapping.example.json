@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "run_id": "run-example-001",
+  "attempt_id": "attempt-example-001",
+  "tenant_id": "TENANT-001",
+  "principal_id": "billing-drafter",
+  "allowed_tools": [
+    "billing_list_customers",
+    "billing_list_items",
+    "billing_create_draft_invoice"
+  ],
+  "schema_name": "r_8e3372285564e045eeaa185e1db96d77",
+  "phase": "executing",
+  "generation": 0,
+  "not_after": "2026-11-07T23:05:00Z",
+  "agent_token_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "verifier_token_sha256": null,
+  "verifier_scope": null,
+  "lock_marker": 0
+}

@@ -1,0 +1,3197 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mcpbench.local/contracts/v1/schema.json",
+  "title": "MCPBench v1 cross-component contracts",
+  "$defs": {
+    "Identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[a-z][a-z0-9-]{0,63}$"
+    },
+    "BusinessID": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[A-Z][A-Z0-9_-]{0,63}$"
+    },
+    "SHA256": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "Date": {
+      "type": "string",
+      "format": "date",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    },
+    "UTC": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]{1,6})?Z$"
+    },
+    "Money": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "Principal": {
+      "enum": [
+        "billing-reader",
+        "billing-drafter"
+      ]
+    },
+    "Strategy": {
+      "enum": [
+        "full_context",
+        "semantic_top_k",
+        "hybrid",
+        "hierarchical"
+      ]
+    },
+    "ToolID": {
+      "enum": [
+        "billing_list_customers",
+        "billing_list_items",
+        "billing_create_draft_invoice",
+        "billing_get_customer",
+        "billing_list_projects",
+        "billing_get_project",
+        "billing_list_timesheets",
+        "billing_get_timesheet",
+        "billing_list_invoices",
+        "billing_get_invoice"
+      ]
+    },
+    "Customer": {
+      "type": "object",
+      "properties": {
+        "customer_id": {
+          "$ref": "#/$defs/BusinessID"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "active": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "customer_id",
+        "name",
+        "active"
+      ],
+      "additionalProperties": false
+    },
+    "Item": {
+      "type": "object",
+      "properties": {
+        "item_id": {
+          "$ref": "#/$defs/BusinessID"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "unit": {
+          "enum": [
+            "hour",
+            "unit"
+          ]
+        },
+        "currency": {
+          "const": "USD"
+        },
+        "unit_price_cents": {
+          "$ref": "#/$defs/Money"
+        },
+        "active": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "item_id",
+        "name",
+        "unit",
+        "currency",
+        "unit_price_cents",
+        "active"
+      ],
+      "additionalProperties": false
+    },
+    "Project": {
+      "type": "object",
+      "properties": {
+        "project_id": {
+          "$ref": "#/$defs/BusinessID"
+        },
+        "customer_id": {
+          "$ref": "#/$defs/BusinessID"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "active": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "project_id",
+        "customer_id",
+        "name",
+        "active"
+      ],
+      "additionalProperties": false
+    },
+    "Timesheet": {
+      "type": "object",
+      "properties": {
+        "timesheet_id": {
+          "$ref": "#/$defs/BusinessID"
+        },
+        "project_id": {
+          "$ref": "#/$defs/BusinessID"
+        },
+        "item_id": {
+          "$ref": "#/$defs/BusinessID"
+        },
+        "work_date": {
+          "$ref": "#/$defs/Date"
+        },
+        "minutes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1440
+        },
+        "billable": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "timesheet_id",
+        "project_id",
+        "item_id",
+        "work_date",
+        "minutes",
+        "billable"
+      ],
+      "additionalProperties": false
+    },
+    "CreateLine": {
+      "type": "object",
+      "properties": {
+        "item_id": {
+          "$ref": "#/$defs/BusinessID"
+        },
+        "quantity": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000
+        }
+      },
+      "required": [
+        "item_id",
+        "quantity"
+      ],
+      "additionalProperties": false
+    },
+    "CreateDraftArgs": {
+      "type": "object",
+      "properties": {
+        "customer_id": {
+          "$ref": "#/$defs/BusinessID"
+        },
+        "invoice_date": {
+          "$ref": "#/$defs/Date"
+        },
+        "due_date": {
+          "$ref": "#/$defs/Date"
+        },
+        "lines": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CreateLine"
+          },
+          "minItems": 1,
+          "maxItems": 10
+        }
+      },
+      "required": [
+        "customer_id",
+        "invoice_date",
+        "due_date",
+        "lines"
+      ],
+      "additionalProperties": false
+    },
+    "Invoice": {
+      "type": "object",
+      "properties": {
+        "invoice_id": {
+          "$ref": "#/$defs/BusinessID"
+        },
+        "customer_id": {
+          "$ref": "#/$defs/BusinessID"
+        },
+        "invoice_date": {
+          "$ref": "#/$defs/Date"
+        },
+        "due_date": {
+          "$ref": "#/$defs/Date"
+        },
+        "currency": {
+          "const": "USD"
+        },
+        "status": {
+          "const": "draft"
+        },
+        "subtotal_cents": {
+          "$ref": "#/$defs/Money"
+        },
+        "tax_cents": {
+          "const": 0,
+          "type": "integer"
+        },
+        "total_cents": {
+          "$ref": "#/$defs/Money"
+        },
+        "created_at": {
+          "$ref": "#/$defs/UTC"
+        }
+      },
+      "required": [
+        "invoice_id",
+        "customer_id",
+        "invoice_date",
+        "due_date",
+        "currency",
+        "status",
+        "subtotal_cents",
+        "tax_cents",
+        "total_cents",
+        "created_at"
+      ],
+      "additionalProperties": false
+    },
+    "InvoiceLine": {
+      "type": "object",
+      "properties": {
+        "line_id": {
+          "$ref": "#/$defs/BusinessID"
+        },
+        "invoice_id": {
+          "$ref": "#/$defs/BusinessID"
+        },
+        "item_id": {
+          "$ref": "#/$defs/BusinessID"
+        },
+        "quantity": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000
+        },
+        "unit_price_cents": {
+          "$ref": "#/$defs/Money"
+        },
+        "line_total_cents": {
+          "$ref": "#/$defs/Money"
+        },
+        "line_number": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        }
+      },
+      "required": [
+        "line_id",
+        "invoice_id",
+        "item_id",
+        "quantity",
+        "unit_price_cents",
+        "line_total_cents",
+        "line_number"
+      ],
+      "additionalProperties": false
+    },
+    "IdempotencyRecord": {
+      "type": "object",
+      "properties": {
+        "idempotency_key": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "request_hash": {
+          "$ref": "#/$defs/SHA256"
+        },
+        "invoice_id": {
+          "$ref": "#/$defs/BusinessID"
+        }
+      },
+      "required": [
+        "idempotency_key",
+        "request_hash",
+        "invoice_id"
+      ],
+      "additionalProperties": false
+    },
+    "DraftOutput": {
+      "type": "object",
+      "properties": {
+        "invoice": {
+          "$ref": "#/$defs/Invoice"
+        },
+        "lines": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/InvoiceLine"
+          },
+          "minItems": 1,
+          "maxItems": 10
+        }
+      },
+      "required": [
+        "invoice",
+        "lines"
+      ],
+      "additionalProperties": false
+    },
+    "EmptyArgs": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    },
+    "GetCustomerArgs": {
+      "type": "object",
+      "properties": {
+        "customer_id": {
+          "$ref": "#/$defs/BusinessID"
+        }
+      },
+      "required": [
+        "customer_id"
+      ],
+      "additionalProperties": false
+    },
+    "GetProjectArgs": {
+      "type": "object",
+      "properties": {
+        "project_id": {
+          "$ref": "#/$defs/BusinessID"
+        }
+      },
+      "required": [
+        "project_id"
+      ],
+      "additionalProperties": false
+    },
+    "GetTimesheetArgs": {
+      "type": "object",
+      "properties": {
+        "timesheet_id": {
+          "$ref": "#/$defs/BusinessID"
+        }
+      },
+      "required": [
+        "timesheet_id"
+      ],
+      "additionalProperties": false
+    },
+    "GetInvoiceArgs": {
+      "type": "object",
+      "properties": {
+        "invoice_id": {
+          "$ref": "#/$defs/BusinessID"
+        }
+      },
+      "required": [
+        "invoice_id"
+      ],
+      "additionalProperties": false
+    },
+    "ListProjectsArgs": {
+      "type": "object",
+      "properties": {
+        "customer_id": {
+          "$ref": "#/$defs/BusinessID"
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "cursor": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]{1,128}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "ListTimesheetsArgs": {
+      "type": "object",
+      "properties": {
+        "customer_id": {
+          "$ref": "#/$defs/BusinessID"
+        },
+        "project_id": {
+          "$ref": "#/$defs/BusinessID"
+        },
+        "date_from": {
+          "$ref": "#/$defs/Date"
+        },
+        "date_to": {
+          "$ref": "#/$defs/Date"
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "cursor": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]{1,128}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "ListInvoicesArgs": {
+      "type": "object",
+      "properties": {
+        "customer_id": {
+          "$ref": "#/$defs/BusinessID"
+        },
+        "status": {
+          "const": "draft"
+        },
+        "date_from": {
+          "$ref": "#/$defs/Date"
+        },
+        "date_to": {
+          "$ref": "#/$defs/Date"
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "cursor": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]{1,128}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "ListCustomerOutput": {
+      "type": "object",
+      "properties": {
+        "customers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Customer"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "customers"
+      ],
+      "additionalProperties": false
+    },
+    "ListItemOutput": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Item"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "items"
+      ],
+      "additionalProperties": false
+    },
+    "ListProjectOutput": {
+      "type": "object",
+      "properties": {
+        "projects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Project"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "next_cursor": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]{1,128}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "projects",
+        "next_cursor"
+      ],
+      "additionalProperties": false
+    },
+    "ListTimesheetOutput": {
+      "type": "object",
+      "properties": {
+        "timesheets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Timesheet"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "next_cursor": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]{1,128}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "timesheets",
+        "next_cursor"
+      ],
+      "additionalProperties": false
+    },
+    "ListInvoiceOutput": {
+      "type": "object",
+      "properties": {
+        "invoices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Invoice"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "next_cursor": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_-]{1,128}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "invoices",
+        "next_cursor"
+      ],
+      "additionalProperties": false
+    },
+    "GetCustomerOutput": {
+      "type": "object",
+      "properties": {
+        "customer": {
+          "$ref": "#/$defs/Customer"
+        }
+      },
+      "required": [
+        "customer"
+      ],
+      "additionalProperties": false
+    },
+    "GetProjectOutput": {
+      "type": "object",
+      "properties": {
+        "project": {
+          "$ref": "#/$defs/Project"
+        }
+      },
+      "required": [
+        "project"
+      ],
+      "additionalProperties": false
+    },
+    "GetTimesheetOutput": {
+      "type": "object",
+      "properties": {
+        "timesheet": {
+          "$ref": "#/$defs/Timesheet"
+        }
+      },
+      "required": [
+        "timesheet"
+      ],
+      "additionalProperties": false
+    },
+    "GetInvoiceOutput": {
+      "$ref": "#/$defs/DraftOutput"
+    },
+    "ToolCall": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "tool_id": {
+              "const": "billing_list_customers"
+            },
+            "arguments": {
+              "$ref": "#/$defs/EmptyArgs"
+            }
+          },
+          "required": [
+            "tool_id",
+            "arguments"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "tool_id": {
+              "const": "billing_list_items"
+            },
+            "arguments": {
+              "$ref": "#/$defs/EmptyArgs"
+            }
+          },
+          "required": [
+            "tool_id",
+            "arguments"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "tool_id": {
+              "const": "billing_create_draft_invoice"
+            },
+            "arguments": {
+              "$ref": "#/$defs/CreateDraftArgs"
+            }
+          },
+          "required": [
+            "tool_id",
+            "arguments"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "tool_id": {
+              "const": "billing_get_customer"
+            },
+            "arguments": {
+              "$ref": "#/$defs/GetCustomerArgs"
+            }
+          },
+          "required": [
+            "tool_id",
+            "arguments"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "tool_id": {
+              "const": "billing_list_projects"
+            },
+            "arguments": {
+              "$ref": "#/$defs/ListProjectsArgs"
+            }
+          },
+          "required": [
+            "tool_id",
+            "arguments"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "tool_id": {
+              "const": "billing_get_project"
+            },
+            "arguments": {
+              "$ref": "#/$defs/GetProjectArgs"
+            }
+          },
+          "required": [
+            "tool_id",
+            "arguments"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "tool_id": {
+              "const": "billing_list_timesheets"
+            },
+            "arguments": {
+              "$ref": "#/$defs/ListTimesheetsArgs"
+            }
+          },
+          "required": [
+            "tool_id",
+            "arguments"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "tool_id": {
+              "const": "billing_get_timesheet"
+            },
+            "arguments": {
+              "$ref": "#/$defs/GetTimesheetArgs"
+            }
+          },
+          "required": [
+            "tool_id",
+            "arguments"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "tool_id": {
+              "const": "billing_list_invoices"
+            },
+            "arguments": {
+              "$ref": "#/$defs/ListInvoicesArgs"
+            }
+          },
+          "required": [
+            "tool_id",
+            "arguments"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "tool_id": {
+              "const": "billing_get_invoice"
+            },
+            "arguments": {
+              "$ref": "#/$defs/GetInvoiceArgs"
+            }
+          },
+          "required": [
+            "tool_id",
+            "arguments"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "ToolError": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "enum": [
+            "invalid_arguments",
+            "not_found",
+            "inactive_record",
+            "authorization_denied",
+            "protocol_error",
+            "tool_error",
+            "db_error",
+            "tool_timeout",
+            "idempotency_conflict",
+            "verification_not_replayable",
+            "budget_exhausted"
+          ]
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "retryable": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "code",
+        "message",
+        "retryable"
+      ],
+      "additionalProperties": false
+    },
+    "ToolResult": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "tool_id": {
+              "const": "billing_list_customers"
+            },
+            "is_error": {
+              "const": false
+            },
+            "result": {
+              "$ref": "#/$defs/ListCustomerOutput"
+            }
+          },
+          "required": [
+            "tool_id",
+            "is_error",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "tool_id": {
+              "const": "billing_list_items"
+            },
+            "is_error": {
+              "const": false
+            },
+            "result": {
+              "$ref": "#/$defs/ListItemOutput"
+            }
+          },
+          "required": [
+            "tool_id",
+            "is_error",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "tool_id": {
+              "const": "billing_create_draft_invoice"
+            },
+            "is_error": {
+              "const": false
+            },
+            "result": {
+              "$ref": "#/$defs/DraftOutput"
+            }
+          },
+          "required": [
+            "tool_id",
+            "is_error",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "tool_id": {
+              "const": "billing_get_customer"
+            },
+            "is_error": {
+              "const": false
+            },
+            "result": {
+              "$ref": "#/$defs/GetCustomerOutput"
+            }
+          },
+          "required": [
+            "tool_id",
+            "is_error",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "tool_id": {
+              "const": "billing_list_projects"
+            },
+            "is_error": {
+              "const": false
+            },
+            "result": {
+              "$ref": "#/$defs/ListProjectOutput"
+            }
+          },
+          "required": [
+            "tool_id",
+            "is_error",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "tool_id": {
+              "const": "billing_get_project"
+            },
+            "is_error": {
+              "const": false
+            },
+            "result": {
+              "$ref": "#/$defs/GetProjectOutput"
+            }
+          },
+          "required": [
+            "tool_id",
+            "is_error",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "tool_id": {
+              "const": "billing_list_timesheets"
+            },
+            "is_error": {
+              "const": false
+            },
+            "result": {
+              "$ref": "#/$defs/ListTimesheetOutput"
+            }
+          },
+          "required": [
+            "tool_id",
+            "is_error",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "tool_id": {
+              "const": "billing_get_timesheet"
+            },
+            "is_error": {
+              "const": false
+            },
+            "result": {
+              "$ref": "#/$defs/GetTimesheetOutput"
+            }
+          },
+          "required": [
+            "tool_id",
+            "is_error",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "tool_id": {
+              "const": "billing_list_invoices"
+            },
+            "is_error": {
+              "const": false
+            },
+            "result": {
+              "$ref": "#/$defs/ListInvoiceOutput"
+            }
+          },
+          "required": [
+            "tool_id",
+            "is_error",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "tool_id": {
+              "const": "billing_get_invoice"
+            },
+            "is_error": {
+              "const": false
+            },
+            "result": {
+              "$ref": "#/$defs/GetInvoiceOutput"
+            }
+          },
+          "required": [
+            "tool_id",
+            "is_error",
+            "result"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "tool_id": {
+              "$ref": "#/$defs/ToolID"
+            },
+            "is_error": {
+              "const": true
+            },
+            "error": {
+              "$ref": "#/$defs/ToolError"
+            }
+          },
+          "required": [
+            "tool_id",
+            "is_error",
+            "error"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "ToolDefinition": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/ToolID"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "domain": {
+          "enum": [
+            "customers",
+            "items",
+            "projects",
+            "timesheets",
+            "invoices"
+          ]
+        },
+        "permission": {
+          "enum": [
+            "billing:read",
+            "billing:draft"
+          ]
+        },
+        "input_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^#/\\$defs/[A-Za-z]+$"
+        },
+        "output_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^#/\\$defs/[A-Za-z]+$"
+        }
+      },
+      "required": [
+        "name",
+        "description",
+        "domain",
+        "permission",
+        "input_ref",
+        "output_ref"
+      ],
+      "additionalProperties": false
+    },
+    "Catalog": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1,
+          "type": "integer"
+        },
+        "catalog_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "catalog_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 32
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ToolDefinition"
+          },
+          "minItems": 1,
+          "maxItems": 10
+        },
+        "smoke_tool_ids": {
+          "const": [
+            "billing_list_customers",
+            "billing_list_items",
+            "billing_create_draft_invoice"
+          ]
+        }
+      },
+      "required": [
+        "schema_version",
+        "catalog_id",
+        "catalog_version",
+        "tools",
+        "smoke_tool_ids"
+      ],
+      "additionalProperties": false
+    },
+    "Tables": {
+      "type": "object",
+      "properties": {
+        "customers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Customer"
+          },
+          "minItems": 0,
+          "maxItems": 1000
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Item"
+          },
+          "minItems": 0,
+          "maxItems": 1000
+        },
+        "projects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Project"
+          },
+          "minItems": 0,
+          "maxItems": 1000
+        },
+        "timesheets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Timesheet"
+          },
+          "minItems": 0,
+          "maxItems": 10000
+        },
+        "invoices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Invoice"
+          },
+          "minItems": 0,
+          "maxItems": 1000
+        },
+        "invoice_lines": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/InvoiceLine"
+          },
+          "minItems": 0,
+          "maxItems": 10000
+        },
+        "idempotency_records": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/IdempotencyRecord"
+          },
+          "minItems": 0,
+          "maxItems": 1000
+        }
+      },
+      "required": [
+        "customers",
+        "items",
+        "projects",
+        "timesheets",
+        "invoices",
+        "invoice_lines",
+        "idempotency_records"
+      ],
+      "additionalProperties": false
+    },
+    "Snapshot": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1,
+          "type": "integer"
+        },
+        "run_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "attempt_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "stage": {
+          "enum": [
+            "before",
+            "agent_only",
+            "final",
+            "after_reset",
+            "diagnostic"
+          ]
+        },
+        "captured_at": {
+          "$ref": "#/$defs/UTC"
+        },
+        "settlement_generation": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "tables": {
+          "$ref": "#/$defs/Tables"
+        }
+      },
+      "required": [
+        "schema_version",
+        "run_id",
+        "attempt_id",
+        "stage",
+        "captured_at",
+        "settlement_generation",
+        "tables"
+      ],
+      "additionalProperties": false
+    },
+    "ExpectedInvoice": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "draft_invoice"
+        },
+        "customer_id": {
+          "$ref": "#/$defs/BusinessID"
+        },
+        "invoice_date": {
+          "$ref": "#/$defs/Date"
+        },
+        "due_date": {
+          "$ref": "#/$defs/Date"
+        },
+        "currency": {
+          "const": "USD"
+        },
+        "lines": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "item_id": {
+                "$ref": "#/$defs/BusinessID"
+              },
+              "quantity": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 1000
+              },
+              "unit_price_cents": {
+                "$ref": "#/$defs/Money"
+              }
+            },
+            "required": [
+              "item_id",
+              "quantity",
+              "unit_price_cents"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1,
+          "maxItems": 10
+        },
+        "subtotal_cents": {
+          "$ref": "#/$defs/Money"
+        },
+        "tax_cents": {
+          "const": 0,
+          "type": "integer"
+        },
+        "total_cents": {
+          "$ref": "#/$defs/Money"
+        },
+        "invoice_count_delta": {
+          "const": 1,
+          "type": "integer"
+        },
+        "allowed_changed_tables": {
+          "const": [
+            "invoices",
+            "invoice_lines",
+            "idempotency_records"
+          ]
+        }
+      },
+      "required": [
+        "kind",
+        "customer_id",
+        "invoice_date",
+        "due_date",
+        "currency",
+        "lines",
+        "subtotal_cents",
+        "tax_cents",
+        "total_cents",
+        "invoice_count_delta",
+        "allowed_changed_tables"
+      ],
+      "additionalProperties": false
+    },
+    "ExpectedReadOnly": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "read_only"
+        },
+        "required_record_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/BusinessID"
+          },
+          "minItems": 0,
+          "maxItems": 100,
+          "uniqueItems": true
+        },
+        "allowed_changed_tables": {
+          "const": []
+        }
+      },
+      "required": [
+        "kind",
+        "required_record_ids",
+        "allowed_changed_tables"
+      ],
+      "additionalProperties": false
+    },
+    "ExpectedState": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ExpectedInvoice"
+        },
+        {
+          "$ref": "#/$defs/ExpectedReadOnly"
+        }
+      ]
+    },
+    "Fixture": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1,
+          "type": "integer"
+        },
+        "fixture_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "fixture_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 32
+        },
+        "migration_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 32
+        },
+        "tenant_id": {
+          "$ref": "#/$defs/BusinessID"
+        },
+        "seed_hash": {
+          "$ref": "#/$defs/SHA256"
+        },
+        "seed": {
+          "$ref": "#/$defs/Tables"
+        },
+        "expected_state_rules": {
+          "type": "object",
+          "properties": {
+            "currency": {
+              "const": "USD"
+            },
+            "draft_only": {
+              "const": true
+            },
+            "integer_cents": {
+              "const": true
+            }
+          },
+          "required": [
+            "currency",
+            "draft_only",
+            "integer_cents"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "schema_version",
+        "fixture_id",
+        "fixture_version",
+        "migration_version",
+        "tenant_id",
+        "seed_hash",
+        "seed",
+        "expected_state_rules"
+      ],
+      "additionalProperties": false
+    },
+    "Budgets": {
+      "type": "object",
+      "properties": {
+        "context_tokens": {
+          "const": 4096,
+          "type": "integer"
+        },
+        "output_tokens": {
+          "const": 512,
+          "type": "integer"
+        },
+        "model_turns": {
+          "const": 8,
+          "type": "integer"
+        },
+        "tool_calls": {
+          "const": 12,
+          "type": "integer"
+        },
+        "tool_timeout_ms": {
+          "const": 5000,
+          "type": "integer"
+        },
+        "db_timeout_ms": {
+          "const": 5000,
+          "type": "integer"
+        },
+        "model_timeout_ms": {
+          "const": 120000,
+          "type": "integer"
+        },
+        "task_timeout_ms": {
+          "const": 300000,
+          "type": "integer"
+        },
+        "transient_retries": {
+          "const": 1,
+          "type": "integer"
+        },
+        "post_agent_timeout_ms": {
+          "const": 30000,
+          "type": "integer"
+        },
+        "verification_operation_ms": {
+          "const": 5000,
+          "type": "integer"
+        },
+        "verification_calls": {
+          "const": 2,
+          "type": "integer"
+        },
+        "verification_retries": {
+          "const": 0,
+          "type": "integer"
+        },
+        "artifact_bytes": {
+          "const": 104857600,
+          "type": "integer"
+        },
+        "document_bytes": {
+          "const": 1048576,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "context_tokens",
+        "output_tokens",
+        "model_turns",
+        "tool_calls",
+        "tool_timeout_ms",
+        "db_timeout_ms",
+        "model_timeout_ms",
+        "task_timeout_ms",
+        "transient_retries",
+        "post_agent_timeout_ms",
+        "verification_operation_ms",
+        "verification_calls",
+        "verification_retries",
+        "artifact_bytes",
+        "document_bytes"
+      ],
+      "additionalProperties": false
+    },
+    "Task": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1,
+          "type": "integer"
+        },
+        "task_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "task_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 32
+        },
+        "fixture_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "fixture_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 32
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16384
+        },
+        "split": {
+          "enum": [
+            "development",
+            "held_out"
+          ]
+        },
+        "principal_id": {
+          "$ref": "#/$defs/Principal"
+        },
+        "permitted_tools": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ToolID"
+          },
+          "minItems": 1,
+          "maxItems": 10,
+          "uniqueItems": true
+        },
+        "required_tool_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ToolID"
+          },
+          "minItems": 0,
+          "maxItems": 10,
+          "uniqueItems": true
+        },
+        "relevant_tool_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ToolID"
+          },
+          "minItems": 0,
+          "maxItems": 10,
+          "uniqueItems": true
+        },
+        "expected_state": {
+          "$ref": "#/$defs/ExpectedState"
+        },
+        "final_answer_rule": {
+          "enum": [
+            "saved_invoice_id",
+            "read_result_ids"
+          ]
+        },
+        "budgets": {
+          "$ref": "#/$defs/Budgets"
+        }
+      },
+      "required": [
+        "schema_version",
+        "task_id",
+        "task_version",
+        "fixture_id",
+        "fixture_version",
+        "prompt",
+        "split",
+        "principal_id",
+        "permitted_tools",
+        "required_tool_ids",
+        "relevant_tool_ids",
+        "expected_state",
+        "final_answer_rule",
+        "budgets"
+      ],
+      "additionalProperties": false
+    },
+    "Model": {
+      "type": "object",
+      "properties": {
+        "tag": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "digest": {
+          "$ref": "#/$defs/SHA256"
+        },
+        "context_tokens": {
+          "const": 4096,
+          "type": "integer"
+        },
+        "output_tokens": {
+          "const": 512,
+          "type": "integer"
+        },
+        "temperature": {
+          "const": 0,
+          "type": "integer"
+        },
+        "seed": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2147483647
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "think": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "keep_alive": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 16,
+              "pattern": "^[1-9][0-9]{0,3}[smh]$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "tag",
+        "digest",
+        "context_tokens",
+        "output_tokens",
+        "temperature",
+        "seed",
+        "think",
+        "keep_alive"
+      ],
+      "additionalProperties": false
+    },
+    "AgentRequest": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1,
+          "type": "integer"
+        },
+        "run_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "attempt_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "task_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16384
+        },
+        "strategy": {
+          "$ref": "#/$defs/Strategy"
+        },
+        "catalog_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "catalog_hash": {
+          "$ref": "#/$defs/SHA256"
+        },
+        "principal_id": {
+          "$ref": "#/$defs/Principal"
+        },
+        "model": {
+          "$ref": "#/$defs/Model"
+        },
+        "budgets": {
+          "$ref": "#/$defs/Budgets"
+        }
+      },
+      "required": [
+        "schema_version",
+        "run_id",
+        "attempt_id",
+        "task_id",
+        "prompt",
+        "strategy",
+        "catalog_id",
+        "catalog_hash",
+        "principal_id",
+        "model",
+        "budgets"
+      ],
+      "additionalProperties": false
+    },
+    "AuthInput": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1,
+          "type": "integer"
+        },
+        "run_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "attempt_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "mode": {
+          "enum": [
+            "agent",
+            "verify"
+          ]
+        },
+        "capability": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "idempotency_key": {
+          "$ref": "#/$defs/Identifier"
+        }
+      },
+      "required": [
+        "schema_version",
+        "run_id",
+        "attempt_id",
+        "mode",
+        "capability",
+        "idempotency_key"
+      ],
+      "additionalProperties": false
+    },
+    "FinalAnswer": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "maxLength": 16384
+        },
+        "invoice_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/BusinessID"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "record_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/BusinessID"
+          },
+          "minItems": 0,
+          "maxItems": 100,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "text",
+        "invoice_id",
+        "record_ids"
+      ],
+      "additionalProperties": false
+    },
+    "Counts": {
+      "type": "object",
+      "properties": {
+        "model_calls": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100000
+        },
+        "tool_calls": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100000
+        },
+        "retries": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100000
+        }
+      },
+      "required": [
+        "model_calls",
+        "tool_calls",
+        "retries"
+      ],
+      "additionalProperties": false
+    },
+    "AgentResult": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1,
+          "type": "integer"
+        },
+        "run_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "attempt_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "status": {
+          "enum": [
+            "completed",
+            "failed",
+            "timeout",
+            "interrupted"
+          ]
+        },
+        "final_answer": {
+          "$ref": "#/$defs/FinalAnswer"
+        },
+        "counts": {
+          "$ref": "#/$defs/Counts"
+        }
+      },
+      "required": [
+        "schema_version",
+        "run_id",
+        "attempt_id",
+        "status",
+        "final_answer",
+        "counts"
+      ],
+      "additionalProperties": false
+    },
+    "RunManifest": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1,
+          "type": "integer"
+        },
+        "run_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "attempt_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "task_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "fixture_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "catalog_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "strategy": {
+          "$ref": "#/$defs/Strategy"
+        },
+        "principal_id": {
+          "$ref": "#/$defs/Principal"
+        },
+        "task_hash": {
+          "$ref": "#/$defs/SHA256"
+        },
+        "fixture_hash": {
+          "$ref": "#/$defs/SHA256"
+        },
+        "catalog_hash": {
+          "$ref": "#/$defs/SHA256"
+        },
+        "config_hash": {
+          "$ref": "#/$defs/SHA256"
+        },
+        "model": {
+          "$ref": "#/$defs/Model"
+        },
+        "budgets": {
+          "$ref": "#/$defs/Budgets"
+        },
+        "versions": {
+          "type": "object",
+          "properties": {
+            "go": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "python": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "mcp_sdk": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "ollama": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "postgres_image": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "agent_image": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "evaluator_image": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "mcp_image": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "go",
+            "python",
+            "mcp_sdk",
+            "ollama",
+            "postgres_image",
+            "agent_image",
+            "evaluator_image",
+            "mcp_image"
+          ],
+          "additionalProperties": false
+        },
+        "unavailable_versions": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "go",
+              "python",
+              "mcp_sdk",
+              "ollama",
+              "postgres_image",
+              "agent_image",
+              "evaluator_image",
+              "mcp_image"
+            ]
+          },
+          "minItems": 0,
+          "maxItems": 8,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "schema_version",
+        "run_id",
+        "attempt_id",
+        "task_id",
+        "fixture_id",
+        "catalog_id",
+        "strategy",
+        "principal_id",
+        "task_hash",
+        "fixture_hash",
+        "catalog_hash",
+        "config_hash",
+        "model",
+        "budgets",
+        "versions",
+        "unavailable_versions"
+      ],
+      "additionalProperties": false
+    },
+    "VerifierScope": {
+      "type": "object",
+      "properties": {
+        "invoice_id": {
+          "$ref": "#/$defs/BusinessID"
+        },
+        "idempotency_key": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "original_request_hash": {
+          "$ref": "#/$defs/SHA256"
+        }
+      },
+      "required": [
+        "invoice_id",
+        "idempotency_key",
+        "original_request_hash"
+      ],
+      "additionalProperties": false
+    },
+    "RunMapping": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1,
+          "type": "integer"
+        },
+        "run_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "attempt_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "tenant_id": {
+          "$ref": "#/$defs/BusinessID"
+        },
+        "principal_id": {
+          "$ref": "#/$defs/Principal"
+        },
+        "allowed_tools": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ToolID"
+          },
+          "minItems": 1,
+          "maxItems": 10,
+          "uniqueItems": true
+        },
+        "schema_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 34,
+          "pattern": "^r_[0-9a-f]{32}$"
+        },
+        "phase": {
+          "enum": [
+            "prepared",
+            "executing",
+            "agent_sealed",
+            "verifying",
+            "final_sealed",
+            "quarantined",
+            "cleaned"
+          ]
+        },
+        "generation": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2
+        },
+        "not_after": {
+          "$ref": "#/$defs/UTC"
+        },
+        "agent_token_sha256": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SHA256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "verifier_token_sha256": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SHA256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "verifier_scope": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/VerifierScope"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "lock_marker": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "schema_version",
+        "run_id",
+        "attempt_id",
+        "tenant_id",
+        "principal_id",
+        "allowed_tools",
+        "schema_name",
+        "phase",
+        "generation",
+        "not_after",
+        "agent_token_sha256",
+        "verifier_token_sha256",
+        "verifier_scope",
+        "lock_marker"
+      ],
+      "additionalProperties": false
+    },
+    "FenceReceipt": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1,
+          "type": "integer"
+        },
+        "run_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "attempt_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "fence": {
+          "enum": [
+            "agent",
+            "verifier"
+          ]
+        },
+        "status": {
+          "enum": [
+            "settled",
+            "unknown"
+          ]
+        },
+        "generation": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "phase": {
+          "anyOf": [
+            {
+              "enum": [
+                "agent_sealed",
+                "final_sealed"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "commit_acknowledged": {
+          "type": "boolean"
+        },
+        "committed_at": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/UTC"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "remaining_inflight": {
+          "anyOf": [
+            {
+              "const": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "elapsed_ms": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 86400000
+        }
+      },
+      "required": [
+        "schema_version",
+        "run_id",
+        "attempt_id",
+        "fence",
+        "status",
+        "generation",
+        "phase",
+        "commit_acknowledged",
+        "committed_at",
+        "remaining_inflight",
+        "elapsed_ms"
+      ],
+      "additionalProperties": false
+    },
+    "VerificationRequest": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1,
+          "type": "integer"
+        },
+        "run_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "attempt_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "invoice_id": {
+          "$ref": "#/$defs/BusinessID"
+        },
+        "idempotency_key": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "original_arguments": {
+          "$ref": "#/$defs/CreateDraftArgs"
+        },
+        "original_request_hash": {
+          "$ref": "#/$defs/SHA256"
+        },
+        "conflict_arguments": {
+          "$ref": "#/$defs/CreateDraftArgs"
+        },
+        "checks": {
+          "const": [
+            "same_payload_replay",
+            "changed_payload_conflict"
+          ]
+        }
+      },
+      "required": [
+        "schema_version",
+        "run_id",
+        "attempt_id",
+        "invoice_id",
+        "idempotency_key",
+        "original_arguments",
+        "original_request_hash",
+        "conflict_arguments",
+        "checks"
+      ],
+      "additionalProperties": false
+    },
+    "Failure": {
+      "type": "object",
+      "properties": {
+        "stage": {
+          "enum": [
+            "admission",
+            "prepare",
+            "retrieval",
+            "agent",
+            "execution",
+            "grading",
+            "verification",
+            "cleanup",
+            "operations"
+          ]
+        },
+        "code": {
+          "enum": [
+            "admission_blocked",
+            "fixture_invalid",
+            "prepare_failed",
+            "reset_failed",
+            "required_tool_missing",
+            "retrieval_unavailable",
+            "index_stale",
+            "context_overflow",
+            "model_unsupported",
+            "unknown_tool",
+            "invalid_arguments",
+            "unauthorized_attempt",
+            "no_result",
+            "answer_invalid",
+            "model_timeout",
+            "budget_exhausted",
+            "protocol_error",
+            "authorization_denied",
+            "tool_error",
+            "db_error",
+            "tool_timeout",
+            "idempotency_conflict",
+            "state_incorrect",
+            "unexpected_write",
+            "grader_error",
+            "settlement_unknown",
+            "verification_failed",
+            "cleanup_failed",
+            "resource_abort",
+            "interrupted",
+            "artifact_incomplete"
+          ]
+        },
+        "call_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "attribution": {
+          "enum": [
+            "observed",
+            "uncertain"
+          ]
+        }
+      },
+      "required": [
+        "stage",
+        "code",
+        "call_id",
+        "reason",
+        "attribution"
+      ],
+      "additionalProperties": false
+    },
+    "EventData": {
+      "type": "object",
+      "properties": {
+        "tool_id": {
+          "$ref": "#/$defs/ToolID"
+        },
+        "duration_ms": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 86400000
+        },
+        "invoice_id": {
+          "$ref": "#/$defs/BusinessID"
+        },
+        "exposed_tool_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ToolID"
+          },
+          "minItems": 0,
+          "maxItems": 10,
+          "uniqueItems": true
+        },
+        "required_tool_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ToolID"
+          },
+          "minItems": 0,
+          "maxItems": 10,
+          "uniqueItems": true
+        },
+        "relevant_tool_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ToolID"
+          },
+          "minItems": 0,
+          "maxItems": 10,
+          "uniqueItems": true
+        },
+        "catalog_hash": {
+          "$ref": "#/$defs/SHA256"
+        },
+        "prompt_hash": {
+          "$ref": "#/$defs/SHA256"
+        },
+        "schema_hash": {
+          "$ref": "#/$defs/SHA256"
+        },
+        "model_digest": {
+          "$ref": "#/$defs/SHA256"
+        },
+        "prompt_tokens": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "output_tokens": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "retry_index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100000
+        },
+        "outcome": {
+          "enum": [
+            "passed",
+            "failed",
+            "blocked",
+            "interrupted"
+          ]
+        },
+        "failure": {
+          "$ref": "#/$defs/Failure"
+        },
+        "arguments": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CreateDraftArgs"
+            },
+            {
+              "$ref": "#/$defs/EmptyArgs"
+            },
+            {
+              "$ref": "#/$defs/GetCustomerArgs"
+            },
+            {
+              "$ref": "#/$defs/GetInvoiceArgs"
+            },
+            {
+              "$ref": "#/$defs/GetProjectArgs"
+            },
+            {
+              "$ref": "#/$defs/GetTimesheetArgs"
+            },
+            {
+              "$ref": "#/$defs/ListInvoicesArgs"
+            },
+            {
+              "$ref": "#/$defs/ListProjectsArgs"
+            },
+            {
+              "$ref": "#/$defs/ListTimesheetsArgs"
+            }
+          ]
+        },
+        "result_hash": {
+          "$ref": "#/$defs/SHA256"
+        },
+        "receipt_generation": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2
+        },
+        "artifact_complete": {
+          "type": "boolean"
+        },
+        "tool_result": {
+          "$ref": "#/$defs/ToolResult"
+        },
+        "proposed_tool_name": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "name_truncated": {
+          "type": "boolean"
+        },
+        "rejected_argument_keys": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "maxItems": 32,
+          "uniqueItems": true
+        },
+        "query_hash": {
+          "$ref": "#/$defs/SHA256"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "Event": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1,
+          "type": "integer"
+        },
+        "run_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "attempt_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "event_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "source": {
+          "enum": [
+            "launcher",
+            "evaluator",
+            "agent",
+            "mcp"
+          ]
+        },
+        "sequence": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "timestamp": {
+          "$ref": "#/$defs/UTC"
+        },
+        "event_type": {
+          "enum": [
+            "run.started",
+            "run.finished",
+            "retrieval.completed",
+            "model.completed",
+            "tool.completed",
+            "tool.failed",
+            "agent.finished",
+            "fence.completed",
+            "grading.completed",
+            "cleanup.completed",
+            "failure"
+          ]
+        },
+        "phase": {
+          "enum": [
+            "admission",
+            "prepare",
+            "retrieval",
+            "agent",
+            "execution",
+            "grading",
+            "verification",
+            "cleanup",
+            "operations",
+            "execution"
+          ]
+        },
+        "status": {
+          "enum": [
+            "ok",
+            "error",
+            "interrupted"
+          ]
+        },
+        "elapsed_ms": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 86400000
+        },
+        "call_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "parent_call_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data": {
+          "$ref": "#/$defs/EventData"
+        }
+      },
+      "required": [
+        "schema_version",
+        "run_id",
+        "attempt_id",
+        "event_id",
+        "source",
+        "sequence",
+        "timestamp",
+        "event_type",
+        "phase",
+        "status",
+        "elapsed_ms",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    "Metrics": {
+      "type": "object",
+      "properties": {
+        "task_latency_ms": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 86400000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "lifecycle_latency_ms": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 86400000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "post_agent_ms": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 86400000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "cpu_ms": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 86400000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "prompt_tokens": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "output_tokens": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "known_prompt_tokens": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "known_output_tokens": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "missing_token_components": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100000
+        },
+        "retrieval_precision": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "required_tool_recall": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "unauthorized_executions": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100000
+        },
+        "verifier_calls": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100000
+        },
+        "cost_usd": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "energy_joules": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "cost_basis": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "energy_basis": {
+          "anyOf": [
+            {
+              "const": "metered"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "task_latency_ms",
+        "lifecycle_latency_ms",
+        "post_agent_ms",
+        "cpu_ms",
+        "prompt_tokens",
+        "output_tokens",
+        "known_prompt_tokens",
+        "known_output_tokens",
+        "missing_token_components",
+        "retrieval_precision",
+        "required_tool_recall",
+        "unauthorized_executions",
+        "verifier_calls",
+        "cost_usd",
+        "energy_joules",
+        "cost_basis",
+        "energy_basis"
+      ],
+      "additionalProperties": false
+    },
+    "Assertions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/$defs/Identifier"
+          },
+          "pass": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        },
+        "required": [
+          "name",
+          "pass",
+          "reason"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0,
+      "maxItems": 1000
+    },
+    "EvaluationResult": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1,
+          "type": "integer"
+        },
+        "run_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "attempt_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "task_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "task_hash": {
+          "$ref": "#/$defs/SHA256"
+        },
+        "fixture_hash": {
+          "$ref": "#/$defs/SHA256"
+        },
+        "catalog_hash": {
+          "$ref": "#/$defs/SHA256"
+        },
+        "config_hash": {
+          "$ref": "#/$defs/SHA256"
+        },
+        "agent_status": {
+          "enum": [
+            "completed",
+            "failed",
+            "timeout",
+            "interrupted",
+            "not_started"
+          ]
+        },
+        "agent_budget_pass": {
+          "type": "boolean"
+        },
+        "agent_settlement_pass": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "verifier_settlement_pass": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "db_oracle_pass": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "answer_pass": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "replay_pass": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "cleanup_pass": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "null_reasons": {
+          "type": "object",
+          "properties": {
+            "agent_settlement_pass": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "verifier_settlement_pass": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "db_oracle_pass": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "answer_pass": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "replay_pass": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "cleanup_pass": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "artifact_complete": {
+          "type": "boolean"
+        },
+        "comparison_valid": {
+          "type": "boolean"
+        },
+        "task_success": {
+          "type": "boolean"
+        },
+        "overall_status": {
+          "enum": [
+            "passed",
+            "failed",
+            "blocked"
+          ]
+        },
+        "quarantined": {
+          "type": "boolean"
+        },
+        "failures": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Failure"
+          },
+          "minItems": 0,
+          "maxItems": 1000
+        },
+        "original_assertions": {
+          "$ref": "#/$defs/Assertions"
+        },
+        "verification_assertions": {
+          "$ref": "#/$defs/Assertions"
+        },
+        "metrics": {
+          "$ref": "#/$defs/Metrics"
+        }
+      },
+      "required": [
+        "schema_version",
+        "run_id",
+        "attempt_id",
+        "task_id",
+        "task_hash",
+        "fixture_hash",
+        "catalog_hash",
+        "config_hash",
+        "agent_status",
+        "agent_budget_pass",
+        "agent_settlement_pass",
+        "verifier_settlement_pass",
+        "db_oracle_pass",
+        "answer_pass",
+        "replay_pass",
+        "cleanup_pass",
+        "null_reasons",
+        "artifact_complete",
+        "comparison_valid",
+        "task_success",
+        "overall_status",
+        "quarantined",
+        "failures",
+        "original_assertions",
+        "verification_assertions",
+        "metrics"
+      ],
+      "additionalProperties": false
+    },
+    "ProbeEchoArgs": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "const": "mcpbench-v1"
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

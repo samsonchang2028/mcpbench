@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "run_id": "run-example-001",
+  "attempt_id": "attempt-example-001",
+  "event_id": "agent-0007",
+  "source": "agent",
+  "sequence": 7,
+  "timestamp": "2026-11-07T23:00:00Z",
+  "event_type": "tool.completed",
+  "phase": "execution",
+  "status": "ok",
+  "call_id": "call-002",
+  "elapsed_ms": 1250,
+  "data": {
+    "tool_id": "billing_create_draft_invoice",
+    "duration_ms": 18,
+    "invoice_id": "INV-EXAMPLE-001"
+  }
+}

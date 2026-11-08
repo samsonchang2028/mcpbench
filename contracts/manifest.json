@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "schema_file": "v1/schema.json",
+  "schema_id": "https://mcpbench.local/contracts/v1/schema.json",
+  "catalog_file": "v1/catalog.json",
+  "entrypoints": [
+    "Catalog",
+    "ToolCall",
+    "ToolResult",
+    "Fixture",
+    "Task",
+    "Snapshot",
+    "ExpectedState",
+    "AgentRequest",
+    "AuthInput",
+    "AgentResult",
+    "RunManifest",
+    "RunMapping",
+    "FenceReceipt",
+    "VerificationRequest",
+    "Event",
+    "EvaluationResult"
+  ],
+  "schema_sha256": "3efa86730eef48ae897c2674cbd58b7982ef70040278788677fc5d7e19f19889",
+  "catalog_sha256": "64e6b0ec54b2242747373ef1a567d9ec8c59f033f47c02afbe715d184a31ae36"
+}

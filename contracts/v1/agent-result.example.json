@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "run_id": "run-example-001",
+  "attempt_id": "attempt-example-001",
+  "status": "completed",
+  "final_answer": {
+    "text": "Created draft INV-EXAMPLE-001.",
+    "invoice_id": "INV-EXAMPLE-001",
+    "record_ids": []
+  },
+  "counts": {
+    "model_calls": 2,
+    "tool_calls": 1,
+    "retries": 0
+  }
+}

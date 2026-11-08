@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "catalog_id": "billing-baseline",
+  "catalog_version": "1",
+  "tools": [
+    {
+      "name": "billing_list_customers",
+      "description": "List fictional customers.",
+      "domain": "customers",
+      "permission": "billing:read",
+      "input_ref": "#/$defs/EmptyArgs",
+      "output_ref": "#/$defs/ListCustomerOutput"
+    },
+    {
+      "name": "billing_list_items",
+      "description": "List fictional catalog items and canonical USD prices.",
+      "domain": "items",
+      "permission": "billing:read",
+      "input_ref": "#/$defs/EmptyArgs",
+      "output_ref": "#/$defs/ListItemOutput"
+    },
+    {
+      "name": "billing_create_draft_invoice",
+      "description": "Create a fictional draft invoice; never send or pay.",
+      "domain": "invoices",
+      "permission": "billing:draft",
+      "input_ref": "#/$defs/CreateDraftArgs",
+      "output_ref": "#/$defs/DraftOutput"
+    },
+    {
+      "name": "billing_get_customer",
+      "description": "Get one fictional customer.",
+      "domain": "customers",
+      "permission": "billing:read",
+      "input_ref": "#/$defs/GetCustomerArgs",
+      "output_ref": "#/$defs/GetCustomerOutput"
+    },
+    {
+      "name": "billing_list_projects",
+      "description": "List fictional projects.",
+      "domain": "projects",
+      "permission": "billing:read",
+      "input_ref": "#/$defs/ListProjectsArgs",
+      "output_ref": "#/$defs/ListProjectOutput"
+    },
+    {
+      "name": "billing_get_project",
+      "description": "Get one fictional project.",
+      "domain": "projects",
+      "permission": "billing:read",
+      "input_ref": "#/$defs/GetProjectArgs",
+      "output_ref": "#/$defs/GetProjectOutput"
+    },
+    {
+      "name": "billing_list_timesheets",
+      "description": "List fictional timesheets.",
+      "domain": "timesheets",
+      "permission": "billing:read",
+      "input_ref": "#/$defs/ListTimesheetsArgs",
+      "output_ref": "#/$defs/ListTimesheetOutput"
+    },
+    {
+      "name": "billing_get_timesheet",
+      "description": "Get one fictional timesheet.",
+      "domain": "timesheets",
+      "permission": "billing:read",
+      "input_ref": "#/$defs/GetTimesheetArgs",
+      "output_ref": "#/$defs/GetTimesheetOutput"
+    },
+    {
+      "name": "billing_list_invoices",
+      "description": "List fictional draft invoices.",
+      "domain": "invoices",
+      "permission": "billing:read",
+      "input_ref": "#/$defs/ListInvoicesArgs",
+      "output_ref": "#/$defs/ListInvoiceOutput"
+    },
+    {
+      "name": "billing_get_invoice",
+      "description": "Get one fictional draft invoice and its lines.",
+      "domain": "invoices",
+      "permission": "billing:read",
+      "input_ref": "#/$defs/GetInvoiceArgs",
+      "output_ref": "#/$defs/GetInvoiceOutput"
+    }
+  ],
+  "smoke_tool_ids": [
+    "billing_list_customers",
+    "billing_list_items",
+    "billing_create_draft_invoice"
+  ]
+}
