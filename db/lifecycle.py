@@ -82,7 +82,7 @@ class _DeadlineConnection(psycopg.Connection):
 def _conninfo(role, password, hostaddr=''):
     return make_conninfo(host='db', hostaddr=hostaddr, port=5432, dbname='mcpbench',
                          user=f'mcpbench_{role}', password=password,
-                         service='', passfile='/dev/null', sslmode='disable',
+                         passfile='/dev/null', sslmode='disable',
                          gssencmode='disable', options='-c search_path=pg_catalog',
                          application_name='mcpbench-lifecycle', connect_timeout=5,
                          target_session_attrs='any', channel_binding='disable')

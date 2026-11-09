@@ -40,7 +40,10 @@ complete passfile lines and private conninfo strings for trusted redaction.
 
 The production factory accepts the approved Compose environment `PGHOST=db` and
 `PGDATABASE=mcpbench` (either may be absent). Any other `PG*` variable or differing
-value fails before DNS. Explicit fixed connection settings remain authoritative.
+value fails before DNS, including `PGSERVICE` and `PGSERVICEFILE`. Conninfo omits
+the `service` keyword: libpq interprets an empty service value as a named-service
+lookup rather than disabling services. Explicit fixed connection settings remain
+authoritative.
 Authentication uses only the private role password. TLS/GSS are disabled for the
 admitted internal project network; no external database endpoint is supported.
 

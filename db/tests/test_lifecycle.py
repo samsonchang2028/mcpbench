@@ -319,11 +319,26 @@ class LifecycleTests(unittest.TestCase):
                 life._DeadlineConnection.wait(conn, 'generator')
         conn.close.assert_called_once()
 
+    def test_conninfo_omits_service_lookup_keyword(self):
+        from psycopg.conninfo import conninfo_to_dict
+        for role in ('controller', 'grader'):
+            with self.subTest(role=role):
+                params = conninfo_to_dict(life._conninfo(role, 'synthetic-password', '192.0.2.1'))
+                self.assertNotIn('service', params)
+                self.assertEqual(params['host'], 'db')
+                self.assertEqual(params['hostaddr'], '192.0.2.1')
+                self.assertEqual(params['dbname'], 'mcpbench')
+                self.assertEqual(params['user'], 'mcpbench_' + role)
+
     def test_production_factory_rejects_inherited_libpq_before_dns(self):
-        with patch.dict(life.os.environ, {'PGHOSTADDR': '127.0.0.1'}), patch.object(life, '_resolve') as resolve:
-            with self.assertRaises(ContractError):
-                life._factory('controller', 'fake-password')(life.time.monotonic() + 1)
-            resolve.assert_not_called()
+        for key, value in (('PGHOSTADDR', '127.0.0.1'), ('PGSERVICE', 'untrusted'),
+                           ('PGSERVICE', ''), ('PGSERVICEFILE', '/tmp/untrusted-service')):
+            with self.subTest(variable=key, value=value), \
+                    patch.dict(life.os.environ, {key: value}, clear=True), \
+                    patch.object(life, '_resolve') as resolve:
+                with self.assertRaises(ContractError):
+                    life._factory('controller', 'fake-password')(life.time.monotonic() + 1)
+                resolve.assert_not_called()
 
 
 if __name__ == '__main__':
