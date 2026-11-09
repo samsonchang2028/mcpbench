@@ -43,16 +43,12 @@ func (m *scriptedModel) Chat(ctx context.Context, q ollama.Request) (ollama.Resp
 		for i := len(q.Messages) - 1; i >= 0; i-- {
 			message := q.Messages[i]
 			if message.Role == "tool" && message.ToolName == agent.CreateTool {
-				var result agent.ToolResult
-				if json.Unmarshal([]byte(message.Content), &result) != nil || result.IsError {
-					return ollama.Response{}, errors.New("scripted tool failure")
-				}
 				var out struct {
 					Invoice struct {
 						ID string `json:"invoice_id"`
 					} `json:"invoice"`
 				}
-				if json.Unmarshal(result.Result, &out) != nil || out.Invoice.ID == "" {
+				if json.Unmarshal([]byte(message.Content), &out) != nil || out.Invoice.ID == "" {
 					return ollama.Response{}, errors.New("scripted result")
 				}
 				return ollama.Response{Done: true, Message: ollama.Message{Role: "assistant", Content: "Created draft " + out.Invoice.ID + "."}}, nil
@@ -85,7 +81,19 @@ func main() {
 		os.Exit(1)
 	}
 }
+
+type toolConnection interface {
+	agent.Tools
+	Close() error
+}
+
 func execute(args []string) error {
+	return executeWithConnector(args, func(ctx context.Context, auth agent.AuthInput) (toolConnection, error) {
+		return agent.ConnectMCP(ctx, auth)
+	})
+}
+
+func executeWithConnector(args []string, connect func(context.Context, agent.AuthInput) (toolConnection, error)) error {
 	entered := time.Now()
 	if len(args) != 7 || (args[0] != "run" && args[0] != "verify") || args[1] != "--request" || args[3] != "--auth" || args[5] != "--output" {
 		return errors.New("fixed arguments")
@@ -109,12 +117,13 @@ func execute(args []string) error {
 		return err
 	}
 	defer writer.Close()
-	connection, err := agent.ConnectMCP(ctx, auth)
+	connection, err := connect(ctx, auth)
 	if err != nil {
 		return err
 	}
 	defer connection.Close()
 	var value any
+	status := "failed"
 	if args[0] == "run" {
 		var request agent.AgentRequest
 		if agent.Decode("AgentRequest", raw, &request) != nil || auth.Mode != "agent" {
@@ -125,23 +134,31 @@ func execute(args []string) error {
 			tools = &lostReply{Tools: connection}
 		}
 		result, e := (agent.Runner{Model: &scriptedModel{}, Tools: tools, Events: writer}).Run(ctx, request, auth)
-		if e != nil || result.Status != "completed" {
+		if e != nil {
 			return errors.New("scripted loop")
 		}
 		value = result
+		status = result.Status
 	} else {
 		var request agent.VerificationRequest
 		if agent.Decode("VerificationRequest", raw, &request) != nil {
 			return errors.New("verification request")
 		}
 		result, e := agent.VerifySince(ctx, request, auth, connection, writer, entered)
-		if e != nil || result.Status != "completed" {
+		if e != nil {
 			return errors.New("verification")
 		}
 		value = result
+		status = result.Status
 	}
 	if err := writer.Close(); err != nil {
 		return err
 	}
-	return agent.WriteResult(args[6], value)
+	if err := agent.WriteResult(args[6], value); err != nil {
+		return err
+	}
+	if status != "completed" {
+		return errors.New("scripted execution failed")
+	}
+	return nil
 }

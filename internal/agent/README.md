@@ -20,7 +20,10 @@ native Ollama `/api/chat`, `stream:false`, request-local settings and the fixed
 loopback endpoint. No model is pulled, unloaded, replaced or reconfigured.
 Unknown names, denied create attempts and invalid raw arguments consume the tool
 budget without dispatch. Locally generated IDs correlate assistant selections
-with tool messages. Capability and idempotency metadata enter only trusted MCP
+with tool messages. Successful model tool-message content contains the complete
+validated business result, while the frozen ToolResult envelope remains internal
+and in events; failed tool messages retain their explicit error envelopes.
+Capability and idempotency metadata enter only trusted MCP
 HTTP headers; known secrets are redacted from events and answers. Draft IDs and
 invoice amounts come from validated server results; the model never supplies
 trusted totals. The first slice returns the saved invoice ID; general read-only
@@ -72,3 +75,10 @@ MCPBENCH_TEST_PYTHON=/home/sfkim/projects/mcpbench/.worktrees/T008/.venv/bin/pyt
 Tests use scripted model/tool interfaces and owned fake HTTP transports. Live
 Ollama, MCP, SQL, containers, image builds and model smoke tests remain UNRUN;
 these deterministic results make no live benchmark claim.
+
+The context-history regression uses the complete expanded three-tool schemas and
+sanitized fictional response shapes from the development integration failure.
+It checks the entire business payload and call correlation, completion with four
+model turns/three tool calls, and rejection one byte beyond the unchanged context
+ceiling. `testdata/full-context-history.json` records the pre-projection request
+shape for that regression; it contains no credentials or production data.

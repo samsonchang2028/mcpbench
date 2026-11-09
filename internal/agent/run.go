@@ -281,6 +281,12 @@ func (r Runner) Run(ctx context.Context, q AgentRequest, a AuthInput) (out Agent
 				break
 			}
 			b, _ := json.Marshal(result)
+			if !result.IsError {
+				// Keep the validated envelope internally and in events. The model
+				// already has tool identity/correlation; supply every business field
+				// without repeating that internal envelope in its context.
+				b = result.Result
+			}
 			messages = append(messages, ollama.Message{Role: "tool", ToolName: tc.Function.Name, ToolCallID: tc.ID, Content: redactText(string(b), a)})
 		}
 	}
