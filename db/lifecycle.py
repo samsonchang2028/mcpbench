@@ -6,6 +6,7 @@ from copy import deepcopy
 from datetime import datetime, timezone
 from functools import wraps
 import json
+import math
 import os
 from pathlib import Path
 import stat
@@ -388,7 +389,7 @@ class PostgresBackend:
         receipt = dict(schema_version=1, run_id=scope.run_id, attempt_id=scope.attempt_id,
                        fence=fence, status='settled', generation=generation + 1, phase=phase,
                        commit_acknowledged=True, committed_at=manage._wire(_utc()), remaining_inflight=0,
-                       elapsed_ms=max(0, (self._clock() - started) * 1000))
+                       elapsed_ms=math.ceil(max(0, (self._clock() - started) * 1000)))
         validate('FenceReceipt', receipt)
         return receipt
 

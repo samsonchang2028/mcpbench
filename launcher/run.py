@@ -106,36 +106,57 @@ class Launcher:
         self.quota()
         start=self.mono()
         outcome = self.transport.execute('evaluator', phase, self.paths, self.remaining(30 if phase=='prepare' else 5), self.quota)
-        self.quota()
-        if not outcome.reaped or outcome.returncode != 0 or outcome.termination != 'exited':
-            raise ValueError('evaluator_transport')
-        ref = self.files.reference(f'control/{phase}-result.json')
-        result = self.files.read(ref, 'ControlResult')
-        if any(result[k] != self.identity[k] for k in self.identity) or result['request_id'] != request['message_id']:
-            raise ValueError('evaluator_identity')
-        if result['phase'] != phase:
-            raise ValueError('evaluator_phase')
-        budget = result['budget']
-        if self.anchor is not None:
-            current = self.budget()
-            if any(budget[k] != current[k] for k in ('anchor_id','started_at','deadline_at')) or budget['elapsed_ms'] < request['budget']['elapsed_ms'] or budget['elapsed_ms'] > current['elapsed_ms']:
-                raise ValueError('budget_transport')
-            self.floor = max(self.floor, budget['elapsed_ms'])
-            self.remaining(30)
-        raw = (self.files.root/ref['path']).read_bytes()
-        self.fixed_transport('result.json', raw)
-        self.host.write_bytes(f'journal/{phase}-result.json', raw)
+        # Delivery and process success are independent observations. Persist the
+        # actual exit even when parsing, quota, deadline or result handling fails.
+        ref, result, raw, delivery = None, None, None, 'missing'
+        current = self.budget()
+        try:
+            if outcome.termination != 'spawn_failed':
+                os.lstat(self.files.root/f'control/{phase}-result.json')
+                ref = self.files.reference(f'control/{phase}-result.json')
+                result = self.files.read(ref, 'ControlResult')
+                if any(result[k] != self.identity[k] for k in self.identity) or result['request_id'] != request['message_id']:
+                    raise ValueError('evaluator_identity')
+                if result['phase'] != phase:
+                    raise ValueError('evaluator_phase')
+                budget = result['budget']
+                if current is not None:
+                    if any(budget[k] != current[k] for k in ('anchor_id','started_at','deadline_at')) or budget['elapsed_ms'] < request['budget']['elapsed_ms'] or budget['elapsed_ms'] > current['elapsed_ms']:
+                        raise ValueError('budget_transport')
+                raw = (self.files.root/ref['path']).read_bytes()
+                delivery = 'complete'
+        except FileNotFoundError:
+            ref, result = None, None
+        except Exception:
+            ref, result, delivery = None, None, 'malformed'
         record=dict(**self.identity,producer='launcher',child='evaluator',phase=phase,
-                    termination=outcome.termination,exit_code=outcome.returncode,signal=outcome.signal,
-                    result_delivery='complete',result_ref=ref,duration_ms=math.ceil(max(0,outcome.ended_monotonic-start)*1000),
-                    budget=self.budget(),result_message_id=result['message_id'],reaped=outcome.reaped)
+                    termination=outcome.termination,
+                    exit_code=outcome.returncode if outcome.returncode is not None and outcome.returncode >= 0 else None,
+                    signal=outcome.signal, result_delivery=delivery,result_ref=ref,
+                    duration_ms=math.ceil(max(0,outcome.ended_monotonic-start)*1000),
+                    budget=current,result_message_id=result['message_id'] if result else None,reaped=outcome.reaped)
         record.pop('workflow_kind')
         validate('ProcessExit',record)
+        # Exit journaling precedes all subsequent fallible transport operations.
         self.host.write(f'journal/{phase}-exit.json',record,contract='ProcessExit')
-        self.chain['requests'].append(request);self.chain['results'].append(result);self.chain['exits'].append(record)
+        if delivery == 'complete':
+            self.host.write_bytes(f'journal/{phase}-result.json', raw)
+            self.fixed_transport('result.json', raw)
         self.quota()
+        if not outcome.reaped or outcome.returncode != 0 or outcome.termination != 'exited' or outcome.signal is not None:
+            raise ValueError('evaluator_transport')
+        if delivery != 'complete':
+            raise ValueError('evaluator_delivery')
+        if not start <= outcome.ended_monotonic <= self.mono():
+            raise ValueError('process_clock')
+        if current is not None:
+            self.floor = max(self.floor, result['budget']['elapsed_ms'])
+            self.remaining(30)
+            if record['duration_ms'] > request['budget']['operation_timeout_ms']:
+                raise ValueError('evaluator_deadline')
         if result['action'] in {'quarantine','blocked'}:
             raise ValueError('evaluator_quarantine')
+        self.chain['requests'].append(request);self.chain['results'].append(result);self.chain['exits'].append(record)
         return result
 
     def trace(self, source, path, *, combined=None):

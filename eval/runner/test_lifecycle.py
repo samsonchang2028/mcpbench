@@ -158,6 +158,42 @@ class LifecycleTests(unittest.TestCase):
                 inputs['verifier_result'] = vref
         return self.evaluator(backend).invoke(self.request('finalize', backend, prior, inputs))
 
+    def test_positive_fractional_clock_persists_events_and_phase_state(self):
+        b = ScriptedBackend()
+        p = self.prepare(b)
+        ticks = iter(i / 1000000 for i in range(10000))
+        self.evaluator = lambda backend: Evaluator(self.files, backend,
+                monotonic=lambda: next(ticks), wall_clock=lambda: NOW)
+        g = self.grade(b, p)
+        self.assertEqual(g['action'], 'verify', g)
+        state = self.files.load('private/settle-grade-state.json')
+        self.assertTrue(state['events'])
+        self.assertTrue(all(type(row['elapsed_ms']) is int for row in state['events']))
+        self.assertGreater(state['events'][0]['elapsed_ms'], 0)
+        self.files.load('evidence/agent-snapshot.json', 'Snapshot')
+        self.assertEqual(len(self.files.read_jsonl('events/evaluator-1.jsonl')), 1)
+
+    def test_event_publication_failure_does_not_contaminate_fallback_state(self):
+        from unittest.mock import patch
+        from eval.runner.artifacts import ArtifactError
+        b = ScriptedBackend()
+        p = self.prepare(b)
+        write = self.files.write_bytes
+        def fail_event(path, raw):
+            if path.startswith('events/evaluator-'):
+                raise ArtifactError('injected_event_write')
+            return write(path, raw)
+        with patch.object(self.files, 'write_bytes', side_effect=fail_event):
+            g = self.grade(b, p)
+        self.assertEqual(g['action'], 'quarantine', g)
+        self.assertIn('seal-agent', b.calls)
+        self.assertNotIn('capture-agent_only', b.calls)
+        state = self.files.load('private/settle-grade-state.json')
+        self.assertEqual(state['events'], [])
+        self.assertFalse((self.files.root / 'events/evaluator-1.jsonl').exists())
+        self.assertEqual(b.calls.count('reset'), 1)
+        self.assertNotIn('cleaned', b.calls)
+
     def test_invoice_three_phases(self):
         b = ScriptedBackend()
         p = self.prepare(b)

@@ -139,6 +139,21 @@ class LifecycleTests(unittest.TestCase):
         self.assertTrue(conn.closed)
         self.assertFalse(conn.calls)
 
+    def test_fractional_fence_timing_is_canonical_integer(self):
+        self.mapping.update(phase='executing', agent_token_sha256='a'*64)
+        factory = self.backend._factories['controller']
+        def advancing_factory(deadline):
+            conn = factory(deadline)
+            self.now += 0.00025
+            return conn
+        self.backend._factories['controller'] = advancing_factory
+        receipt = self.backend.seal(self.scope, 'agent')
+        validate('FenceReceipt', receipt)
+        self.assertIs(type(receipt['elapsed_ms']), int)
+        self.assertEqual(receipt['elapsed_ms'], 1)
+        from contracts.validate import canonical_bytes
+        canonical_bytes(receipt)
+
     def test_fence_fresh_locked_revocation_and_positive_receipt(self):
         for fence, phase, generation in (('agent', 'executing', 0), ('verifier', 'verifying', 1)):
             self.backend._unsafe.clear()

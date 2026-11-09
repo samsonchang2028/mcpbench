@@ -132,6 +132,84 @@ class LauncherTests(unittest.TestCase):
         with self.assertRaises(FileExistsError):self.run_attempt()
         self.assertEqual(len(self.transport.calls),5)
 
+    def test_evaluator_failure_outcomes_retain_exit_without_progression(self):
+        scenarios = ('quarantine', 'missing', 'malformed', 'identity', 'budget',
+                     'signaled', 'timed_out', 'unreaped', 'spawn_failed', 'expired', 'overdue', 'quota')
+        for scenario in scenarios:
+            with self.subTest(scenario=scenario):
+                fixture = LauncherTests()
+                fixture.setUp()
+                try:
+                    if scenario == 'quarantine':
+                        fixture.backend.unknown = 'agent'
+                    execute = fixture.transport.execute
+                    def outcome(child, phase, paths, timeout, quota):
+                        observed = execute(child, phase, paths, timeout, quota)
+                        if child != 'evaluator' or phase != 'settle-grade':
+                            return observed
+                        target = paths['evaluator']/'control/settle-grade-result.json'
+                        if scenario == 'missing':
+                            target.unlink()
+                        elif scenario == 'malformed':
+                            target.write_bytes(b'{}\n')
+                        elif scenario in {'identity', 'budget'}:
+                            result = load_bytes(target.read_bytes())
+                            if scenario == 'identity':
+                                result['request_id'] = 'wrong-request'
+                            else:
+                                result['budget']['anchor_id'] = 'wrong-anchor'
+                            target.write_bytes(canonical_bytes(result)+b'\n')
+                        elif scenario == 'signaled':
+                            return Outcome(None, True, 'terminated', 'SIGKILL', observed.ended_monotonic)
+                        elif scenario == 'timed_out':
+                            return Outcome(None, True, 'timed_out', 'SIGKILL', observed.ended_monotonic)
+                        elif scenario == 'unreaped':
+                            return Outcome(None, False, 'timed_out', None, observed.ended_monotonic)
+                        elif scenario == 'spawn_failed':
+                            return Outcome(None, False, 'spawn_failed', None, observed.ended_monotonic)
+                        elif scenario == 'expired':
+                            fixture.clock.now += 31
+                        elif scenario == 'overdue':
+                            fixture.clock.now += 6
+                            return Outcome(0, True, 'exited', None, fixture.clock.now)
+                        elif scenario == 'quota':
+                            fixture.launcher.quota = lambda: (_ for _ in ()).throw(ValueError('artifact_limit'))
+                        return Outcome(1 if scenario in {'missing','malformed','quarantine'} else 0,
+                                       True, 'exited', None, observed.ended_monotonic)
+                    fixture.transport.execute = outcome
+                    with self.assertRaisesRegex(ValueError, 'quarantined'):
+                        fixture.run_attempt()
+                    root = fixture.launcher.root
+                    record = Artifacts(root).load('journal/settle-grade-exit.json', 'ProcessExit')
+                    if scenario in {'missing','malformed','quarantine'}:
+                        self.assertEqual(record['exit_code'], 1)
+                    if scenario in {'unreaped','spawn_failed'}:
+                        self.assertFalse(record['reaped'])
+                    if scenario in {'signaled','timed_out'}:
+                        self.assertEqual(record['signal'], 'SIGKILL')
+                    delivery = 'missing' if scenario in {'missing','spawn_failed'} else 'malformed' if scenario in {'malformed','identity','budget'} else 'complete'
+                    self.assertEqual(record['result_delivery'], delivery)
+                    if delivery == 'complete':
+                        self.assertEqual((root/'journal/settle-grade-result.json').read_bytes(),
+                                         (root/'evaluator/control/settle-grade-result.json').read_bytes())
+                    self.assertEqual(fixture.backend.calls.count('reset'), 1)
+                    self.assertNotIn('cleaned', fixture.backend.calls)
+                    self.assertNotIn(('verifier','verify'), [call[:2] for call in fixture.transport.calls])
+                    self.assertFalse((root/'journal/control-chain.json').exists())
+                finally:
+                    fixture.doCleanups()
+
+    def test_blocked_prepare_exit_one_retains_typed_result(self):
+        self.backend.reset_ok = False
+        with self.assertRaisesRegex(ValueError, 'quarantined'):
+            self.run_attempt()
+        record = Artifacts(self.launcher.root).load('journal/prepare-exit.json', 'ProcessExit')
+        self.assertEqual(record['exit_code'], 1)
+        self.assertEqual(record['result_delivery'], 'complete')
+        result = Artifacts(self.launcher.root).load('journal/prepare-result.json', 'ControlResult')
+        self.assertEqual(result['action'], 'blocked')
+        self.assertEqual(len(self.transport.calls), 1)
+
     def test_transport_failure_quarantines_without_reset_or_retry(self):
         self.transport.fail='settle-grade'
         with self.assertRaisesRegex(ValueError,'quarantined'):self.run_attempt()

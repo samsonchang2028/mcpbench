@@ -133,13 +133,13 @@ class Evaluator:
         row = dict(schema_version=1, run_id=self.scope.run_id, attempt_id=self.scope.attempt_id,
                    event_id=f'evaluator-{len(rows) + 1}', sequence=len(rows) + 1, source='evaluator',
                    timestamp=self.wall().isoformat().replace('+00:00', 'Z'), event_type=kind,
-                   phase=phase, status='ok', elapsed_ms=self._event_offset + max(0, (self.mono() - self.invoked_at) * 1000), data=data)
+                   phase=phase, status='ok', elapsed_ms=self._event_offset + math.ceil(max(0, (self.mono() - self.invoked_at) * 1000)), data=data)
         row = redact(row, self.files.secrets)
         validate('Event', row)
+        # Each record is durable immediately; one source sequence spans processes.
+        self.files.write_bytes(f'events/evaluator-{len(rows) + 1}.jsonl', canonical_bytes(row) + b'\n')
         rows.append(row)
         self.events.append(row)
-        # Each record is durable immediately; one source sequence spans processes.
-        self.files.write_bytes(f'events/evaluator-{len(rows)}.jsonl', canonical_bytes(row) + b'\n')
 
     def invoke(self, request):
         """Return and persist one frozen ControlResult; never execute a child."""
