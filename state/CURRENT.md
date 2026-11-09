@@ -40,3 +40,5 @@ independent runtime gate remains BLOCKED. Earlier empty-service failure retained
 Workspace agent credit failure was transient;focused re-review completed later.
 
 T013 gate closed: R APPROVE, independent V actual SDK/parity tests PASS; no live DB/model claim. T019 still WAITING on T018. Latest one-shot RAM20.0236GiB is not a 60-second admission pass.
+
+2026-11-09T06:22:09Z independent T018 preflight retry failed at21,433,200,640 bytes (19.9612236GiB), before60-second loop or SQL. OwnedDB identity/limits/noports andexact19baseline passed again. New ignored evidence:independent-resume-admission.json and independent-resume-memory-pre.json. DAG recalculation:onlyT018 has completed prerequisites;BLOCKED by resourceadmission. T019 and20 other downstreamtasks WAITING. No service mutation or modelrequest.

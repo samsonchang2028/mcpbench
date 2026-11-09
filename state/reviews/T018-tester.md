@@ -2,6 +2,22 @@
 
 Verdict: **BLOCKED — fresh resource gate failed before SQL.** No runtime retry was attempted. This does not identify an adapter defect, and it does not invalidate the earlier source approval.
 
+## Authorized resumption — still BLOCKED
+
+On the orchestrator's explicit resumption, prepared `artifacts/admission/t018/independent_admission_resume.py` to perform the existing `independent_verify.py` identity/limit checks before and after a fresh 31-sample admission (2.01-second spacing), capture disk evidence for project/Docker/model filesystems, and stop immediately on any RAM, baseline, model-residency or sustained-swap failure. The helper preserves the original admission and failure files and writes new `independent-resume-*` evidence. Its copy of the verification logic additionally saves the exact RAM value before asserting the threshold.
+
+Executed once from the main project directory:
+
+```text
+.worktrees/T008/.venv/bin/python artifacts/admission/t018/independent_admission_resume.py
+```
+
+Exit **1** at the pre-admission RAM assertion: **21,433,200,640 bytes (19.9612236023 GiB)** available, below the **21,474,836,480-byte (20 GiB)** requirement. `independent-resume-admission.json` and `independent-resume-memory-pre.json` preserve this value; the failure summary was annotated at `2026-11-09T06:22:09.412985+00:00`. This is the actual failing measurement, not the earlier one-shot observation supplied by the orchestrator.
+
+The owned identity/image/labels/limits/internal network/no ports and exact 19-service baseline assertions again passed before the RAM check. No 60-second observation was completed: the failure occurred before the sample loop (**0 of 31 samples**). Fresh disk checks and post-verification were not reached. The ten PostgreSQL cases and lifecycle harness remain **UNRUN**, with **0 SQL connections**. No retry followed this failure. No infrastructure, grants, models, source or Git changes occurred. This renewed attempt therefore supplies no runtime PASS or T018 completion approval.
+
+The original attempt's details below remain valid historical evidence.
+
 Candidates inspected: adapter `f2c4dc9fff47567d826275c343dcb1b2b1a066ee` in `.worktrees/T018`; database grant/test candidate `8707121` in `.worktrees/db-grants`. Both worktrees were clean. This tester authored neither the adapter nor the supplied runtime harnesses.
 
 ## Actual checks
