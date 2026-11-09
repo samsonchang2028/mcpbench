@@ -1,5 +1,5 @@
 """Local artifact and deadline adversaries; no application services."""
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 import os
 from pathlib import Path
 import tempfile
@@ -11,6 +11,8 @@ from contracts.validate import ContractError
 from eval.runner import Artifacts, Budget
 from eval.runner.__main__ import CONTROL, main, read_request
 from eval.runner.test_lifecycle import LifecycleTests, ScriptedBackend
+from eval.runner.lifecycle import BoundedBackend
+from eval.reset import reset_and_check
 
 
 class ArtifactTests(unittest.TestCase):
@@ -87,6 +89,20 @@ class ArtifactTests(unittest.TestCase):
 
 
 class DeadlineTests(unittest.TestCase):
+    def test_normal_budget_preserves_anchor_and_operation_cap(self):
+        current = [900000.0]
+        supplied = LifecycleTests().budget()
+        budget = Budget(supplied, monotonic=lambda: current[0],
+                        wall_clock=lambda: datetime(2026, 11, 7, 23, 0, 1, tzinfo=timezone.utc))
+        self.assertEqual(budget.check(), 5000)
+        self.assertEqual(budget.observation(), supplied)
+        current[0] += 0.125
+        observed = budget.observation()
+        self.assertEqual(observed['elapsed_ms'], 1225)
+        self.assertEqual(observed['remaining_ms'], 28775)
+        for key in ('anchor_id', 'started_at', 'deadline_at'):
+            self.assertEqual(observed[key], supplied[key])
+
     def test_budget_does_not_restart_and_preserves_overrun(self):
         current = [0.0]
         budget = Budget(LifecycleTests().budget(29900), monotonic=lambda: current[0],
@@ -102,6 +118,31 @@ class DeadlineTests(unittest.TestCase):
                         wall_clock=lambda: datetime(2026, 11, 7, 23, 1, tzinfo=timezone.utc))
         with self.assertRaises(ContractError):
             budget.check()
+
+    def test_stale_observation_is_capped_before_absolute_expiry(self):
+        budget = Budget(LifecycleTests().budget(0), monotonic=lambda: 900000,
+                        wall_clock=lambda: datetime(2026, 11, 7, 23, 0, 29, tzinfo=timezone.utc))
+        self.assertEqual(budget.check(), 1000)
+        observation = budget.observation()
+        self.assertEqual(observation['elapsed_ms'], 29000)
+        self.assertEqual(observation['remaining_ms'], 1000)
+        from contracts.validate import validate
+        validate('PostAgentBudget', observation)
+
+    def test_wall_clock_changes_cannot_extend_monotonic_budget(self):
+        current, wall = [0.0], [datetime(2026, 11, 7, 23, 0, 29, tzinfo=timezone.utc)]
+        budget = Budget(LifecycleTests().budget(0), monotonic=lambda: current[0], wall_clock=lambda: wall[0])
+        self.assertEqual(budget.check(), 1000)
+        current[0], wall[0] = 0.25, wall[0] - timedelta(seconds=10)
+        self.assertEqual(budget.check(), 750)
+        wall[0] = datetime(2026, 11, 7, 23, 0, 29, 500000, tzinfo=timezone.utc)
+        self.assertEqual(budget.check(), 500)
+        current[0], wall[0] = 0.5, wall[0] - timedelta(seconds=20)
+        self.assertEqual(budget.check(), 250)
+        current[0] = 0.8
+        with self.assertRaises(ContractError):
+            budget.check()
+        self.assertEqual(budget.observation()['elapsed_ms'], 30050)
 
 
 class LifecycleAdversaries(LifecycleTests):
@@ -170,12 +211,21 @@ class LifecycleAdversaries(LifecycleTests):
         (control / 'request.json').write_bytes(canonical_bytes(request))
         os.chmod(control / 'request.json', 0o600)
         module = ModuleType('db.lifecycle')
-        from unittest.mock import Mock
-        module.PostgresBackend = Mock()
-        module.PostgresBackend.from_private_config.return_value = b
+        calls = []
+
+        class StrictBackendFactory:
+            @staticmethod
+            def from_private_config(path):
+                # Match the real T018 factory's exact-type and fixed-path guard.
+                if type(path) is not str or path != '/run/mcpbench/control/database.json':
+                    raise ValueError('private_config_path')
+                calls.append(path)
+                return b
+
+        module.PostgresBackend = StrictBackendFactory
         with patch.dict('sys.modules', {'db.lifecycle': module}):
             self.assertEqual(main(['prepare'], root=self.files.root, control=control), 0)
-        module.PostgresBackend.from_private_config.assert_called_once_with(CONTROL / 'database.json')
+        self.assertEqual(calls, [str(CONTROL / 'database.json')])
         self.assertEqual(self.files.load('control/prepare-result.json')['action'], 'execute_agent')
 
     def test_missing_trace_preserves_original_but_invalidates_comparison(self):
@@ -215,6 +265,59 @@ class LifecycleAdversaries(LifecycleTests):
 
         with patch.object(b, 'mark_cleaned', side_effect=checked_transition):
             self.assertEqual(self.finish(b, grade)['action'], 'complete')
+
+    def test_expiry_during_backend_operation_rejects_ack_and_next_operation(self):
+        b = ScriptedBackend()
+        wall = [datetime(2026, 11, 7, 23, 0, 29, tzinfo=timezone.utc)]
+        e = self.evaluator(b)
+        e.budget = Budget(self.budget(0), monotonic=lambda: 0, wall_clock=lambda: wall[0])
+        read_mapping = b.read_mapping
+
+        def expire(scope):
+            wall[0] += timedelta(seconds=1)
+            return read_mapping(scope)
+
+        with patch.object(b, 'read_mapping', side_effect=expire):
+            with self.assertRaises(ContractError):
+                e.operation('read_mapping', b.scope)
+        self.assertEqual(b.timeouts, [1000])
+        with self.assertRaises(ContractError):
+            e.operation('reset_seed', b.scope, b.mapping['schema_name'], b.fixture)
+        self.assertNotIn('reset', b.calls)
+        self.assertEqual(b.timeouts, [1000])
+
+    def test_reset_backend_refreshes_absolute_bound_for_every_call(self):
+        b = ScriptedBackend()
+        current = [0.0]
+        initial = datetime(2026, 11, 7, 23, 0, 29, tzinfo=timezone.utc)
+        e = self.evaluator(b)
+        e.mono = lambda: current[0]
+        e.budget = Budget(self.budget(0), monotonic=e.mono,
+                          wall_clock=lambda: initial + timedelta(seconds=current[0]))
+
+        def advance(operation):
+            def wrapped(*args):
+                result = operation(*args)
+                current[0] += 0.125
+                return result
+            return wrapped
+
+        with patch.object(b, 'read_mapping', side_effect=advance(b.read_mapping)), \
+             patch.object(b, 'reset_seed', side_effect=advance(b.reset_seed)), \
+             patch.object(b, 'snapshot', side_effect=advance(b.snapshot)):
+            result = reset_and_check(BoundedBackend(e), b.scope, b.fixture)
+        self.assertTrue(result.passed)
+        self.assertEqual(b.timeouts, [1000, 875, 750, 625])
+
+    def test_expired_budget_blocks_reset_before_backend_io(self):
+        b = ScriptedBackend()
+        e = self.evaluator(b)
+        e.budget = Budget(self.budget(0), monotonic=lambda: 0,
+                          wall_clock=lambda: datetime(2026, 11, 7, 23, 0, 30, tzinfo=timezone.utc))
+        result = reset_and_check(BoundedBackend(e), b.scope, b.fixture)
+        self.assertFalse(result.passed)
+        self.assertEqual(b.timeouts, [])
+        self.assertEqual(b.calls, [])
 
 
 if __name__ == '__main__':

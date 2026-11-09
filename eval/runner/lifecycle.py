@@ -2,6 +2,7 @@
 from copy import deepcopy
 from datetime import datetime, timezone
 import hashlib
+import math
 import secrets
 import time
 from typing import Protocol
@@ -44,13 +45,20 @@ class Budget:
         validate('PostAgentBudget', value)
         self.base = deepcopy(value)
         self.mono, self.wall = monotonic, wall_clock
-        self.started = monotonic()
+        self.observed_at = monotonic()
+        self.elapsed = value['elapsed_ms']
+        self.deadline = datetime.fromisoformat(value['deadline_at'].replace('Z', '+00:00'))
 
     def observation(self):
-        elapsed = self.base['elapsed_ms'] + max(0, int((self.mono() - self.started) * 1000))
-        # UTC is a conservative expiry guard only, never cross-producer latency.
-        if self.wall() >= datetime.fromisoformat(self.base['deadline_at'].replace('Z', '+00:00')):
-            elapsed = max(elapsed, 30000)
+        now = self.mono()
+        # The absolute deadline conservatively charges startup/transport and
+        # forward UTC changes. Continue every such floor with this process's
+        # monotonic deltas, so a later backward UTC change cannot restore time.
+        # This is safety-budget accounting, not cross-producer latency.
+        self.elapsed = max(self.elapsed + max(0, (now - self.observed_at) * 1000),
+                           30000 - (self.deadline - self.wall()).total_seconds() * 1000)
+        self.observed_at = now
+        elapsed = math.ceil(self.elapsed)
         remaining = max(0, 30000 - elapsed)
         return {**self.base, 'elapsed_ms': elapsed, 'remaining_ms': remaining,
                 'operation_timeout_ms': min(5000, remaining)}

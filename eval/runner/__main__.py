@@ -47,7 +47,7 @@ def main(argv=None, *, backend=None, root=OUTPUT, control=CONTROL):
             raise ValueError('phase')
         if backend is None:
             from db.lifecycle import PostgresBackend
-            backend = PostgresBackend.from_private_config(CONTROL / 'database.json')
+            backend = PostgresBackend.from_private_config(str(CONTROL / 'database.json'))
         files.secrets += tuple(getattr(backend, 'known_secrets', ()))
         result = Evaluator(files, backend).invoke(request)
         # Trusted host copies/hashes this phase-specific file to the fixed private

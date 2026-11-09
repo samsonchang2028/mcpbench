@@ -47,9 +47,13 @@ or restart rather than retrying with a fresh post-agent clock.
 
 `Budget` preserves the single launcher anchor and elapsed observations across
 phases. The total post-agent budget is 30 seconds, including transport and startup;
-each backend operation gets at most the remaining budget or five seconds. UTC
-deadline expiry adds a conservative guard; latency never subtracts clocks from
-different producers. Backend deadlines must include connection, lock, statement
+each backend operation gets at most the remaining budget or five seconds. The
+absolute UTC deadline also bounds remaining time before expiry, charging stale
+startup/transport observations conservatively. Each resulting elapsed floor then
+advances with local monotonic deltas; backward UTC changes cannot restore time.
+Elapsed milliseconds round upward so submillisecond expiry grants no new IO.
+These UTC floors are safety-budget observations, not cross-producer latency
+measurements. Backend deadlines must include connection, lock, statement
 and commit acknowledgment. The Python timer alone cannot cancel a blocked driver.
 
 ## Backend and artifacts
