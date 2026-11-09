@@ -59,6 +59,17 @@ class PostgreSQLTests(unittest.TestCase):
         if ledger:
             conn.execute(self.q("INSERT INTO {s}.idempotency_records VALUES ('key-test',%s,'INV-TEST')"), ('1' * 64,))
 
+    def test_runtime_roles_connect_only_to_benchmark_database(self):
+        for role in ('mcpbench_controller', 'mcpbench_service', 'mcpbench_grader'):
+            for database in ('postgres', 'template0', 'template1'):
+                with self.subTest(role=role, database=database):
+                    self.assertFalse(self.controller.execute(
+                        "SELECT has_database_privilege(%s,%s,'CONNECT')",
+                        (role, database)).fetchone()[0])
+            self.assertTrue(self.controller.execute(
+                "SELECT has_database_privilege(%s,'mcpbench','CONNECT')",
+                (role,)).fetchone()[0])
+
     def test_seed_twice_and_existing_volume_migration(self):
         expected = manage.fixture()['seed_hash']
         self.assertEqual(manage.seed(self.controller, self.run), expected)
