@@ -11,7 +11,8 @@ x-hardened: &hardened
     driver: local
     options:
       max-size: 1m
-      max-file: "2"
+      max-file: "1"
+      compress: "false"
 
 x-agent: &agent
   <<: *hardened
@@ -87,8 +88,6 @@ services:
     memswap_limit: 256m
     cpus: 0.5
     networks: [db]
-    ports:
-      - "127.0.0.1:18081:8080"
     environment:
       PGHOST: db
       PGDATABASE: mcpbench
@@ -123,6 +122,30 @@ services:
       retries: 2
       start_period: 5s
     stop_grace_period: 5s
+
+  gateway:
+    <<: *hardened
+    image: mcpbench-gateway:t019
+    pull_policy: never
+    build:
+      context: .
+      dockerfile: containers/go.Dockerfile
+      target: gateway
+    user: "1000:1000"
+    mem_limit: 64m
+    memswap_limit: 64m
+    cpus: 0.1
+    networks: [front, db]
+    ports:
+      - "127.0.0.1:18081:8080"
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=1048576,mode=1777
+    healthcheck:
+      test: [CMD, /app/mcp-gateway, health]
+      interval: 5s
+      timeout: 5s
+      retries: 2
+    stop_grace_period: 2s
 
   agent:
     <<: *agent
@@ -211,9 +234,11 @@ services:
 
 networks:
   db:
-    internal: true
-    driver: bridge
-    # Docker selects a subnet; verify routes/allocation before admitted startup.
+    external: true
+    name: mcpbench_db
+  front:
+    external: true
+    name: mcpbench_front
 
 volumes:
   db-data:

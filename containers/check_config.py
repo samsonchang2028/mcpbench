@@ -16,9 +16,9 @@ config = json.loads(render.stdout)
 lock = json.loads((root / "config/images.lock.json").read_text())["images"]
 assert config["name"] == "mcpbench"
 services = config["services"]
-assert set(services) == {"db", "mcp", "agent", "verifier", "evaluator"}
+assert set(services) == {"db", "mcp", "gateway", "agent", "verifier", "evaluator"}
 limits = {"db": (512, .5), "mcp": (256, .5), "agent": (512, 1),
-          "verifier": (512, 1), "evaluator": (512, .5)}
+          "verifier": (512, 1), "evaluator": (512, .5), "gateway": (64, .1)}
 for name, service in services.items():
     memory, cpu = limits[name]
     assert int(service["mem_limit"]) == int(service["memswap_limit"]) == memory * 1024**2
@@ -31,7 +31,7 @@ for name, service in services.items():
     assert service["pids_limit"] == 128
     assert not any(service.get(key) for key in
                    ("privileged", "cap_add", "devices", "group_add", "pid", "ipc", "extra_hosts", "env_file"))
-    if name != "mcp":
+    if name != "gateway":
         assert not service.get("ports")
     assert service["tmpfs"] and all("size=" in item for item in service["tmpfs"])
     for mount in service.get("volumes", []):
@@ -53,10 +53,10 @@ for name, service in services.items():
             "/run/mcpbench/output": False}
         assert service["profiles"] == [name]
     else:
-        assert set(service["networks"]) == {"db"}
+        assert set(service["networks"]) == ({"db", "front"} if name == "gateway" else {"db"})
         assert not service.get("network_mode")
 assert services["agent"]["volumes"] != services["verifier"]["volumes"]
-port, = services["mcp"]["ports"]
+port, = services["gateway"]["ports"]
 assert port["host_ip"] == "127.0.0.1" and port["published"] == "18081" and port["target"] == 8080
 assert services["db"]["image"] == lock["postgres"]["reference"]
 assert services["db"]["environment"]["POSTGRES_PASSWORD_FILE"] == "/run/secrets/bootstrap-password"
@@ -69,7 +69,11 @@ assert services["evaluator"]["profiles"] == ["evaluator"]
 assert services["evaluator"]["command"] == ["prepare"]
 assert {m["target"]: m.get("read_only", False) for m in services["evaluator"]["volumes"]} == {
     "/run/mcpbench/control": True, "/run/mcpbench/output": False}
-assert config["networks"] == {"db": {"name": "mcpbench_db", "driver": "bridge", "ipam": {}, "internal": True}}
+assert config["networks"] == {"db": {"name": "mcpbench_db", "external": True}, "front": {"name": "mcpbench_front", "external": True}}
+assert not services["gateway"].get("volumes")
+assert not services["gateway"].get("environment")
+for service in services.values():
+    assert service["logging"]["options"] == {"max-size": "1m", "max-file": "1", "compress": "false"}
 assert config["volumes"] == {"db-data": {"name": "mcpbench_db-data"}}
 for filename, roles in {"go.Dockerfile": ["go_builder", "go_runtime"],
                         "evaluator.Dockerfile": ["python_evaluator"]}.items():
@@ -78,6 +82,6 @@ for filename, roles in {"go.Dockerfile": ["go_builder", "go_runtime"],
     assert [ref for ref in references if ref != "runtime"] == [lock[role]["reference"] for role in roles]
     assert "USER 1000:1000" in dockerfile
     assert "HEALTHCHECK" not in dockerfile
-for name in ("mcp", "agent", "verifier", "evaluator"):
+for name in ("mcp", "gateway", "agent", "verifier", "evaluator"):
     assert services[name]["pull_policy"] == "never"
-print("PASS: Compose render; 5 identities/limits; private DB; loopback MCP; separate narrow agent/verifier mounts; pinned bases; no daemon/runtime operations")
+print("PASS: Compose render; 6 identities/limits; internal MCP/DB; loopback gateway; separate narrow agent/verifier mounts; pinned bases; no daemon/runtime operations")

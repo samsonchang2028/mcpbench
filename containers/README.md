@@ -155,3 +155,13 @@ No model request occurs in this child. Build context admits only that integratio
 child subtree, retaining all other existing exclusions. Serial Go compilation
 uses GOMAXPROCS1. The trusted launcher uses the same hardening, fixed roles and
 scoped mounts; see `launcher/README.md`. Source wiring is not a build/startup PASS.
+
+
+T019 gateway target: `docker build --target gateway -f containers/go.Dockerfile
+-t mcpbench-gateway:t019 .` (operator admission required). Only gateway publishes
+127.0.0.1:18081 and joins owned normal front + internal DB networks; it has no
+mounts. MCP/DB/evaluator remain internal only. Both Compose networks are external
+and must already be verified/provisioned by the operator. Gateway uses the same
+pinned Go/runtime bases with no new dependency, 64MiB/0.1CPU, read-only/non-root
+execution and bounded uncompressed local logs. See `launcher/README.md` for fresh
+CID receipts, per-run fixed upstream binding and runtime acceptance evidence.

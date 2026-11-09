@@ -6,7 +6,7 @@ COPY go.mod go.sum ./
 RUN go mod download && go mod verify
 # The Dockerfile-specific allowlist excludes eval, fixtures, artifacts and secrets.
 COPY . .
-RUN go build -p 1 -trimpath -o /out/agent ./cmd/agent && go build -p 1 -trimpath -o /out/billing-mcp ./cmd/billing-mcp
+RUN go build -p 1 -trimpath -o /out/mcp-gateway ./cmd/mcp-gateway && go build -p 1 -trimpath -o /out/agent ./cmd/agent && go build -p 1 -trimpath -o /out/billing-mcp ./cmd/billing-mcp
 # Deterministic integration target is a separate explicitly identified image.
 ARG MCPBENCH_SCRIPTED_SCENARIO=smoke
 RUN go build -p 1 -trimpath -ldflags "-X main.scenario=${MCPBENCH_SCRIPTED_SCENARIO}" -o /out/scripted-agent ./tests/integration/scripted-agent
@@ -27,3 +27,7 @@ ENTRYPOINT ["/app/billing-mcp"]
 FROM runtime AS scripted-agent
 COPY --from=builder /out/scripted-agent /app/agent
 ENTRYPOINT ["/app/agent"]
+
+FROM runtime AS gateway
+COPY --from=builder /out/mcp-gateway /app/mcp-gateway
+ENTRYPOINT ["/app/mcp-gateway"]

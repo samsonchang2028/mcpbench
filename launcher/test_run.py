@@ -19,7 +19,7 @@ from launcher.transport import DockerTransport, Outcome
 class DockerLoggingTests(unittest.TestCase):
     def setUp(self):
         self.driver=DockerTransport({'agent':'sha256:'+'a'*64,'evaluator':'sha256:'+'b'*64,
-                                     'mcp':'sha256:'+'c'*64},'/nonexistent/service.pgpass')
+                                     'mcp':'sha256:'+'c'*64,'gateway':'sha256:'+'d'*64},'/nonexistent/service.pgpass')
         root=Path('/nonexistent/mcpbench-test')
         self.paths={name:root/name for name in ('control','evaluator','mcp-control','mcp-output',
                     'agent-input','agent-output','verifier-input','verifier-output')}
@@ -175,7 +175,7 @@ class LauncherTests(unittest.TestCase):
 
     def test_fixed_command_and_mounts(self):
         self.run_attempt()
-        driver=DockerTransport({'agent':'sha256:'+'a'*64,'evaluator':'sha256:'+'b'*64,'mcp':'sha256:'+'c'*64},'/nonexistent/service.pgpass')
+        driver=DockerTransport({'agent':'sha256:'+'a'*64,'evaluator':'sha256:'+'b'*64,'mcp':'sha256:'+'c'*64,'gateway':'sha256:'+'d'*64},'/nonexistent/service.pgpass')
         command=driver.command('agent','run',self.launcher.paths)
         joined=' '.join(command)
         self.assertNotIn('shell',joined)

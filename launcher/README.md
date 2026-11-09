@@ -15,6 +15,7 @@ same-UID mode0600 JSON file beneath a mode0700, symlink-free private directory:
   "images": {
     "agent": "sha256:<64 lowercase hex characters of the scripted image ID>",
     "mcp": "sha256:<64 lowercase hex characters of the MCP image ID>",
+    "gateway": "sha256:<64 lowercase hex characters of the gateway image ID>",
     "evaluator": "sha256:<64 lowercase hex characters of the evaluator image ID>"
   },
   "service_passfile": "/absolute/private/service.pgpass",
@@ -84,14 +85,22 @@ operator's admitted CPU/memory flags. These commands select frozen base referenc
 already pinned in the Dockerfiles; the operator records actual output image IDs:
 
 ```sh
+docker build --target gateway -f containers/go.Dockerfile -t mcpbench-gateway:t019 .
 docker build --target mcp -f containers/go.Dockerfile -t mcpbench-mcp:t019 .
 docker build --target scripted-agent --build-arg MCPBENCH_SCRIPTED_SCENARIO=smoke -f containers/go.Dockerfile -t mcpbench-scripted-agent:smoke-t019 .
 docker build -f containers/evaluator.Dockerfile -t mcpbench-evaluator:t019 .
 ```
 
 Use the same scripted target with `wrong-write` or `lost-reply` for their separate
-images/configs/attempts. The trusted driver starts a fresh MCP service on only
-`127.0.0.1:18081`, verifies its real `/healthz`, and launches serial one-shot
+images/configs/attempts. The trusted driver starts fresh MCP and gateway containers from exact image IDs.
+Only the gateway publishes `127.0.0.1:18081`; it joins owned `mcpbench_front` and
+internal `mcpbench_db`. MCP and evaluator remain internal-only. The launcher
+inspects the fresh MCP CID/image/running state and sole DB-network attachment,
+verifies network ownership/internal status/subnet, and binds gateway hostname
+`mcp` to that exact IPv4 with `--add-host`. Retained quarantined containers never
+participate in name resolution. Gateway has no mounts or credentials and uses
+64MiB/0.1CPU limits; both service startups consume the original agent deadline.
+The driver verifies real gateway `/healthz`, then launches serial one-shot
 children from exact image IDs. It never starts/reconfigures native Ollama or the
 existing owned DB. Run from this reviewed checkout with the cached Python:
 
@@ -134,3 +143,42 @@ unit tests use scripted backend/child evidence; they are explicitly not live SQL
 or actual process/reaping evidence. Docker/static rendering, builds, actual
 container launches, live regression cases and actual full-stack proof remain
 operator-owned and UNRUN by this source worker. No inference was performed.
+
+
+## Gateway runtime evidence (operator only, after admission)
+
+Before launch, verify the existing DB network is internal and carries
+`com.docker.compose.project=mcpbench`, `com.docker.compose.network=db`. Verify
+name/subnet nonoverlap before creating the new normal bridge `mcpbench_front`
+with project=mcpbench/network=front labels. Compose references both as external
+networks and will never recreate the existing DB network. Preserve all prior
+quarantined containers, schemas, receipts and artifacts; never reuse their runs.
+
+Add the inspected gateway `sha256:` image ID to each private launcher config.
+During the fresh attempt read `control/mcp-container.json` and
+`control/gateway-container.json` to inspect only those exact CIDs. Require MCP's
+sole network to be `mcpbench_db`, gateway's networks to be db+front, no gateway
+mounts, and effective `NetworkSettings.Ports` to contain only
+`127.0.0.1:18081 -> 8080/tcp` on gateway with none on MCP/DB/evaluator.
+Verify `/healthz`, official SDK discovery/call and denied-caller zero-write
+behavior through the host endpoint. Check memory/CPU usage under the new limits
+and unchanged 19-service baseline; resource limits are proposed bounds until
+measured. On success the driver captures separate bounded `mcp.stderr` and
+`gateway.stderr` logs and stops/removes only the two fresh receipted CIDs using
+one existing shutdown deadline. Any uncertain startup/shutdown remains an
+incomplete attempt and retains its resources. No volume deletion occurs.
+
+Focused source checks (no Docker, SQL or model):
+
+```sh
+MCPBENCH_TEST_PYTHON=/home/sfkim/projects/mcpbench/.worktrees/T008/.venv/bin/python GOMAXPROCS=1 GOTOOLCHAIN=local GOPROXY=off go test -mod=readonly -p=1 ./internal/gateway ./cmd/mcp-gateway
+PYTHONDONTWRITEBYTECODE=1 /home/sfkim/projects/mcpbench/.worktrees/T008/.venv/bin/python -m unittest launcher.test_transport launcher.test_run -q
+```
+
+After admission, `python containers/check_config.py` validates Docker Compose's
+rendered deployment without starting containers. Gateway buffers at most 1MiB
+per request/response, caps headers at 16KiB and concurrent forwards at four,
+and imposes a six-second hop deadline. It preserves MCP Host/Origin/auth and
+content types, strips HTTP hop headers, follows no redirects, and disables
+connection reuse and request replay. The actual pinned SDK loopback test uses
+both real HTTP hops and verifies discovery, structured results and revocation.
