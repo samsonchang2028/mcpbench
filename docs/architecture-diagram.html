@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MCPBench v1 — Workflow Diagram</title>
+<style>
+  :root{
+    --bg:#f4f6f8; --ink:#16212e; --muted:#5b6b7b; --line:#c7d2de;
+    --trusted:#7d4bd1; --eval:#1f9d55; --agent:#2d7ff9; --mcp:#b4690e;
+    --db:#c2255c; --model:#0b7285; --artifact:#687787;
+    --card:#ffffff;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    padding:34px 20px 70px;}
+  .wrap{max-width:1180px;margin:0 auto;}
+  h1{font-size:25px;margin:0 0 3px;}
+  .sub{color:var(--muted);margin:0 0 26px;}
+  h2{font-size:16px;margin:40px 0 6px;}
+  .h2sub{color:var(--muted);margin:0 0 16px;font-size:13px;}
+
+  .legend{display:flex;flex-wrap:wrap;gap:16px;margin:0 0 10px;}
+  .legend span{display:inline-flex;align-items:center;gap:8px;color:var(--muted);font-size:12.5px;}
+  .sw{width:14px;height:14px;border-radius:4px;display:inline-block;}
+
+  .canvas{width:100%;height:auto;background:var(--card);
+    border:1px solid var(--line);border-radius:14px;
+    box-shadow:0 1px 3px rgba(16,33,46,.06);}
+  text{font-family:inherit;}
+  .cardTitle{font-size:14px;font-weight:700;fill:var(--ink);}
+  .cardSub{font-size:11px;fill:var(--muted);}
+  .zoneLabel{font-size:11.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;}
+  .flowLabel{font-size:11px;fill:var(--muted);}
+  .stepNo{font-size:12px;font-weight:700;fill:#fff;}
+
+  .steps{margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .step{display:flex;gap:10px;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:11px 13px;box-shadow:0 1px 2px rgba(16,33,46,.04);}
+  .step .num{flex:none;width:24px;height:24px;border-radius:50%;background:var(--trusted);
+    color:#fff;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;}
+  .step p{margin:0;font-size:12.8px;color:var(--muted);}
+  .step b{color:var(--ink);}
+
+  .note{margin-top:22px;padding:13px 15px;border:1px solid #e4c36b;background:#fff8e6;
+    border-radius:10px;color:#6b541a;font-size:12.5px;}
+  .note b{color:#8a6a12;}
+  code{background:#eef2f6;padding:1px 5px;border-radius:4px;font-size:12px;}
+  @media (max-width:760px){.steps{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>MCPBench v1 — Benchmark Workflow</h1>
+  <p class="sub">An AWS-style reference view of how one evaluation attempt flows through the system. Source: <code>docs/ARCHITECTURE.md</code>.</p>
+
+  <div class="legend">
+    <span><i class="sw" style="background:#7d4bd1"></i> Trusted control plane</span>
+    <span><i class="sw" style="background:#1f9d55"></i> Python evaluator</span>
+    <span><i class="sw" style="background:#2d7ff9"></i> Go agent</span>
+    <span><i class="sw" style="background:#b4690e"></i> Billing MCP</span>
+    <span><i class="sw" style="background:#c2255c"></i> PostgreSQL</span>
+    <span><i class="sw" style="background:#0b7285"></i> Native Ollama</span>
+  </div>
+
+  <svg class="canvas" viewBox="0 0 1160 640" role="img" aria-label="MCPBench workflow diagram">
+    <defs>
+      <marker id="arrow" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+        <path d="M0,0 L7,3 L0,6 Z" fill="#5b6b7b"/>
+      </marker>
+      <style>
+        .flow{stroke:#5b6b7b;stroke-width:1.6;fill:none;marker-end:url(#arrow);}
+        .flowDash{stroke:#5b6b7b;stroke-width:1.6;fill:none;stroke-dasharray:5 4;marker-end:url(#arrow);}
+        .zoneBox{fill:none;stroke-width:1.4;stroke-dasharray:6 5;rx:14;}
+      </style>
+    </defs>
+
+    <!-- ===== ZONES ===== -->
+    <!-- trusted control plane -->
+    <rect x="20" y="20" width="1120" height="92" rx="14" class="zoneBox" stroke="#7d4bd1"/>
+    <text x="34" y="42" class="zoneLabel" fill="#7d4bd1">Trusted host control plane · only this uses the container runtime</text>
+
+    <!-- compose project -->
+    <rect x="20" y="128" width="800" height="360" rx="14" class="zoneBox" stroke="#b4690e"/>
+    <text x="34" y="150" class="zoneLabel" fill="#b4690e">Compose project “mcpbench” · private internal DB network · no published DB port</text>
+
+    <!-- host native -->
+    <rect x="836" y="128" width="304" height="360" rx="14" class="zoneBox" stroke="#0b7285"/>
+    <text x="850" y="150" class="zoneLabel" fill="#0b7285">Existing host · outside Compose · never restarted</text>
+
+    <!-- ===== NODE: Launcher ===== -->
+    <g>
+      <rect x="470" y="52" width="220" height="48" rx="10" fill="#f3ecfc" stroke="#7d4bd1" stroke-width="1.5"/>
+      <rect x="470" y="52" width="6" height="48" rx="3" fill="#7d4bd1"/>
+      <!-- gear icon -->
+      <g transform="translate(492,62)" fill="#7d4bd1">
+        <circle cx="12" cy="13" r="5" fill="none" stroke="#7d4bd1" stroke-width="2"/>
+        <g stroke="#7d4bd1" stroke-width="2"><line x1="12" y1="3" x2="12" y2="6"/><line x1="12" y1="20" x2="12" y2="23"/><line x1="2" y1="13" x2="5" y2="13"/><line x1="19" y1="13" x2="22" y2="13"/></g>
+      </g>
+      <text x="524" y="74" class="cardTitle">Host launcher</text>
+      <text x="524" y="90" class="cardSub">sequences phases · deadlines · no socket</text>
+    </g>
+
+    <!-- ===== NODE: Evaluator ===== -->
+    <g>
+      <rect x="54" y="210" width="240" height="70" rx="10" fill="#e9f7ef" stroke="#1f9d55" stroke-width="1.5"/>
+      <rect x="54" y="210" width="6" height="70" rx="3" fill="#1f9d55"/>
+      <!-- clipboard icon -->
+      <g transform="translate(74,226)" stroke="#1f9d55" stroke-width="2" fill="none">
+        <rect x="2" y="2" width="20" height="26" rx="3"/><rect x="7" y="-1" width="10" height="6" rx="2" fill="#1f9d55" stroke="none"/>
+        <line x1="6" y1="12" x2="18" y2="12"/><line x1="6" y1="18" x2="18" y2="18"/>
+      </g>
+      <text x="108" y="238" class="cardTitle">Python evaluator</text>
+      <text x="108" y="254" class="cardSub">owns reset + grading (DB, not prose)</text>
+      <text x="108" y="269" class="cardSub">holds DB creds · 512 MiB · 0.5 CPU</text>
+    </g>
+
+    <!-- ===== NODE: Agent ===== -->
+    <g>
+      <rect x="54" y="330" width="240" height="70" rx="10" fill="#e8f1ff" stroke="#2d7ff9" stroke-width="1.5"/>
+      <rect x="54" y="330" width="6" height="70" rx="3" fill="#2d7ff9"/>
+      <!-- robot icon -->
+      <g transform="translate(74,346)" stroke="#2d7ff9" stroke-width="2" fill="none">
+        <rect x="2" y="6" width="20" height="16" rx="4"/><line x1="12" y1="0" x2="12" y2="6"/><circle cx="12" cy="1" r="1.6" fill="#2d7ff9" stroke="none"/>
+        <circle cx="8" cy="14" r="1.6" fill="#2d7ff9" stroke="none"/><circle cx="16" cy="14" r="1.6" fill="#2d7ff9" stroke="none"/>
+      </g>
+      <text x="108" y="358" class="cardTitle">Go agent</text>
+      <text x="108" y="374" class="cardSub">untrusted model loop · validates calls</text>
+      <text x="108" y="389" class="cardSub">no DB creds · host networking</text>
+    </g>
+
+    <!-- ===== NODE: MCP ===== -->
+    <g>
+      <rect x="400" y="330" width="230" height="70" rx="10" fill="#fdf1e0" stroke="#b4690e" stroke-width="1.5"/>
+      <rect x="400" y="330" width="6" height="70" rx="3" fill="#b4690e"/>
+      <!-- plug icon -->
+      <g transform="translate(420,346)" stroke="#b4690e" stroke-width="2" fill="none">
+        <path d="M6 2 v6 M14 2 v6"/><rect x="3" y="8" width="14" height="8" rx="2"/><path d="M10 16 v6"/>
+      </g>
+      <text x="452" y="358" class="cardTitle">Billing MCP (Go)</text>
+      <text x="452" y="374" class="cardSub">tools/list · tools/call · ACL per call</text>
+      <text x="452" y="389" class="cardSub">127.0.0.1:18081 · 256 MiB</text>
+    </g>
+
+    <!-- ===== NODE: Postgres ===== -->
+    <g>
+      <rect x="400" y="210" width="230" height="70" rx="10" fill="#fce8f0" stroke="#c2255c" stroke-width="1.5"/>
+      <rect x="400" y="210" width="6" height="70" rx="3" fill="#c2255c"/>
+      <!-- db icon -->
+      <g transform="translate(420,224)" stroke="#c2255c" stroke-width="2" fill="none">
+        <ellipse cx="11" cy="4" rx="9" ry="3"/><path d="M2 4 v16 a9 3 0 0 0 18 0 V4"/><path d="M2 12 a9 3 0 0 0 18 0"/>
+      </g>
+      <text x="452" y="238" class="cardTitle">PostgreSQL</text>
+      <text x="452" y="254" class="cardSub">per-run isolated DB + seed hash</text>
+      <text x="452" y="269" class="cardSub">cents · idempotent · no host port</text>
+    </g>
+
+    <!-- ===== NODE: Ollama ===== -->
+    <g>
+      <rect x="866" y="210" width="246" height="70" rx="10" fill="#e4f3f5" stroke="#0b7285" stroke-width="1.5"/>
+      <rect x="866" y="210" width="6" height="70" rx="3" fill="#0b7285"/>
+      <!-- brain/chip icon -->
+      <g transform="translate(886,224)" stroke="#0b7285" stroke-width="2" fill="none">
+        <rect x="4" y="4" width="16" height="16" rx="4"/><line x1="9" y1="0" x2="9" y2="4"/><line x1="15" y1="0" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="24"/><line x1="15" y1="20" x2="15" y2="24"/><line x1="0" y1="9" x2="4" y2="9"/><line x1="0" y1="15" x2="4" y2="15"/><line x1="20" y1="9" x2="24" y2="9"/><line x1="20" y1="15" x2="24" y2="15"/>
+      </g>
+      <text x="920" y="238" class="cardTitle">Native Ollama</text>
+      <text x="920" y="254" class="cardSub">qwen3.5:9b · /api/chat</text>
+      <text x="920" y="269" class="cardSub">loopback 11434 · config untouched</text>
+    </g>
+
+    <!-- ===== NODE: Artifacts ===== -->
+    <g>
+      <rect x="866" y="330" width="246" height="70" rx="10" fill="#eef1f4" stroke="#687787" stroke-width="1.5"/>
+      <rect x="866" y="330" width="6" height="70" rx="3" fill="#687787"/>
+      <!-- file icon -->
+      <g transform="translate(886,346)" stroke="#687787" stroke-width="2" fill="none">
+        <path d="M4 2 h10 l6 6 v14 a0 0 0 0 1 0 0 H4 Z"/><path d="M14 2 v6 h6"/>
+      </g>
+      <text x="920" y="358" class="cardTitle">Artifacts (JSONL)</text>
+      <text x="920" y="374" class="cardSub">snapshots · verdicts · events</text>
+      <text x="920" y="389" class="cardSub">correlated by run / call IDs</text>
+    </g>
+
+    <!-- ===== FLOW ARROWS with numbered badges ===== -->
+    <!-- 1 launcher -> evaluator (prepare) -->
+    <path class="flow" d="M480 100 C 300 140, 174 160, 174 208"/>
+    <circle cx="250" cy="150" r="11" fill="#7d4bd1"/><text x="250" y="154" text-anchor="middle" class="stepNo">1</text>
+    <text x="268" y="154" class="flowLabel">prepare + seed</text>
+
+    <!-- 2 launcher -> agent (sanitized task) -->
+    <path class="flow" d="M560 100 C 300 230, 174 250, 174 328"/>
+    <circle cx="214" cy="300" r="11" fill="#2d7ff9"/><text x="214" y="304" text-anchor="middle" class="stepNo">2</text>
+    <text x="232" y="304" class="flowLabel">sanitized task + auth</text>
+
+    <!-- 3 agent <-> ollama -->
+    <path class="flowDash" d="M294 358 C 560 420, 780 300, 864 256"/>
+    <circle cx="600" cy="392" r="11" fill="#0b7285"/><text x="600" y="396" text-anchor="middle" class="stepNo">3</text>
+    <text x="618" y="396" class="flowLabel">model turn (loopback 11434)</text>
+
+    <!-- 4 agent -> mcp -> db -->
+    <path class="flow" d="M294 372 L 396 372"/>
+    <circle cx="345" cy="356" r="11" fill="#b4690e"/><text x="345" y="360" text-anchor="middle" class="stepNo">4</text>
+    <text x="330" y="420" class="flowLabel">tools/call · validated</text>
+    <path class="flow" d="M515 328 L 515 282"/>
+    <text x="523" y="308" class="flowLabel">atomic draft write</text>
+
+    <!-- evaluator reaches db too -->
+    <path class="flowDash" d="M294 245 L 396 245"/>
+    <text x="300" y="238" class="flowLabel">reset / grade</text>
+
+    <!-- 5 agent -> artifacts -->
+    <path class="flow" d="M294 385 C 560 470, 780 440, 864 380"/>
+    <circle cx="690" cy="452" r="11" fill="#687787"/><text x="690" y="456" text-anchor="middle" class="stepNo">5</text>
+    <text x="708" y="456" class="flowLabel">JSONL events + result</text>
+
+    <!-- 6 launcher -> evaluator settle/grade (return) -->
+    <path class="flow" d="M470 76 C 120 90, 60 150, 90 208"/>
+    <circle cx="70" cy="150" r="11" fill="#1f9d55"/><text x="70" y="154" text-anchor="middle" class="stepNo">6</text>
+    <text x="24" y="190" class="flowLabel">settle → grade → reset</text>
+  </svg>
+
+  <h2>Step-by-step: one evaluation attempt</h2>
+  <p class="h2sub">Follow the numbered badges on the diagram above.</p>
+  <div class="steps">
+    <div class="step"><div class="num">1</div><p>The <b>launcher</b> tells the <b>evaluator</b> to spin up an isolated per-run database, seed it, and verify the seed fingerprint.</p></div>
+    <div class="step"><div class="num">2</div><p>The launcher hands the <b>agent</b> a sanitized task plus a run-scoped auth envelope — kept out of the model prompt.</p></div>
+    <div class="step"><div class="num">3</div><p>The agent converses with <b>Qwen via Ollama</b>; the model proposes a tool call and the agent validates the name + JSON.</p></div>
+    <div class="step"><div class="num">4</div><p>Validated calls go to the <b>MCP server</b>, which re-checks principal/run on every call and writes the draft invoice <b>atomically</b>.</p></div>
+    <div class="step"><div class="num">5</div><p>The agent records <b>JSONL events + result</b> to its narrow artifact paths. Output stays untrusted until the evaluator checks it.</p></div>
+    <div class="step"><div class="num">6</div><p>The launcher runs settlement: the <b>evaluator grades the database state</b> and answer, then performs a scoped reset.</p></div>
+  </div>
+
+  <div class="note">
+    <b>Status:</b> contracts, DB/seed, grader, JSONL and static Compose config are implemented; the live MCP server, agent invoice path, reset/concurrency behavior and container startup are <b>not yet proven at runtime</b>. This is the intended design, not a validated running system.
+  </div>
+</div>
+</body>
+</html>
