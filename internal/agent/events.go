@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"mcpbench/observability"
 	"strings"
+	"time"
 )
 
 // ValidateEvent validates only the explicitly emitted agent subset. Unsupported
@@ -13,7 +14,7 @@ func ValidateEvent(e map[string]any) error {
 	if Validate("Event", b) != nil {
 		return invalid
 	}
-	if e["source"] != "agent" {
+	if e["source"] != "agent" || !validCalendar(time.RFC3339Nano, e["timestamp"].(string)) {
 		return invalid
 	}
 	d := e["data"].(map[string]any)
@@ -87,9 +88,12 @@ func DecodeToolResult(b []byte, out *ToolResult) error {
 	}
 	var d struct {
 		Invoice struct {
-			InvoiceID string `json:"invoice_id"`
-			Subtotal  int64  `json:"subtotal_cents"`
-			Total     int64  `json:"total_cents"`
+			InvoiceID   string `json:"invoice_id"`
+			InvoiceDate string `json:"invoice_date"`
+			DueDate     string `json:"due_date"`
+			CreatedAt   string `json:"created_at"`
+			Subtotal    int64  `json:"subtotal_cents"`
+			Total       int64  `json:"total_cents"`
 		} `json:"invoice"`
 		Lines []struct {
 			InvoiceID string `json:"invoice_id"`
@@ -101,6 +105,9 @@ func DecodeToolResult(b []byte, out *ToolResult) error {
 		} `json:"lines"`
 	}
 	if json.Unmarshal(out.Result, &d) != nil {
+		return invalid
+	}
+	if !validCalendar(time.DateOnly, d.Invoice.InvoiceDate) || !validCalendar(time.DateOnly, d.Invoice.DueDate) || d.Invoice.DueDate < d.Invoice.InvoiceDate || !validCalendar(time.RFC3339Nano, d.Invoice.CreatedAt) {
 		return invalid
 	}
 	seen := map[string]bool{}
@@ -121,4 +128,10 @@ func DecodeToolResult(b []byte, out *ToolResult) error {
 		return invalid
 	}
 	return nil
+}
+
+// Schema patterns constrain the spelling; parsing enforces real calendar dates.
+func validCalendar(layout, value string) bool {
+	t, e := time.Parse(layout, value)
+	return e == nil && t.Year() >= 1
 }

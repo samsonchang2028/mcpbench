@@ -78,6 +78,41 @@ func TestEventSemanticParity(t *testing.T) {
 	mutate("agent.finished", func(v, d map[string]any) { d["result"].(map[string]any)["run_id"] = "different-run" })
 	mutate("failure", func(v, d map[string]any) { d["failure"].(map[string]any)["code"] = "verification_failed" })
 	mutate("failure", func(v, d map[string]any) { d["extra"] = true })
+	// Exercise the actual nested draft-result path, not just argument validation.
+	_, _, vw, _, draftResults := verifierFixture(t)
+	vw.Close()
+	draft := clone("tool.completed")
+	draft["data"].(map[string]any)["tool_id"] = CreateTool
+	draft["data"].(map[string]any)["tool_result"] = tree(draftResults[0])
+	if ValidateEvent(draft) != nil {
+		t.Fatal("rejected valid draft event")
+	}
+	add(draft)
+	for _, tc := range []struct{ field, value string }{
+		{"invoice_date", "2026-02-30"},
+		{"due_date", "2026-02-30"},
+		{"due_date", "2026-11-06"},
+		{"created_at", "2026-02-30T23:00:00Z"},
+		{"created_at", "2026-11-07T24:00:00Z"},
+		{"created_at", "2026-11-07T23:00:60Z"},
+		{"created_at", "0000-11-07T23:00:00Z"},
+		{"invoice_date", "0000-11-07"},
+	} {
+		b, _ := json.Marshal(draft)
+		var v map[string]any
+		json.Unmarshal(b, &v)
+		result := v["data"].(map[string]any)["tool_result"].(map[string]any)
+		result["result"].(map[string]any)["invoice"].(map[string]any)[tc.field] = tc.value
+		b, _ = json.Marshal(result)
+		var decoded ToolResult
+		if DecodeToolResult(b, &decoded) == nil || ValidateEvent(v) == nil {
+			t.Fatalf("accepted invalid calendar/order %s=%s", tc.field, tc.value)
+		}
+		add(v)
+	}
+	for _, stamp := range []string{"2026-02-30T23:00:00Z", "0000-11-07T23:00:00Z", "2026-11-07T24:00:00Z"} {
+		mutate("model.started", func(v, d map[string]any) { v["timestamp"] = stamp })
+	}
 	// Python compares each individual shape/semantic verdict, independently of
 	// stream correlation (covered separately by parityTrace).
 	input := []map[string]any{}

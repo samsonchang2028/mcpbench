@@ -14,7 +14,7 @@ func ReadDocument(path string) ([]byte, error) {
 	if e := safePath(path); e != nil {
 		return nil, e
 	}
-	fd, e := syscall.Open(path, syscall.O_RDONLY|syscall.O_NOFOLLOW, 0)
+	fd, e := syscall.Open(path, syscall.O_RDONLY|syscall.O_NOFOLLOW|syscall.O_NONBLOCK, 0)
 	if e != nil {
 		return nil, invalid
 	}

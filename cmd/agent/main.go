@@ -20,7 +20,20 @@ func main() {
 		os.Exit(2)
 	}
 }
+
+type toolConnection interface {
+	agent.Tools
+	Close() error
+}
+
 func execute(args []string) error {
+	return executeWithConnector(args, func(ctx context.Context, auth agent.AuthInput) (toolConnection, error) {
+		return agent.ConnectMCP(ctx, auth)
+	})
+}
+
+func executeWithConnector(args []string, connect func(context.Context, agent.AuthInput) (toolConnection, error)) error {
+	entered := time.Now()
 	if len(args) != 7 || (args[0] != "run" && args[0] != "verify") || args[1] != "--request" || args[3] != "--auth" || args[5] != "--output" {
 		return fmt.Errorf("invalid arguments")
 	}
@@ -65,6 +78,10 @@ func execute(args []string) error {
 			return e
 		}
 		var stop context.CancelFunc
+		localDeadline := entered.Add(time.Duration(v.Budget.RemainingMS * float64(time.Millisecond)))
+		if localDeadline.Before(deadline) {
+			deadline = localDeadline
+		}
 		ctx, stop = context.WithDeadline(ctx, deadline)
 		defer stop()
 	}
@@ -74,7 +91,7 @@ func execute(args []string) error {
 	}
 	defer w.Close()
 	connectionCtx, stop := context.WithTimeout(ctx, 5*time.Second)
-	tools, e := agent.ConnectMCP(connectionCtx, auth)
+	tools, e := connect(connectionCtx, auth)
 	stop()
 	if e != nil {
 		return e
@@ -88,7 +105,7 @@ func execute(args []string) error {
 		result = r
 		status = r.Status
 	} else {
-		r, err := agent.Verify(ctx, v, auth, tools, w)
+		r, err := agent.VerifySince(ctx, v, auth, tools, w, entered)
 		e = err
 		result = r
 		status = r.Status

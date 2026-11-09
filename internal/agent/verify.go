@@ -53,11 +53,16 @@ func ValidateVerification(q VerificationRequest, a AuthInput) error {
 // Verify performs precisely two constrained calls and never invokes a model,
 // lists tools, retries, creates a capability, or claims database settlement.
 func Verify(ctx context.Context, q VerificationRequest, a AuthInput, t Tools, w *observability.Writer) (out VerifierResult, err error) {
+	return VerifySince(ctx, q, a, t, w, time.Now())
+}
+
+// VerifySince retains the invocation entry time, including MCP startup, instead
+// of granting the supplied remaining budget again after negotiation.
+func VerifySince(ctx context.Context, q VerificationRequest, a AuthInput, t Tools, w *observability.Writer, entered time.Time) (out VerifierResult, err error) {
 	out = VerifierResult{SchemaVersion: 1, RunID: q.RunID, AttemptID: q.AttemptID, TaskID: q.TaskID, TaskHash: q.TaskHash, ConfigHash: q.ConfigHash, Status: "failed", InvoiceID: q.InvoiceID, IdempotencyKey: q.IdempotencyKey, OriginalRequestHash: q.OriginalRequestHash, Budget: q.Budget, Checks: []VerifierCheck{}}
 	if ValidateVerification(q, a) != nil || t == nil || w == nil {
 		return out, invalid
 	}
-	entered := time.Now()
 	deadline, _ := time.Parse(time.RFC3339Nano, q.Budget.DeadlineAt)
 	remaining := func() time.Duration {
 		local := time.Duration(q.Budget.RemainingMS*float64(time.Millisecond)) - time.Since(entered)
@@ -82,6 +87,9 @@ func Verify(ctx context.Context, q VerificationRequest, a AuthInput, t Tools, w 
 		left := remaining()
 		if left <= 0 || ctx.Err() != nil {
 			out.Status = "timeout"
+			if e := emit(w, "failure", "verification", "error", "", map[string]any{"failure": tree(failure("verification_failed", "verification", "", "terminal"))}); e != nil {
+				return out, e
+			}
 			return out, nil
 		}
 		if left > 5*time.Second {
@@ -122,10 +130,19 @@ func Verify(ctx context.Context, q VerificationRequest, a AuthInput, t Tools, w 
 		if !valid || r.IsError {
 			kind = "tool.failed"
 			status = "error"
-			data["failure"] = tree(failure("verification_failed", "verification", call, "terminal"))
+			f := failure("verification_failed", "verification", call, "terminal")
+			if check.Pass {
+				f = failure("idempotency_conflict", "verification", call, "recovered")
+			}
+			data["failure"] = tree(f)
 		}
 		if e := emit(w, kind, "verification", status, call, data); e != nil {
 			return out, e
+		}
+		if valid && !r.IsError && !check.Pass {
+			if e := emit(w, "failure", "verification", "error", call, map[string]any{"failure": tree(failure("verification_failed", "verification", call, "terminal"))}); e != nil {
+				return out, e
+			}
 		}
 		out.Checks = append(out.Checks, check)
 		if !check.Pass {

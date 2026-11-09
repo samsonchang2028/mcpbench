@@ -47,15 +47,19 @@ trusted idempotency key. Model calls are never retried.
 
 Verify mode performs only same-payload replay and the constrained changed-quantity
 conflict call. It invokes no model/discovery, never retries, and uses the smaller
-of the remaining absolute deadline and supplied remaining budget, capped at five
-seconds per call. It reports typed evidence; it cannot establish SQL settlement,
+of the remaining absolute deadline and supplied remaining budget. A single
+monotonic observation starts at CLI entry, charges MCP startup, and caps startup
+and each call at five seconds or the remaining budget, whichever is smaller.
+Expected conflicts retain typed error responses as recovered idempotency-conflict
+evidence; failed checks retain terminal verification failures. It reports typed evidence; it cannot establish SQL settlement,
 repair an original failure or grant a fresh post-agent budget.
 
 Events use `observability.Writer` with a real schema plus semantic validator for
 the emitted subset. The embedded `schema.json` is an exact copy of the frozen
 v1 schema, with no contract changes. Unsupported event kinds fail closed.
 Python parity checks validate emitted complete traces and adversarial nested
-semantics with the authoritative contract validator. Runtime starts no Python
+semantics, including calendar dates, UTC timestamps and invoice date order, with
+the authoritative contract validator. Runtime starts no Python
 process. T019 owns combined producer wiring and real MCP/database integration;
 T021 owns aggregate metrics/fairness acceptance.
 

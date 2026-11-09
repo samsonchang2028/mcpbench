@@ -1,6 +1,7 @@
 package agent
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"mcpbench/observability"
@@ -62,6 +63,10 @@ func TestFixedVerifier(t *testing.T) {
 		t.Fatal(e)
 	}
 	b, _ := os.ReadFile(p)
+	assertVerificationFailures(t, b, false)
+	if !bytes.Contains(b, []byte(`"code":"idempotency_conflict"`)) || !bytes.Contains(b, []byte(`"disposition":"recovered"`)) {
+		t.Fatal("expected conflict evidence was lost")
+	}
 	parityTrace(t, b)
 	parityObject(t, "VerifierResult", r)
 }
@@ -106,12 +111,36 @@ func TestVerifierNoRepairOrRetry(t *testing.T) {
 	parityObject(t, "VerifierResult", r)
 }
 func TestVerifierRejectsWrongInvoice(t *testing.T) {
-	q, a, w, _, results := verifierFixture(t)
+	q, a, w, path, results := verifierFixture(t)
 	q.InvoiceID = "INV-WRONG"
 	r, e := Verify(context.Background(), q, a, &verifierTools{results: results}, w)
 	if e != nil || r.Status != "failed" || r.Calls != 1 || r.Checks[0].Pass {
 		t.Fatalf("%+v %v", r, e)
 	}
 	w.Close()
+	b, _ := os.ReadFile(path)
+	assertVerificationFailures(t, b, true)
+	parityTrace(t, b)
 	parityObject(t, "VerifierResult", r)
+}
+
+func assertVerificationFailures(t *testing.T, trace []byte, want bool) {
+	t.Helper()
+	found := false
+	for _, line := range bytes.Split(bytes.TrimSpace(trace), []byte("\n")) {
+		var event struct {
+			Data struct {
+				Failure *Failure `json:"failure"`
+			} `json:"data"`
+		}
+		if e := json.Unmarshal(line, &event); e != nil {
+			t.Fatal(e)
+		}
+		if f := event.Data.Failure; f != nil && f.Code == "verification_failed" && f.Disposition == "terminal" {
+			found = true
+		}
+	}
+	if found != want {
+		t.Fatalf("terminal verification failure=%v, want %v", found, want)
+	}
 }

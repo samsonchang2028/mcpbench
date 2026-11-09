@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"syscall"
 	"testing"
 	"time"
 )
@@ -279,4 +280,21 @@ func TestToolBudgetCountsRejectedAttempts(t *testing.T) {
 	}
 	events, _ := os.ReadFile(p)
 	parityTrace(t, events)
+}
+
+func TestReadDocumentRejectsFIFOWithoutWriter(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "input.fifo")
+	if e := syscall.Mkfifo(path, 0600); e != nil {
+		t.Fatal(e)
+	}
+	done := make(chan error, 1)
+	go func() { _, e := ReadDocument(path); done <- e }()
+	select {
+	case e := <-done:
+		if e == nil {
+			t.Fatal("accepted FIFO")
+		}
+	case <-time.After(time.Second):
+		t.Fatal("FIFO open blocked before regular-file validation")
+	}
 }

@@ -103,11 +103,11 @@ func ValidateArguments(name string, b []byte) error {
 		return invalid
 	}
 	i, e := time.Parse("2006-01-02", a.InvoiceDate)
-	if e != nil {
+	if e != nil || i.Year() < 1 {
 		return invalid
 	}
 	due, e := time.Parse("2006-01-02", a.DueDate)
-	if e != nil || due.Before(i) || !businessID.MatchString(a.CustomerID) {
+	if e != nil || due.Year() < 1 || due.Before(i) || !businessID.MatchString(a.CustomerID) {
 		return invalid
 	}
 	seen := map[string]bool{}
