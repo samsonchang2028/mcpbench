@@ -1,6 +1,6 @@
 # Current state — database gate accepted
 
-2026-11-09T06:37Z: DONE T001–T018,T040 (19/40). T019 READY;20 later nodes WAITING.
+2026-11-09T06:37Z: DONE T001–T018,T040 (19/40). T019 IMPLEMENTING source;20 later nodes WAITING.
 T013 aaeefdd integrated4badae1 after independent R/V; real SDK loopback checks PASS.
 T018 adapter047c030+f2c4dc9 integrated0cfdc37+6996d07 after independent source
 review and runtime testing. Main adapter unit check20tests PASS.
