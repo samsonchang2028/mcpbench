@@ -27,3 +27,10 @@ locked manifest digest, no retagging of homelab images. artifacts/admission/t019
 base-images.json records exact IDs. Post-pull ownedDB and19baseline checks PASS.
 No application image build or new container startup yet. T019 source worker live;
 root-approved contract-preserving timing/redaction seam fixes in its context pack.
+
+T019 frozena85d9f9 independently R APPROVE/VcachedPASS (Go,91Python,static
+Compose). All5 admitted serial builds PASS with CPU1/memory2GiB/swap2GiB.
+ImageIDs and source/scenario/build commands recorded in candidate-images.json.
+Root prepared private evaluator templates and exactimage launchconfigs, no secret
+values logged. Fresh prestart-01 resourcegate session45389 running before live
+scriptedfullstack; no Qwen inference. Full task runtimeacceptance still UNRUN.
