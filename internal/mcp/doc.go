@@ -1,3 +1,3 @@
-// Package mcp reserves the boundary for authenticated MCP transport.
-// Runtime implementation belongs to later DAG tasks.
+// Package mcp implements authenticated three-tool MCP Streamable HTTP transport.
+// The production source is dedicated to mcpbench_service; tests inject Service.
 package mcp
