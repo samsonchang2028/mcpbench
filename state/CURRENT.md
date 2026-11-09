@@ -34,3 +34,7 @@ requiresapprovalbeforearchitecture/securitychanges. No daemon/firewall/oldnetwor
 nativeOllamachanges proposed. Next: userselectlayout, narrowimplementation with
 R/V, freshadmission/newrun, remainingT019regressions. LiveQwenwaitsT022/T023.
 Untracked docs/architecture-diagram.html is userwork;preserve/do notstage.
+
+Goal-level blocked audit: same pending network-layout approval across three goal
+turns; no eligible independent node. Goal BLOCKED awaiting user A/B decision.
+No further runtime retries or architecture changes before that decision.
