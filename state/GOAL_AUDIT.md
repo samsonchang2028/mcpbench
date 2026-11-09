@@ -15,7 +15,8 @@ completion. Authoritative file/process evidence was checked after integration.
 | Relevant independent gates | Static T006/T009 PASS; runtime gates UNRUN | Incomplete |
 | Existing homelab/native Ollama preserved | No runtime/container/config mutations; no project containers | Preserved |
 
-DAG recomputation:14DONE;T012/T014/T016IMPLEMENTING;T018READY;22WAITING.
-Main93Python tests plusGotests/vet/build,lock/fixture/ComposestaticchecksPASS.
-RealDB/invoice/modelworkflow/retrieval/campaign/reproduction stillincomplete.
-No schema/fixture drift or homelab/nativeconfiguration mutations. Fullv1notdone.
+DAG recomputation:17DONE;T013candidateunderreview;T018runtimegateBLOCKED;
+21WAITING. Main142Python tests+Go/fixture/locks checksPASS. RealisolatedPG
+schema/grants and productionbackend tests passed earlier;finalindependentruntime
+repetitionUNRUNdueRAM<20GiB. NativeQwen tool echo only;no actualMCPinvoice,
+fourretrievalengines,campaignorfullreproductionproof. Fullv1notachieved.
