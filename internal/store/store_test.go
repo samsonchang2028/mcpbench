@@ -6,6 +6,8 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"errors"
+	"fmt"
+	"sort"
 	"strings"
 	"testing"
 	"time"
@@ -278,5 +280,164 @@ func TestNoBeginForMalformedTrustedIdentity(t *testing.T) {
 	e := New(db).WithSession(context.Background(), a, "", func(billing.Session) error { t.Fatal("callback"); return nil })
 	if e == nil || db.begins != 0 {
 		t.Fatal("malformed identity reached SQL")
+	}
+}
+
+// catalogTx models only the SELECT filter/order/limit pipeline. It records the
+// actual query so these offline checks also require filtering before the bound;
+// it is not PostgreSQL runtime evidence.
+type catalogTx struct {
+	*fakeTx
+	data [][]any
+}
+
+type catalogRows struct {
+	pgx.Rows
+	data [][]any
+	pos  int
+}
+
+func (r *catalogRows) Next() bool { r.pos++; return r.pos <= len(r.data) }
+func (r *catalogRows) Close()     {}
+func (r *catalogRows) Err() error { return nil }
+func (r *catalogRows) Scan(dest ...any) error {
+	for i, value := range r.data[r.pos-1] {
+		switch d := dest[i].(type) {
+		case *string:
+			*d = value.(string)
+		case *bool:
+			*d = value.(bool)
+		case *int64:
+			*d = value.(int64)
+		default:
+			panic("unexpected catalog column")
+		}
+	}
+	return nil
+}
+func (tx *catalogTx) Query(_ context.Context, q string, _ ...any) (pgx.Rows, error) {
+	tx.queries = append(tx.queries, q)
+	data := [][]any{}
+	for _, row := range tx.data {
+		if !strings.Contains(q, " WHERE active") || row[len(row)-1].(bool) {
+			data = append(data, row)
+		}
+	}
+	sort.Slice(data, func(i, j int) bool { return data[i][0].(string) < data[j][0].(string) })
+	if len(data) > 101 {
+		data = data[:101]
+	}
+	return &catalogRows{data: data}, nil
+}
+
+type catalogDB struct{ tx *catalogTx }
+
+func (db catalogDB) BeginTx(context.Context, pgx.TxOptions) (pgx.Tx, error) { return db.tx, nil }
+
+func TestActiveListsFilterBeforeCap(t *testing.T) {
+	for _, tool := range []string{billing.ListCustomers, billing.ListItems} {
+		for _, tc := range []struct {
+			name             string
+			active, inactive int
+			wantError        bool
+		}{
+			{"empty", 0, 0, false},
+			{"inactive only beyond cap", 0, 150, false},
+			{"mixed", 3, 2, false},
+			{"inactive beyond cap", 3, 150, false},
+			{"exact active cap", 100, 150, false},
+			{"active overflow", 101, 150, true},
+		} {
+			t.Run(tool+"/"+tc.name, func(t *testing.T) {
+				db, access := fixture()
+				tx := &catalogTx{fakeTx: db.tx}
+				// Descending input tests stable sorting. Inactive IDs sort before
+				// active ones, exposing a LIMIT applied before the active filter.
+				for n := tc.active + tc.inactive - 1; n >= 0; n-- {
+					active := n >= tc.inactive
+					id := fmt.Sprintf("REC-%03d", n)
+					row := []any{id, "Synthetic", active}
+					if tool == billing.ListItems {
+						row = []any{id, "Synthetic", "hour", "USD", int64(12500), active}
+					}
+					tx.data = append(tx.data, row)
+				}
+				out, err := (billing.Service{Repo: New(catalogDB{tx})}).Call(context.Background(), access, tool, json.RawMessage(`{}`))
+				idColumn := "customer_id"
+				if tool == billing.ListItems {
+					idColumn = "item_id"
+				}
+				query := tx.queries[len(tx.queries)-1]
+				if !strings.HasSuffix(query, " WHERE active ORDER BY "+idColumn+" LIMIT 101") {
+					t.Fatalf("active filter/order/cap missing: %s", query)
+				}
+				if tc.wantError {
+					var be *billing.Error
+					if !errors.As(err, &be) || be.Code != "tool_error" || out != nil || tx.commits != 0 {
+						t.Fatalf("overflow result=%v error=%v commits=%d", out, err, tx.commits)
+					}
+					return
+				}
+				if err != nil {
+					t.Fatal(err)
+				}
+				ids := []string{}
+				switch result := out.(type) {
+				case billing.CustomerOutput:
+					if result.Customers == nil {
+						t.Fatal("null list")
+					}
+					for _, record := range result.Customers {
+						if !record.Active {
+							t.Fatal("inactive customer exposed")
+						}
+						ids = append(ids, record.ID)
+					}
+				case billing.ItemOutput:
+					if result.Items == nil {
+						t.Fatal("null list")
+					}
+					for _, record := range result.Items {
+						if !record.Active {
+							t.Fatal("inactive item exposed")
+						}
+						ids = append(ids, record.ID)
+					}
+				default:
+					t.Fatalf("unexpected result %T", out)
+				}
+				if len(ids) != tc.active || tx.commits != 1 {
+					t.Fatalf("count=%d want=%d commits=%d", len(ids), tc.active, tx.commits)
+				}
+				for n, id := range ids {
+					if want := fmt.Sprintf("REC-%03d", tc.inactive+n); id != want {
+						t.Fatalf("id[%d]=%s want=%s", n, id, want)
+					}
+				}
+			})
+		}
+	}
+}
+
+func TestValidationReadsRetainInactiveRecords(t *testing.T) {
+	db, _ := fixture()
+	tx := &catalogTx{fakeTx: db.tx, data: [][]any{{"CUST-001", "Synthetic", false}}}
+	ctx, cancel := context.WithTimeout(context.Background(), billing.OperationLimit)
+	defer cancel()
+	s := &session{tx: tx, ctx: ctx, schema: "r_unit"}
+	customers, err := s.Customers(ctx)
+	if err != nil || len(customers) != 1 || customers[0].Active {
+		t.Fatalf("inactive customer lost: %v %v", customers, err)
+	}
+	if strings.Contains(tx.queries[len(tx.queries)-1], "WHERE active") {
+		t.Fatal("validation query filtered inactive customer")
+	}
+	tx.data = [][]any{{"SVC-CONSULT", "Synthetic", "hour", "USD", int64(12500), false}}
+	items, err := s.Items(ctx)
+	if err != nil || len(items) != 1 || items[0].Active {
+		t.Fatalf("inactive item lost: %v %v", items, err)
+	}
+	if strings.Contains(tx.queries[len(tx.queries)-1], "WHERE active") {
+		t.Fatal("validation query filtered inactive item")
 	}
 }

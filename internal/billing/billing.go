@@ -109,6 +109,9 @@ type Repository interface {
 type Session interface {
 	AllowedTools() []string
 	VerifierScope() *Scope
+	// Active lists filter before their 100-record cap; validation reads retain inactive IDs.
+	ActiveCustomers(context.Context) ([]Customer, error)
+	ActiveItems(context.Context) ([]Item, error)
 	Customers(context.Context) ([]Customer, error)
 	Items(context.Context) ([]Item, error)
 	// LockKey serializes execution creates for this trusted run/key until tx end.
@@ -139,7 +142,7 @@ func (s Service) Call(ctx context.Context, a Access, tool string, raw json.RawMe
 			if err := emptyArgs(raw); err != nil {
 				return err
 			}
-			v, e := tx.Customers(ctx)
+			v, e := tx.ActiveCustomers(ctx)
 			if e != nil {
 				return e
 			}
@@ -152,7 +155,7 @@ func (s Service) Call(ctx context.Context, a Access, tool string, raw json.RawMe
 			if err := emptyArgs(raw); err != nil {
 				return err
 			}
-			v, e := tx.Items(ctx)
+			v, e := tx.ActiveItems(ctx)
 			if e != nil {
 				return e
 			}

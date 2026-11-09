@@ -212,8 +212,18 @@ func dbError(e error) error {
 }
 func (s *session) table(name string) string { return pgx.Identifier{s.schema, name}.Sanitize() }
 func (s *session) Customers(ctx context.Context) ([]billing.Customer, error) {
+	return s.customers(ctx, false)
+}
+func (s *session) ActiveCustomers(ctx context.Context) ([]billing.Customer, error) {
+	return s.customers(ctx, true)
+}
+func (s *session) customers(ctx context.Context, activeOnly bool) ([]billing.Customer, error) {
 	ctx = s.ctx
-	rows, e := s.tx.Query(ctx, "SELECT customer_id,name,active FROM "+s.table("customers")+" ORDER BY customer_id LIMIT 101")
+	filter := ""
+	if activeOnly {
+		filter = " WHERE active"
+	}
+	rows, e := s.tx.Query(ctx, "SELECT customer_id,name,active FROM "+s.table("customers")+filter+" ORDER BY customer_id LIMIT 101")
 	if e != nil {
 		return nil, normalize(e)
 	}
@@ -235,8 +245,18 @@ func (s *session) Customers(ctx context.Context) ([]billing.Customer, error) {
 	return out, nil
 }
 func (s *session) Items(ctx context.Context) ([]billing.Item, error) {
+	return s.items(ctx, false)
+}
+func (s *session) ActiveItems(ctx context.Context) ([]billing.Item, error) {
+	return s.items(ctx, true)
+}
+func (s *session) items(ctx context.Context, activeOnly bool) ([]billing.Item, error) {
 	ctx = s.ctx
-	rows, e := s.tx.Query(ctx, "SELECT item_id,name,unit,currency,unit_price_cents,active FROM "+s.table("items")+" ORDER BY item_id LIMIT 101")
+	filter := ""
+	if activeOnly {
+		filter = " WHERE active"
+	}
+	rows, e := s.tx.Query(ctx, "SELECT item_id,name,unit,currency,unit_price_cents,active FROM "+s.table("items")+filter+" ORDER BY item_id LIMIT 101")
 	if e != nil {
 		return nil, normalize(e)
 	}

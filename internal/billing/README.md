@@ -11,7 +11,9 @@ opens a connection or resolves environment credentials.
 - `Call(ctx, Access, toolID, json.RawMessage) (any, error)` authenticates and parses
   exact model arguments. Success is `CustomerOutput`, `ItemOutput` or `DraftOutput`,
   ready to place in the frozen `ToolResult.result`. Reads require `{}`. Lists are
-  ordered by ID and reject catalogs exceeding 100 rows rather than truncate.
+  active-only, ordered by ID, and reject more than 100 active rows rather than
+  truncate. Inactive rows do not count against the list cap; draft validation
+  retains inactive records to distinguish `inactive_record` from `not_found`.
 - `Access{RunID, AttemptID, IdempotencyKey, Capability}` is private trusted transport
   metadata. There is no schema, tenant, price, invoice ID or SQL input route.
   Never expose Access to the model or construct it from tool arguments.
@@ -62,3 +64,10 @@ including the contract hash parity subprocess and observability tests. The three
 opt-in PostgreSQL tests **SKIP / UNRUN** without database admission. No database
 connection, dependency installation, image/container operation or inference ran.
 Independent reviewer/tester acceptance and actual PostgreSQL proof remain pending.
+
+Active-list repair check, 2026-11-08: cached-dependency `go test -mod=readonly
+-p=1 -count=1 ./...` with the same environment above **PASS**. New offline cases
+cover both list tools with mixed/descending records, more than 100 inactive
+records, exactly 100 active records, 101 active records returning `tool_error`,
+and retained inactive-versus-missing draft validation. These use test doubles;
+PostgreSQL list execution and other live DB gates remain **UNRUN** here.

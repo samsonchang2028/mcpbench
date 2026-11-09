@@ -143,11 +143,13 @@ func (m *memory) WithSession(ctx context.Context, a Access, tool string, fn func
 	}
 	return m.failure
 }
-func (m *memory) AllowedTools() []string                        { return []string{ListCustomers, ListItems, CreateDraft} }
-func (m *memory) VerifierScope() *Scope                         { return m.scope }
-func (m *memory) Customers(context.Context) ([]Customer, error) { c, _ := records(); return c, nil }
-func (m *memory) Items(context.Context) ([]Item, error)         { _, i := records(); return i, nil }
-func (m *memory) LockKey(context.Context, string) error         { m.locks++; return nil }
+func (m *memory) AllowedTools() []string                                  { return []string{ListCustomers, ListItems, CreateDraft} }
+func (m *memory) VerifierScope() *Scope                                   { return m.scope }
+func (m *memory) Customers(context.Context) ([]Customer, error)           { c, _ := records(); return c, nil }
+func (m *memory) Items(context.Context) ([]Item, error)                   { _, i := records(); return i, nil }
+func (m *memory) ActiveCustomers(ctx context.Context) ([]Customer, error) { return m.Customers(ctx) }
+func (m *memory) ActiveItems(ctx context.Context) ([]Item, error)         { return m.Items(ctx) }
+func (m *memory) LockKey(context.Context, string) error                   { m.locks++; return nil }
 func (m *memory) FindDraft(context.Context, string) (*DraftOutput, string, error) {
 	return m.old, m.hash, nil
 }
@@ -200,5 +202,61 @@ func TestNoResultWithoutCommitAck(t *testing.T) {
 	out, e := (Service{m}).Call(context.Background(), Access{IdempotencyKey: "key-test"}, CreateDraft, raw)
 	if out != nil || e == nil {
 		t.Fatal("success escaped failed commit")
+	}
+}
+
+// Creation must use validation reads, which retain known inactive IDs, rather
+// than the active-only list reads.
+type validationMemory struct {
+	memory
+	customers []Customer
+	items     []Item
+}
+
+func (m *validationMemory) WithSession(_ context.Context, _ Access, _ string, fn func(Session) error) error {
+	return fn(m)
+}
+func (m *validationMemory) Customers(context.Context) ([]Customer, error) { return m.customers, nil }
+func (m *validationMemory) Items(context.Context) ([]Item, error)         { return m.items, nil }
+func (m *validationMemory) ActiveCustomers(context.Context) ([]Customer, error) {
+	panic("create used list read")
+}
+func (m *validationMemory) ActiveItems(context.Context) ([]Item, error) {
+	panic("create used list read")
+}
+
+func TestCreateRetainsInactiveVsMissingClassification(t *testing.T) {
+	for _, tc := range []struct {
+		name           string
+		customer, item string
+		want           string
+	}{
+		{"inactive customer", "inactive", "active", "inactive_record"},
+		{"missing customer", "missing", "active", "not_found"},
+		{"inactive item", "active", "inactive", "inactive_record"},
+		{"missing item", "active", "missing", "not_found"},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			c, i := records()
+			if tc.customer == "inactive" {
+				c[0].Active = false
+			}
+			if tc.customer == "missing" {
+				c = nil
+			}
+			if tc.item == "inactive" {
+				i[0].Active = false
+			}
+			if tc.item == "missing" {
+				i = nil
+			}
+			m := &validationMemory{customers: c, items: i}
+			raw, _ := json.Marshal(args())
+			out, err := (Service{Repo: m}).Call(context.Background(), Access{IdempotencyKey: "key-test"}, CreateDraft, raw)
+			code(t, err, tc.want)
+			if out != nil || m.writes != 0 {
+				t.Fatal("invalid draft saved or returned")
+			}
+		})
 	}
 }
