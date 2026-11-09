@@ -22,6 +22,56 @@ class ArtifactTests(unittest.TestCase):
         self.root = Path(self.tmp.name)
         self.files = Artifacts(self.root)
 
+    def test_reserved_control_journal_consumes_only_precharged_capacity(self):
+        import hashlib
+        from contracts.validate import canonical_bytes
+        from eval.runner.test_lifecycle import example
+        from eval.runner.artifacts import ArtifactError
+        result = example('control-prepare-result')
+        raw = canonical_bytes(result) + b'\n'
+        record = example('agent-exit')
+        record.update({key: result[key] for key in
+                       ('schema_version','run_id','attempt_id','task_id','task_hash','config_hash','phase')})
+        record.update(child='evaluator', result_message_id=result['message_id'],
+                      result_ref={'path':'control/prepare-result.json',
+                                  'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest()})
+        cap = 64 * 1024 + 1024**2
+        self.files.max_bytes = cap
+        self.files.reserve_control_journal('prepare')
+        self.assertEqual(self.files.size(), cap)
+        with self.assertRaisesRegex(ArtifactError, 'artifact_limit'):
+            self.files.write('evidence/unreserved.json', {'reason':'no-capacity'})
+        # Simulate external overshoot; consuming slots must never add bytes.
+        payload = self.root/'retained-payload.json'
+        payload.write_bytes(b' ' * 17)
+        os.chmod(payload, 0o600)
+        before = self.files.size()
+        self.files.publish_control_exit(record)
+        self.assertLess(self.files.size(), before)
+        before = self.files.size()
+        self.files.publish_control_result(raw, record)
+        self.assertLess(self.files.size(), before)
+        self.assertEqual((self.root/'journal/prepare-result.json').read_bytes(), raw)
+        self.files.load('journal/prepare-exit.json', 'ProcessExit')
+        self.assertEqual(payload.read_bytes(), b' ' * 17)
+        with self.assertRaises((ValueError, KeyError)):
+            self.files.publish_control_result(raw, record)
+
+    def test_control_reservations_reject_untyped_or_mismatched_evidence(self):
+        from contracts.validate import canonical_bytes
+        from eval.runner.test_lifecycle import example
+        self.files.reserve_control_journal('prepare')
+        before = self.files.size()
+        with self.assertRaises(ValueError):
+            self.files.publish_control_exit(example('agent-exit'))
+        with self.assertRaises(ValueError):
+            self.files.publish_control_result(canonical_bytes(example('control-prepare-result')), example('agent-exit'))
+        self.assertEqual(self.files.size(), before)
+        self.assertFalse((self.root/'journal/prepare-exit.json').exists())
+        self.assertFalse((self.root/'journal/prepare-result.json').exists())
+        with self.assertRaises(ValueError):
+            self.files.reserve_control_journal('arbitrary')
+
     def test_exclusive_atomic_publish_and_hash(self):
         ref = self.files.write('control/result.json', {'status': 'saved'})
         with self.assertRaises(ValueError):

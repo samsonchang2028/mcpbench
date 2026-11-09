@@ -103,9 +103,15 @@ class Launcher:
         validate('ControlRequest', request)
         self.host.write(f'journal/{phase}-request.json', request, private=True)
         self.fixed_transport('request.json', canonical_bytes(request)+b'\n')
+        self.host.reserve_control_journal(phase)
         self.quota()
         start=self.mono()
         outcome = self.transport.execute('evaluator', phase, self.paths, self.remaining(30 if phase=='prepare' else 5), self.quota)
+        quota_failed = False
+        try:
+            self.quota()
+        except Exception:
+            quota_failed = True
         # Delivery and process success are independent observations. Persist the
         # actual exit even when parsing, quota, deadline or result handling fails.
         ref, result, raw, delivery = None, None, None, 'missing'
@@ -138,9 +144,12 @@ class Launcher:
         record.pop('workflow_kind')
         validate('ProcessExit',record)
         # Exit journaling precedes all subsequent fallible transport operations.
-        self.host.write(f'journal/{phase}-exit.json',record,contract='ProcessExit')
+        self.host.publish_control_exit(record)
         if delivery == 'complete':
-            self.host.write_bytes(f'journal/{phase}-result.json', raw)
+            self.host.publish_control_result(raw, record)
+        if quota_failed:
+            raise ValueError('artifact_limit')
+        if delivery == 'complete':
             self.fixed_transport('result.json', raw)
         self.quota()
         if not outcome.reaped or outcome.returncode != 0 or outcome.termination != 'exited' or outcome.signal is not None:

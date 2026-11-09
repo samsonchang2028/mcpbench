@@ -18,6 +18,7 @@ class Artifacts:
         self.root = Path(root).absolute()
         self.secrets = tuple(secrets)
         self.max_bytes = min(max_bytes, 100 * 1024**2)
+        self._control_slots = {}
         # Walk every ancestor without following symlinks, including the root.
         fd = os.open('/', os.O_RDONLY | os.O_DIRECTORY)
         try:
@@ -103,6 +104,73 @@ class Artifacts:
             finally:
                 os.close(fd)
         return {'path': path, 'sha256': hashlib.sha256(raw).hexdigest(), 'bytes': len(raw)}
+
+    def reserve_control_journal(self, phase):
+        """Charge finite host-only evidence slots before admitting a child.
+
+        This is application accounting, not a kernel quota on external writers.
+        A later overshoot still fails the run; consuming a slot adds no bytes.
+        """
+        if phase not in {'prepare', 'settle-grade', 'finalize'}:
+            raise ArtifactError('control_phase')
+        for kind, capacity in (('exit', 64 * 1024), ('result', 1024**2)):
+            target = f'journal/{phase}-{kind}.json'
+            reserved = f'journal/reserved-{phase}-{kind}.json'
+            self.write_bytes(reserved, b' ' * capacity)
+            self._control_slots[target] = (reserved, capacity)
+
+    def _consume_control_slot(self, path, raw):
+        # Only typed, fixed-path callers below can consume these allocations.
+        reserved, capacity = self._control_slots[path]
+        if not raw or len(raw) > capacity:
+            raise ArtifactError('control_slot_limit')
+        directory, name = self._parent(reserved)
+        destination = path.split('/')[-1]
+        try:
+            fd = os.open(name, os.O_RDWR | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=directory)
+            with os.fdopen(fd, 'r+b') as stream:
+                info = os.fstat(stream.fileno())
+                if (not stat.S_ISREG(info.st_mode) or info.st_uid != os.getuid() or
+                        stat.S_IMODE(info.st_mode) != 0o600 or info.st_nlink != 1 or info.st_size != capacity):
+                    raise ArtifactError('control_slot')
+                if stream.write(raw) != len(raw):
+                    raise ArtifactError('short_write')
+                stream.truncate(len(raw))
+                stream.flush()
+                os.fsync(stream.fileno())
+            # As with ordinary artifacts, never replace prior finalized evidence.
+            os.link(name, destination, src_dir_fd=directory, dst_dir_fd=directory, follow_symlinks=False)
+            os.unlink(name, dir_fd=directory)
+            os.fsync(directory)
+            del self._control_slots[path]
+        except OSError:
+            raise ArtifactError('control_publish') from None
+        finally:
+            os.close(directory)
+
+    def publish_control_exit(self, record):
+        record = redact(record, self.secrets)
+        validate('ProcessExit', record)
+        if record['child'] != 'evaluator':
+            raise ArtifactError('control_child')
+        self._consume_control_slot(f'journal/{record["phase"]}-exit.json', canonical_bytes(record) + b'\n')
+
+    def publish_control_result(self, raw, record):
+        """Retain exact validated bytes correlated to the already journaled exit."""
+        validate('ProcessExit', record)
+        result = load_bytes(raw)
+        validate('ControlResult', result)
+        if (record['child'] != 'evaluator' or record['result_delivery'] != 'complete' or
+                any(record[k] != result[k] for k in
+                    ('schema_version', 'run_id', 'attempt_id', 'task_id', 'task_hash', 'config_hash', 'phase')) or
+                record['result_message_id'] != result['message_id'] or
+                record['result_ref']['path'] != f'control/{record["phase"]}-result.json' or
+                record['result_ref']['sha256'] != hashlib.sha256(raw).hexdigest() or
+                record['result_ref']['bytes'] != len(raw)):
+            raise ArtifactError('control_binding')
+        if self.load(f'journal/{record["phase"]}-exit.json', 'ProcessExit') != record:
+            raise ArtifactError('control_exit')
+        self._consume_control_slot(f'journal/{record["phase"]}-result.json', raw)
 
     def read(self, ref, contract=None):
         validate('ArtifactRef', ref)

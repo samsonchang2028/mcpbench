@@ -199,6 +199,64 @@ class LauncherTests(unittest.TestCase):
                 finally:
                     fixture.doCleanups()
 
+    def test_real_artifact_capacity_preserves_reserved_failure_evidence(self):
+        from eval.runner.artifacts import ArtifactError
+        for scenario in ('near_exit1', 'over_exit1', 'over_success', 'near_expired', 'result_failure'):
+            with self.subTest(scenario=scenario):
+                fixture = LauncherTests()
+                fixture.setUp()
+                try:
+                    if scenario.endswith('exit1'):
+                        fixture.backend.unknown = 'agent'
+                    execute = fixture.transport.execute
+                    cap = 2 * 1024**2
+                    retained_sizes = []
+                    def fill_after_execution(child, phase, paths, timeout, quota):
+                        observed = execute(child, phase, paths, timeout, quota)
+                        if child == 'evaluator' and phase == 'settle-grade':
+                            host = fixture.launcher.host
+                            host.max_bytes = cap
+                            fill = cap - host.size() + (1 if scenario.startswith('over_') else -1)
+                            self.assertGreater(fill, 0)
+                            payload = fixture.launcher.root/'retained-payload.json'
+                            with payload.open('wb') as stream:
+                                stream.truncate(fill)
+                            os.chmod(payload, 0o600)
+                            retained_sizes.append(fill)
+                            # Exercise the real artifact writer, not a quota mock.
+                            with self.assertRaisesRegex(ArtifactError, 'artifact_limit'):
+                                host.write('journal/unreserved-probe.json', {'reason':'capacity'})
+                            if scenario == 'near_expired':
+                                fixture.clock.now += 31
+                            if scenario == 'result_failure':
+                                host.publish_control_result = lambda *args: (_ for _ in ()).throw(ArtifactError('injected_result_publish'))
+                        return observed
+                    fixture.transport.execute = fill_after_execution
+                    with patch('launcher.run.LIMIT', cap):
+                        with self.assertRaisesRegex(ValueError, 'quarantined'):
+                            fixture.run_attempt()
+                    host = fixture.launcher.host
+                    record = host.load('journal/settle-grade-exit.json', 'ProcessExit')
+                    self.assertEqual(record['exit_code'], 1 if scenario.endswith('exit1') else 0)
+                    self.assertEqual(record['result_delivery'], 'complete')
+                    if scenario == 'result_failure':
+                        self.assertFalse((host.root/'journal/settle-grade-result.json').exists())
+                        self.assertTrue((host.root/'journal/reserved-settle-grade-result.json').exists())
+                    else:
+                        self.assertEqual((host.root/'journal/settle-grade-result.json').read_bytes(),
+                                         (host.root/'evaluator/control/settle-grade-result.json').read_bytes())
+                    self.assertLess(host.size(), cap)
+                    self.assertEqual((host.root/'retained-payload.json').stat().st_size, retained_sizes[0])
+                    self.assertFalse((host.root/'journal/control-chain.json').exists())
+                    self.assertTrue((host.root/'journal/quarantine.json').exists())
+                    self.assertNotIn(('verifier','verify'), [x[:2] for x in fixture.transport.calls])
+                    self.assertEqual(fixture.backend.calls.count('reset'), 1)
+                    self.assertNotIn('cleaned', fixture.backend.calls)
+                    with self.assertRaises(FileExistsError):
+                        fixture.run_attempt()
+                finally:
+                    fixture.doCleanups()
+
     def test_blocked_prepare_exit_one_retains_typed_result(self):
         self.backend.reset_ok = False
         with self.assertRaisesRegex(ValueError, 'quarantined'):
