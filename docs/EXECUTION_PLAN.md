@@ -2,7 +2,7 @@
 
 Current milestone: T001–T018 and T040 are DONE (19 tasks). T018 passed renewed
 resource admission, independent real PostgreSQL tests and production-backend
-lifecycle. User approved option A gateway and resumed; T019 gateway source work is IMPLEMENTING. Existing owned
+lifecycle. User approved option A gateway and resumed; T019 gateway publication/isolation is proven; agent-context and settlement runtime defects are being repaired in disjoint worktrees. Existing owned
 PostgreSQL is healthy; all19 unrelated services matched their saved baseline.
 
 This document schedules [TASK_GRAPH.md](TASK_GRAPH.md), which owns IDs, edges,

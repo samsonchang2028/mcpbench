@@ -248,8 +248,8 @@ approved by completing these documents.
 ## Approved decision: gateway for MCP host access
 
 Status: **Option A approved by the user (reply: "A"). Not yet implemented or deployed.**
-The goal remains paused at the user’s request; selecting the layout does not
-resume implementation. On resume, implement the small gateway while retaining
+Approval was recorded during the pause; the user subsequently requested resume.
+Gateway source implementation is now underway, retaining
 MCP/PostgreSQL/evaluator internal-only attachments and loopback-only publication.
 Resource admission and independent implementation review/testing remain required.
 Research scope and strategy fairness are unchanged.
@@ -305,3 +305,11 @@ allow only fixed paths/methods/upstream, no redirects or proxy retries for write
 Test effective scoped reachability rather than configuration labels alone. Gateway
 handles transient authorization headers even without credential mounts; never log
 them. Probe only MCPBench endpoints, and keep one frozen topology across strategies.
+
+Observed approved-A runtime2026-11-09: actual gateway-only loopback publication,
+hosthealth and unauthenticated401 passed. Gateway had no credential mounts, both
+owned networks and64MiB/.1CPU caps; MCP stayed internal-only. Sampled gateway
+memory1.992MiB (not a measured peak). The first actual attempt remains failed/
+quarantined due independent agent-context and artifact-settlement defects; no
+complete invoice evaluation, comparison or native-Qwen workflow success is claimed.
+Exact images/CI receipts and snapshots retained in artifacts/admission/t019/.
