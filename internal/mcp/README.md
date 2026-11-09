@@ -103,3 +103,28 @@ launcher-mounted traces and live model inference remain **UNRUN** in T013.
 The same environment with `go test -mod=readonly -p=1 -count=1 ./...` also
 **PASS** across all Go packages; opt-in database tests remain skipped/unrun.
 Independent reviewer/tester acceptance is separate from author evidence.
+
+## T019 source join
+
+The command now installs a trusted `TraceFiles` factory from the separate RO
+`/run/mcpbench/trace/config.json` and RW `/run/mcpbench/events` mounts. The config
+has exact fields `schema_version`, `run_id`, `attempt_id`, `phase`, `secrets`;
+phase advances from execution to verification, identity never changes, secrets
+are a cumulative list of the one/two private capability literals. It is owner-only
+mode0600, strict JSON and symlink-free. `Writer.AddSecrets` installs verifier
+redaction before requests proceed, preserving the same MCP source sequence.
+
+Store instrumentation starts spans at actual application SQL boundaries, not
+around an opaque Service call. Each actual transaction shares a generated private
+transaction correlation ID; all of its SQL spans finish only after its real
+COMMIT/rollback outcome. Missing ACK emits uncertain `settlement_unknown`, never
+`db.completed`. Rows affected stay null rather than inventing counts. Frozen
+semantics label execution reads (including duplicate lookup) `read_tool`, writes
+`create_draft`, and verifier SQL `replay`. Registry-only auth emits no application
+DB span. The genuine validator now supports these DB events and phase constraints.
+
+`billing-mcp health` checks the real fixed local HTTP health endpoint; Compose
+uses it as its health command. Graceful termination closes the durable trace and
+propagates close failure. See `launcher/README.md` for exact runtime ownership,
+scripted evidence limits, per-run mount routing and quarantine handling. Earlier
+T013 UNRUN statements remain historical author evidence, not a T019 live claim.

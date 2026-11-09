@@ -351,3 +351,44 @@ func TestExclusiveNoSymlinkAndMetadataSecrets(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestAddSecretsCopiesAndRedactsWithoutReset(t *testing.T) {
+	w, path := makeWriter(t, Options{})
+	if err := w.Emit(failure("initial failure")); err != nil {
+		t.Fatal(err)
+	}
+	secrets := []string{"new-private-literal"}
+	if err := w.AddSecrets(secrets); err != nil {
+		t.Fatal(err)
+	}
+	secrets[0] = "changed-by-caller"
+	if err := w.AddSecrets([]string{"valid-before-invalid", ""}); err == nil {
+		t.Fatal("invalid secret admitted")
+	}
+	if len(w.options.Secrets) != 1 {
+		t.Fatal("partial update or caller alias")
+	}
+	if err := w.Emit(failure("new-private-literal")); err != nil {
+		t.Fatal(err)
+	}
+	if err := w.Close(); err != nil {
+		t.Fatal(err)
+	}
+	events := readEvents(t, path)
+	if events[1]["sequence"] != float64(2) || events[1]["data"].(map[string]any)["failure"].(map[string]any)["reason"] != Redacted {
+		t.Fatal("new secret not redacted or sequence reset", events)
+	}
+	if err := w.AddSecrets([]string{"later"}); err == nil {
+		t.Fatal("closed writer updated")
+	}
+}
+func TestAddSecretsRejectsFailedAndInvalidUTF8(t *testing.T) {
+	w, _ := makeWriter(t, Options{})
+	if err := w.AddSecrets([]string{string([]byte{0xff})}); err == nil {
+		t.Fatal("invalid UTF8 admitted")
+	}
+	w.failure = "write"
+	if err := w.AddSecrets([]string{"new-private-literal"}); err == nil || len(w.options.Secrets) != 0 {
+		t.Fatal("failed writer updated")
+	}
+}

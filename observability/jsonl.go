@@ -369,3 +369,24 @@ func (w *Writer) Close() error {
 	}
 	return nil
 }
+
+// AddSecrets installs newly minted private literals before their requests are
+// admitted. It retains its own copy and never resets sequence or elapsed time.
+// Invalid updates are atomic: none of their literals are installed.
+func (w *Writer) AddSecrets(secrets []string) error {
+	w.mu.Lock()
+	defer w.mu.Unlock()
+	if w.closed {
+		return LogError("closed")
+	}
+	if w.failure != "" {
+		return LogError(w.failure)
+	}
+	for _, secret := range secrets {
+		if secret == "" || !utf8.ValidString(secret) {
+			return LogError("secrets")
+		}
+	}
+	w.options.Secrets = append(w.options.Secrets, secrets...)
+	return nil
+}

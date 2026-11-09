@@ -36,6 +36,7 @@ type mapping struct {
 	scope                                                    []byte
 }
 type session struct {
+	events *transactionEvents
 	tx     pgx.Tx
 	ctx    context.Context
 	schema string
@@ -124,6 +125,7 @@ func (s *Store) WithSession(parent context.Context, a billing.Access, tool strin
 	if e != nil {
 		return dbError(e)
 	}
+	events := transactionTelemetry(ctx)
 	settled := false
 	// Rollback uses the same bounded operation context; no detached cleanup writes.
 	// pgx closes a broken connection if rollback cannot be acknowledged.
@@ -136,9 +138,14 @@ func (s *Store) WithSession(parent context.Context, a billing.Access, tool strin
 		e := tx.Rollback(ctx)
 		settled = true
 		if e != nil {
+			_ = events.finish(unknown())
 			return unknown()
 		}
-		return normalize(cause)
+		normalized := normalize(cause)
+		if events.finish(normalized) != nil {
+			return billing.Fail("tool_error")
+		}
+		return normalized
 	}
 	if _, e = tx.Exec(ctx, "SET LOCAL statement_timeout = '4000ms'"); e != nil {
 		return abort(e)
@@ -171,7 +178,7 @@ func (s *Store) WithSession(parent context.Context, a billing.Access, tool strin
 	if scope != nil {
 		tools = []string{billing.CreateDraft}
 	}
-	ss := &session{tx: tx, ctx: ctx, schema: m.schema, run: m.run, tools: tools, scope: scope}
+	ss := &session{events: events, tx: tx, ctx: ctx, schema: m.schema, run: m.run, tools: tools, scope: scope}
 	if e = fn(ss); e != nil {
 		return abort(e)
 	}
@@ -183,10 +190,15 @@ func (s *Store) WithSession(parent context.Context, a billing.Access, tool strin
 	// Any absent COMMIT acknowledgment is conservatively unknown. Never expose
 	// the callback's draft on this path, including cancellation or lost connection.
 	if e != nil {
+		_ = events.finish(unknown())
 		return unknown()
 	}
 	if ctx.Err() != nil {
+		_ = events.finish(unknown())
 		return unknown()
+	}
+	if events.finish(nil) != nil {
+		return billing.Fail("tool_error")
 	}
 	return nil
 }
@@ -218,6 +230,9 @@ func (s *session) ActiveCustomers(ctx context.Context) ([]billing.Customer, erro
 	return s.customers(ctx, true)
 }
 func (s *session) customers(ctx context.Context, activeOnly bool) ([]billing.Customer, error) {
+	if e := s.events.start("read_tool"); e != nil {
+		return nil, billing.Fail("tool_error")
+	}
 	ctx = s.ctx
 	filter := ""
 	if activeOnly {
@@ -251,6 +266,9 @@ func (s *session) ActiveItems(ctx context.Context) ([]billing.Item, error) {
 	return s.items(ctx, true)
 }
 func (s *session) items(ctx context.Context, activeOnly bool) ([]billing.Item, error) {
+	if e := s.events.start("read_tool"); e != nil {
+		return nil, billing.Fail("tool_error")
+	}
 	ctx = s.ctx
 	filter := ""
 	if activeOnly {
@@ -292,6 +310,9 @@ func normalizeNil(e error) error {
 	return normalize(e)
 }
 func (s *session) FindDraft(ctx context.Context, key string) (*billing.DraftOutput, string, error) {
+	if e := s.events.start("read_tool"); e != nil {
+		return nil, "", billing.Fail("tool_error")
+	}
 	ctx = s.ctx
 	var hash, id string
 	e := s.tx.QueryRow(ctx, "SELECT request_hash,invoice_id FROM "+s.table("idempotency_records")+" WHERE idempotency_key=$1", key).Scan(&hash, &id)
@@ -300,6 +321,9 @@ func (s *session) FindDraft(ctx context.Context, key string) (*billing.DraftOutp
 	}
 	if e != nil {
 		return nil, "", normalize(e)
+	}
+	if e := s.events.start("replay"); e != nil {
+		return nil, "", billing.Fail("tool_error")
 	}
 	var d billing.DraftOutput
 	var invoiceDate, dueDate, created time.Time
@@ -338,6 +362,9 @@ func (s *session) SaveDraft(ctx context.Context, key, hash string, d billing.Dra
 	ctx = s.ctx
 	if s.scope != nil {
 		return billing.Fail("authorization_denied")
+	}
+	if e := s.events.start("create_draft"); e != nil {
+		return billing.Fail("tool_error")
 	}
 	h := d.Invoice
 	invoiceDate, e := time.Parse("2006-01-02", h.InvoiceDate)

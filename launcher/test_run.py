@@ -1,0 +1,160 @@
+"""Offline typed launcher proofs. Scripted backend/children never prove live SQL."""
+from copy import deepcopy
+from datetime import timedelta
+import os
+from pathlib import Path
+import tempfile
+import unittest
+
+from contracts.validate import canonical_bytes, load_bytes, validate
+from eval.runner import Artifacts, Evaluator, Budget
+from eval.runner.test_lifecycle import ScriptedBackend, NOW, example
+from eval.runner import test_lifecycle as fixtures
+from launcher.run import Launcher
+from launcher.transport import DockerTransport, Outcome
+
+
+class Clock:
+    now = 0
+    def mono(self): return self.now
+    def wall(self): return NOW+timedelta(seconds=self.now)
+
+
+class ScriptedTransport:
+    def __init__(self, clock, backend):
+        self.clock,self.backend=clock,backend
+        self.calls=[]
+        self.fail=None
+        self.unreaped=False
+        self.bad_trace=None
+
+    def execute(self, child, phase, paths, timeout, quota):
+        self.calls.append((child,phase,timeout))
+        if self.fail == phase:
+            return Outcome(1,True,'exited',None,self.clock.now)
+        files=Artifacts(paths['evaluator'])
+        if child=='evaluator':
+            request=load_bytes((paths['control']/'request.json').read_bytes())
+            value=Evaluator(files,self.backend,monotonic=self.clock.mono,wall_clock=self.clock.wall).invoke(request)
+            code=int(value['action'] in {'blocked','quarantine'})
+        else:
+            output=Artifacts(paths[child+'-output'])
+            request=load_bytes((paths[child+'-input']/'transport/request.json').read_bytes())
+            if child=='agent':
+                self.backend.tables=deepcopy(self.backend.saved['tables'])
+                result=example('agent-result')
+                result.update(run_id=request['run_id'],attempt_id=request['attempt_id'])
+                event=dict(schema_version=1,run_id=request['run_id'],attempt_id=request['attempt_id'],source='agent',
+                           timestamp=self.clock.wall().isoformat().replace('+00:00','Z'),event_id='agent-1',sequence=1,
+                           event_type='agent.finished',phase='agent',status='ok',elapsed_ms=1,data={'result':result})
+                output.write_bytes('transport/events.jsonl',canonical_bytes(event)+b'\n')
+                events=fixtures.LifecycleTests.invoice_trace(None,self.backend)
+                Artifacts(paths['mcp-output']).write_bytes('trace/events.jsonl',b''.join(canonical_bytes(e)+b'\n' for e in events))
+            else:
+                result=example('verifier-result')
+                for key in ('run_id','attempt_id','task_id','task_hash','config_hash','budget','invoice_id','idempotency_key','original_request_hash'):
+                    result[key]=request[key]
+                result['budget']=Budget(request['budget'],monotonic=self.clock.mono,wall_clock=self.clock.wall).observation()
+                # Verifier's independent agent producer starts at sequence1.
+                event=dict(schema_version=1,run_id=request['run_id'],attempt_id=request['attempt_id'],source='agent',
+                    timestamp=self.clock.wall().isoformat().replace('+00:00','Z'),event_id='agent-1',sequence=1,
+                    event_type='tool.started',phase='verification',status='ok',elapsed_ms=1,call_id='verify-test',
+                    data={'tool_id':'billing_create_draft_invoice','arguments':request['original_arguments'],'retry_index':0})
+                terminal={**event,'event_id':'agent-2','sequence':2,'event_type':'tool.completed','data':{
+                    'tool_id':'billing_create_draft_invoice','duration_ms':1,'tool_result':result['checks'][0]['tool_result']}}
+                output.write_bytes('transport/events.jsonl',canonical_bytes(event)+b'\n'+canonical_bytes(terminal)+b'\n')
+            output.write('transport/result.json',result,contract='AgentResult' if child=='agent' else 'VerifierResult')
+            if self.bad_trace==child:(output.root/'transport/events.jsonl').write_bytes(b'{}\n')
+            code=0
+        self.clock.now+=.001
+        return Outcome(code,not self.unreaped,'exited' if not self.unreaped else 'timed_out',None,self.clock.now)
+
+
+class LauncherTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup)
+        os.chmod(self.tmp.name,0o700)
+        self.clock=Clock();self.backend=ScriptedBackend()
+        self.transport=ScriptedTransport(self.clock,self.backend)
+        self.config=dict(mapping=deepcopy(self.backend.mapping),idempotency_key=self.backend.scope.idempotency_key,
+                         model=example('agent-request')['model'],trace_paths=['events/agent.jsonl','events/mcp.jsonl'])
+        self.control={'database.json':b'{}','controller.pgpass':b'synthetic-controller','grader.pgpass':b'synthetic-grader'}
+        self.launcher=Launcher(self.tmp.name,self.transport,monotonic=self.clock.mono,wall=self.clock.wall)
+
+    def run_attempt(self):
+        return self.launcher.run(self.backend.task,self.backend.fixture,self.config,self.control)
+
+    def test_typed_complete_and_restart_barrier(self):
+        result=self.run_attempt()
+        self.assertEqual(result['action'],'complete')
+        self.assertTrue(result['original_pass'])
+        files=Artifacts(self.launcher.paths['evaluator'])
+        evaluation=files.read(result['outputs']['evaluation'],'EvaluationResult')
+        self.assertTrue(evaluation['comparison_valid'])
+        self.assertEqual(self.backend.tables,self.backend.seed)
+        journal=Artifacts(self.launcher.root)
+        chain=journal.load('journal/control-chain.json','ControlChain')
+        self.assertEqual(len(chain['exits']),5)
+        self.assertEqual((self.launcher.paths['control']/'result.json').read_bytes(),
+                         (files.root/'control/finalize-result.json').read_bytes())
+        self.assertEqual([x[:2] for x in self.transport.calls],[('evaluator','prepare'),('agent','run'),('evaluator','settle-grade'),('verifier','verify'),('evaluator','finalize')])
+        self.assertTrue(all(timeout<=5 for child,phase,timeout in self.transport.calls if phase not in {'prepare','run'}))
+        with self.assertRaises(FileExistsError):self.run_attempt()
+        self.assertEqual(len(self.transport.calls),5)
+
+    def test_transport_failure_quarantines_without_reset_or_retry(self):
+        self.transport.fail='settle-grade'
+        with self.assertRaisesRegex(ValueError,'quarantined'):self.run_attempt()
+        self.assertTrue((self.launcher.root/'journal/quarantine.json').exists())
+        self.assertEqual(self.backend.calls.count('reset'),1)  # initial prepare reset only
+        self.assertNotIn('cleaned',self.backend.calls)
+        with self.assertRaises(FileExistsError):self.run_attempt()
+
+    def test_unknown_fence_never_cleanup(self):
+        self.backend.unknown='agent'
+        with self.assertRaisesRegex(ValueError,'quarantined'):self.run_attempt()
+        self.assertNotIn('cleaned',self.backend.calls)
+        self.assertEqual(self.backend.calls.count('reset'),1)
+
+    def test_missing_original_evidence_still_fences_before_quarantine(self):
+        self.transport.bad_trace='agent'
+        with self.assertRaisesRegex(ValueError,'quarantined'):self.run_attempt()
+        self.assertIn('seal-agent',self.backend.calls)
+        self.assertNotIn('cleaned',self.backend.calls)
+        self.assertNotIn(('verifier','verify'),[x[:2] for x in self.transport.calls])
+        self.assertEqual(self.backend.calls.count('reset'),1)
+
+    def test_invalid_verifier_evidence_blocks_finalize_and_reset(self):
+        self.transport.bad_trace='verifier'
+        with self.assertRaisesRegex(ValueError,'quarantined'):self.run_attempt()
+        self.assertIn('seal-agent',self.backend.calls)
+        self.assertNotIn(('evaluator','finalize'),[x[:2] for x in self.transport.calls])
+        self.assertNotIn('cleaned',self.backend.calls)
+        self.assertEqual(self.backend.calls.count('reset'),1)
+
+    def test_parent_symlink_rejected_before_child(self):
+        alias=Path(self.tmp.name)/'alias';alias.symlink_to(self.tmp.name,target_is_directory=True)
+        bad=Launcher(alias,self.transport)
+        with self.assertRaises(Exception):bad.run(self.backend.task,self.backend.fixture,self.config,self.control)
+        self.assertEqual(self.transport.calls,[])
+
+    def test_aggregate_quota(self):
+        self.run_attempt()
+        with open(self.launcher.root/'overflow','wb') as out:out.truncate(100*1024**2)
+        with self.assertRaisesRegex(ValueError,'artifact_limit'):self.launcher.quota()
+
+    def test_fixed_command_and_mounts(self):
+        self.run_attempt()
+        driver=DockerTransport({'agent':'sha256:'+'a'*64,'evaluator':'sha256:'+'b'*64,'mcp':'sha256:'+'c'*64},'/nonexistent/service.pgpass')
+        command=driver.command('agent','run',self.launcher.paths)
+        joined=' '.join(command)
+        self.assertNotIn('shell',joined)
+        self.assertIn('--network host',joined)
+        self.assertEqual(command.count('--mount'),3)
+        self.assertNotIn(str(self.launcher.paths['evaluator']),joined)
+        self.assertNotIn(str(self.launcher.paths['control']),joined)
+        self.assertIn('no-new-privileges:true',command)
+        self.assertIn('/usr/bin/env',command)
+        for pair in [('agent','finalize'),('shell','run')]:
+            with self.assertRaises(ValueError):driver.command(*pair,self.launcher.paths)
+        with self.assertRaises(ValueError):DockerTransport({'agent':'latest','evaluator':'latest','mcp':'latest'},'/nonexistent/service.pgpass')

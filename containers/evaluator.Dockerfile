@@ -7,6 +7,7 @@ RUN python /tmp/install_locked.py && rm /tmp/uv.lock /tmp/install_locked.py /tmp
 COPY eval/ /app/eval/
 COPY contracts/ /app/contracts/
 COPY db/ /app/db/
+COPY observability/ /app/observability/
 USER 1000:1000
 ENV HOME=/nonexistent TMPDIR=/tmp PYTHONDONTWRITEBYTECODE=1
 ENTRYPOINT ["python", "-m", "eval.runner"]

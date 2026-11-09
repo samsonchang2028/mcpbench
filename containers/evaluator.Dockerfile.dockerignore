@@ -10,3 +10,7 @@
 !db/**
 **/__pycache__/
 **/*.pyc
+
+!observability/
+!observability/__init__.py
+!observability/jsonl.py

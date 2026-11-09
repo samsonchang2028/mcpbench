@@ -555,5 +555,27 @@ class Contracts(unittest.TestCase):
                 c.validate_run_bundle(*bundle)
 
 
+    def test_control_chain_observations_follow_generation_order(self):
+        chain=self.example("control-chain")
+        def budget(record,elapsed):
+            record["budget"].update(elapsed_ms=elapsed,remaining_ms=30000-elapsed)
+        settle_exit=next(e for e in chain["exits"] if e["child"]=="evaluator" and e["phase"]=="settle-grade")
+        verifier_exit=next(e for e in chain["exits"] if e["child"]=="verifier")
+        final_exit=next(e for e in chain["exits"] if e["child"]=="evaluator" and e["phase"]=="finalize")
+        for record,elapsed in [(chain["requests"][1],20),(chain["verification_request"],25),
+                              (chain["results"][1],30),(settle_exit,35),(chain["verifier"],40),
+                              (verifier_exit,45),(chain["requests"][2],50),(chain["results"][2],55),(final_exit,60)]:
+            budget(record,elapsed)
+        c.validate("ControlChain",chain)
+        # Older request observations belong inside their generating phase; all
+        # later results/exits still must advance the same absolute anchor.
+        for elapsed in (19,31):
+            bad=deepcopy(chain);budget(bad["verification_request"],elapsed)
+            self.reject("ControlChain",bad)
+        bad=deepcopy(chain);budget(bad["verifier"],34);self.reject("ControlChain",bad)
+        bad=deepcopy(chain);bad["verification_request"]["budget"]["anchor_id"]="post-restarted";self.reject("ControlChain",bad)
+        bad=deepcopy(chain);bad["verifier"]["budget"]["deadline_at"]="2026-11-07T23:00:31Z";self.reject("ControlChain",bad)
+
+
 if __name__ == "__main__":
     unittest.main()

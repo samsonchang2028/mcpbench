@@ -17,6 +17,7 @@ import (
 	sdk "github.com/modelcontextprotocol/go-sdk/mcp"
 	"mcpbench/internal/agent"
 	"mcpbench/internal/billing"
+	"mcpbench/internal/store"
 	"mcpbench/observability"
 )
 
@@ -98,6 +99,9 @@ func New(o Options) (http.Handler, error) {
 				if writer.Emit(observability.Record{Type: "tool.started", Phase: phase, Status: "ok", CallID: call, Data: map[string]any{"tool_id": name, "arguments": arguments, "retry_index": 0}}) != nil {
 					return toolFailure(billing.Fail("tool_error")), nil
 				}
+			}
+			if writer != nil {
+				ctx = store.WithObserver(ctx, databaseObserver(writer, phase, call))
 			}
 			start := time.Now()
 			value, err := o.Service.Call(ctx, who.access, name, args)

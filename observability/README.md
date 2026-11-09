@@ -142,3 +142,8 @@ Tests cover real contract validation/parity, trusted context, contiguous sequenc
 correlation/identity/reuse, finite data, negative duration, invalid tool arguments,
 metric preservation, nested credential/text redaction, limits, clock regression,
 exclusive/symlink-safe creation and injected write/short-write/sync/close failures.
+
+`Writer.AddSecrets` installs newly minted private literals under the writer mutex
+before admitting their requests. It copies the supplied values, rejects empty or
+invalid UTF-8 updates atomically, and rejects closed/failed writers. It preserves
+source sequence and elapsed time; T019 uses this for verifier capability redaction.

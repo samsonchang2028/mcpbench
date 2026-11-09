@@ -137,3 +137,21 @@ commands alone do not implement the protocol, and startup time counts toward the
 post-agent deadline. Live inference requires its later DAG admission; deterministic
 integration must not accidentally invoke native Ollama. No teardown/prune command
 is included; preserve the owned DB volume and all unrelated workloads/evidence.
+
+## T019 source wiring (runtime evidence remains separate)
+
+MCP now has a real `/app/billing-mcp health` command and two additional narrow
+binds: `MCPBENCH_MCP_TRACE_CONTROL_DIR` to `/run/mcpbench/trace` RO, and
+`MCPBENCH_MCP_OUTPUT_DIR` to `/run/mcpbench/events` RW. Both default to absent
+`/nonexistent/mcpbench/` paths with no auto-created bind sources. Agent/verifier
+still receive exactly their original three mounts. The evaluator image now
+includes the Python observability module required by its implemented lifecycle.
+
+The Go Dockerfile has a separate `scripted-agent` target for T019 only, controlled
+by trusted build argument `MCPBENCH_SCRIPTED_SCENARIO` (`smoke`, `wrong-write`,
+`lost-reply`). It installs the real-loop deterministic child at `/app/agent`; its
+image ID and scripted tag must be recorded distinctly from the production agent.
+No model request occurs in this child. Build context admits only that integration
+child subtree, retaining all other existing exclusions. Serial Go compilation
+uses GOMAXPROCS1. The trusted launcher uses the same hardening, fixed roles and
+scoped mounts; see `launcher/README.md`. Source wiring is not a build/startup PASS.

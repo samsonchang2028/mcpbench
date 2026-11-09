@@ -7,3 +7,8 @@
 !internal/**
 !observability/
 !observability/**
+
+!tests/
+!tests/integration/
+!tests/integration/scripted-agent/
+!tests/integration/scripted-agent/**

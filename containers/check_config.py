@@ -61,7 +61,10 @@ assert port["host_ip"] == "127.0.0.1" and port["published"] == "18081" and port[
 assert services["db"]["image"] == lock["postgres"]["reference"]
 assert services["db"]["environment"]["POSTGRES_PASSWORD_FILE"] == "/run/secrets/bootstrap-password"
 assert services["db"]["healthcheck"]["timeout"] == "3s"
-assert services["mcp"]["healthcheck"]["disable"] is True
+assert services["mcp"]["healthcheck"]["test"] == ["CMD", "/app/billing-mcp", "health"]
+assert {m["target"]: m.get("read_only", False) for m in services["mcp"]["volumes"]} == {
+    "/run/secrets/service.pgpass": True, "/run/mcpbench/trace": True,
+    "/run/mcpbench/events": False}
 assert services["evaluator"]["profiles"] == ["evaluator"]
 assert services["evaluator"]["command"] == ["prepare"]
 assert {m["target"]: m.get("read_only", False) for m in services["evaluator"]["volumes"]} == {

@@ -103,11 +103,25 @@ services:
         read_only: true
         bind:
           create_host_path: false
+      - type: bind
+        source: ${MCPBENCH_MCP_TRACE_CONTROL_DIR:-/nonexistent/mcpbench/mcp-trace-control}
+        target: /run/mcpbench/trace
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${MCPBENCH_MCP_OUTPUT_DIR:-/nonexistent/mcpbench/mcp-output}
+        target: /run/mcpbench/events
+        bind:
+          create_host_path: false
     tmpfs:
       - /tmp:rw,noexec,nosuid,nodev,size=16777216,mode=1777
-    # Stub exits 2; no fabricated ready endpoint. T019 must add real readiness.
     healthcheck:
-      disable: true
+      test: ["CMD", "/app/billing-mcp", "health"]
+      interval: 5s
+      timeout: 5s
+      retries: 2
+      start_period: 5s
     stop_grace_period: 5s
 
   agent:

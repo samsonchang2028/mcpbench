@@ -488,8 +488,8 @@
       "anchor_id": "post-example-001",
       "started_at": "2026-11-07T23:00:00Z",
       "deadline_at": "2026-11-07T23:00:30Z",
-      "elapsed_ms": 100,
-      "remaining_ms": 29900,
+      "elapsed_ms": 25,
+      "remaining_ms": 29975,
       "operation_timeout_ms": 5000
     }
   },

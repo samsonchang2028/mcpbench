@@ -90,3 +90,11 @@ All four strategy IDs are reserved: `full_context`, `semantic_top_k`, `hybrid`,
 `hierarchical`. This freeze implements no selector. Ranking, embedding, k, fusion,
 hierarchy and held-out campaign settings remain T026/T039 decisions. V1 uses JSONL
 and durable artifacts only; OpenTelemetry, Jaeger and dashboard are outside v1.
+
+T019 causal-order repair: VerificationRequest is generated inside settle-grade,
+so ControlChain validates its budget between that phase's request and result,
+before the later host exit and verifier result. The example and embedded cases
+now use25ms inside the existing20–30ms interval. Real increasing observations,
+regressions on either side of that interval and restarted anchors/deadlines have
+regression coverage. Schemas, allowed budgets, business/oracle fixtures and
+reference-byte requirements are unchanged.

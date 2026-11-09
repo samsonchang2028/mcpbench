@@ -615,7 +615,6 @@ def validate_control_chain(requests: list[dict[str, Any]], results: list[dict[st
                         _require(all(agent_result["counts"][key] <= limit for key, limit in AGENT_COUNT_LIMITS.items()), "original PASS exceeds observed agent count budget")
                 if child == "verifier":
                     _require(verification_request is not None, "verifier has no bounded invocation")
-                    bind(verification_request, "VerificationRequest")
                     if verifier is not None:
                         bind(verifier, "VerifierResult")
                         _require(all(verifier[key] == verification_request[key] for key in ["invoice_id", "idempotency_key", "original_request_hash"]), "verifier escaped registered request scope")
@@ -628,6 +627,12 @@ def validate_control_chain(requests: list[dict[str, Any]], results: list[dict[st
             elif index == 2:
                 _require(not ({"verifier_exit", "verifier_result"} & request["inputs"].keys()) and verifier is None, "skipped verifier produced evidence")
         bind(request, "ControlRequest")
+        if index == 1 and result["action"] == "verify":
+            _require(verification_request is not None, "verifier has no bounded invocation")
+            # Generated inside settle-grade, before its result and host exit.
+            # Preserve immutable request bytes and enforce the actual causal
+            # interval rather than validating this older observation at finalize.
+            bind(verification_request, "VerificationRequest")
         bind(result, "ControlResult")
         _require(result["phase"] == request["phase"] and result["workflow_kind"] == request["workflow_kind"] and result["request_id"] == request["message_id"], "phase result binding changed")
         evaluator_exits = [(i, x) for i, x in enumerate(exits) if x["child"] == "evaluator" and x["phase"] == request["phase"]]

@@ -27,6 +27,23 @@ func ValidateEvent(e map[string]any) error {
 	d := e["data"].(map[string]any)
 	name, _ := d["tool_id"].(string)
 	switch e["event_type"] {
+	case "db.started", "db.completed", "db.failed":
+		op, _ := d["operation"].(string)
+		if (e["phase"] != "execution" && e["phase"] != "verification") || (op == "replay" && e["phase"] != "verification") || ((op == "read_tool" || op == "create_draft") && e["phase"] != "execution") || (op != "read_tool" && op != "create_draft" && op != "replay") {
+			return invalid
+		}
+		if _, ok := e["parent_call_id"].(string); !ok {
+			return invalid
+		}
+		if f, ok := d["failure"].(map[string]any); ok {
+			if f["stage"] != e["phase"] || f["call_id"] != e["call_id"] || f["disposition"] != "terminal" {
+				return invalid
+			}
+			if f["code"] == "settlement_unknown" && f["attribution"] != "uncertain" {
+				return invalid
+			}
+		}
+		return nil
 	case "tool.started":
 		b, _ := json.Marshal(d["arguments"])
 		return agent.ValidateArguments(name, b)
