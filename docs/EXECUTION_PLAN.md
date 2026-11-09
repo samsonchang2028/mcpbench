@@ -1,9 +1,9 @@
 # MCPBench execution plan
 
-Current milestone: T001–T017 and T040 are DONE (18 tasks). T013 source
-passed independent review and SDK loopback testing. T018 final independent runtime
-validation is BLOCKED by fresh RAM admission; T019 waits on T018. Existing owned
-PostgreSQL is healthy; earlier real SQL evidence remains valid within its scope.
+Current milestone: T001–T018 and T040 are DONE (19 tasks). T018 passed renewed
+resource admission, independent real PostgreSQL tests and production-backend
+lifecycle. T019 is READY for deterministic full-stack integration. Existing owned
+PostgreSQL is healthy; all19 unrelated services matched their saved baseline.
 
 This document schedules [TASK_GRAPH.md](TASK_GRAPH.md), which owns IDs, edges,
 priorities, statuses and acceptance criteria. The user approved documentation-only T003–T005 execution. Application
@@ -23,7 +23,7 @@ DAG prerequisites and all relevant admission gates under the active goal. DAG wa
 | M6: reliability and report | T035–T038 | Scoped fault/concurrency experiments, reproducible analysis, independent reproduction and report tied to immutable evidence |
 
 M0 is complete, including verified model storage and the approved T040 probe.
-M1 remains incomplete at T018's fresh runtime gate. M1/M2 remain separate so
+M1 remains incomplete at T019–T021's integration/security/metrics gates. M1/M2 remain separate so
 scripted-model success cannot be presented as live Qwen workflow success. No later
 milestone waives a failed earlier gate. T035 may proceed alongside the campaign
 after M4; M6 joins it.
