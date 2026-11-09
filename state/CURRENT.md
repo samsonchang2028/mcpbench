@@ -1,48 +1,36 @@
-# Current state — database gate accepted
+# Current state — network architecture approval required
 
-2026-11-09T06:37Z: DONE T001–T018,T040 (19/40). T019 IMPLEMENTING source;20 later nodes WAITING.
-T013 aaeefdd integrated4badae1 after independent R/V; real SDK loopback checks PASS.
-T018 adapter047c030+f2c4dc9 integrated0cfdc37+6996d07 after independent source
-review and runtime testing. Main adapter unit check20tests PASS.
+2026-11-09T16:19Z:19/40 DONE (T001–T018,T040). T019 BLOCKED;20 laternodes WAITING.
+Task graph remains authoritative. Fullv1 incomplete; no newnative inference.
 
-User-requested retry3 admission:31samples/60.3287seconds, minimum22.2994GiB,
-swap-in/out0, no resident Ollama model, disks above20GiB. Independent10PGtests
-PASS0skips; real production-driver prepare/reset/activation/fences/capture/oracle/
-cleanup PASS, run-lifecycle-b8db08217c1fd7e23093. Final ownership/health/limits/
-no-publication and exact19 unrelatedservice baseline PASS. Earlier failures retained.
-Reports state/reviews/T018-tester.md and T018-backend-reviewer-v2.md;
-ignored artifacts/admission/t018/independent-retry3-* contain actual evidence.
+T019 core source a85d9f9 frozen in.worktrees/T019, independently sourceRapproved
+and VpassedGo/91Python/staticCompose. All5 cappedserial applicationimagebuilds
+passed; exactIDs/source/scenario in artifacts/admission/t019/candidate-images.json.
+Firstactualsmoke failed beforeevaluatorstartup dueDockerlocalcompression+maxfile1.
+Narrowhostonlyfix c97f44e explicitlycompress=false preserves1file/1MiB bound:
+independentR APPROVE/T019-logging-reviewer.md, rootV10launcher testsPASS.
+Images remaina85d9f9 built binaries; patch changes onlyhostlauncher/tests.
+WholeT019 source bundle remains unintegrated pendingrealacceptance.
 
-OwnedDB86a17f3d5a78 healthy, networkmcpbench_db, volumemcpbench_db-data retained.
-No existingservice/nativeOllamaconfiguration changes. No inference sinceT040.
-The v1 goal is incomplete. Next T019:real MCP/scripted agent/Python evaluator
-join, trusted launcher transport and genuine DB/JSONL wiring, deterministic replay/
-concurrency/timeout tests. Fresh admission before costly operations; live Qwen
-workflow waitsT022/T023. No Go/MCP/live-model workflow success claimed byT018.
+Fresh prestart-03 admission PASS31samples(min26,742,308,864bytes,swapstreak1).
+Secondsmoke run-0d31319a52e2e0d900f516ac passedrealPython evaluatorprepare and
+startedhealthy MCP, but nohost publication: requested127.0.0.1:18081→8080 while
+NetworkSettings.Ports8080/tcp:null. Onlyinternalmcpbench_db attached. In-container
+healthPASS,hostcurlrefused. Moby discussion53256 documentsdefaultgatewayrequirement.
+Noagent/verifierprocess ortoolworkflow started. RootsentSIGINT onlyexactlauncher
+at confirmedarchitecturegate; actualexit1/quarantine retained. No reset/reuse.
+
+OwnedMCP6ecae489dbdb stoppedgracefullyexit0 andretainedfor diagnosis; DB86a17f3d5a78
+healthy with originalvolume/schema/seededevidence preserved. Firstneverstarted
+container124b7fdae845 removed only afterexactimage/mount/state proof. No volumes
+or registered schema reset/deleted. Final19unrelatedcontainerbaseline unchanged.
+All actualevidence inignored artifacts/admission/t019/smoke-01/02-* andrunfolders.
+
+Pendingdecision in docs/ARCHITECTURE.md: A fixedsmallgateway(front+internal),
+recommendedto retainMCPoutboundisolation, orB directMCPfront attachment with
+explicitoutboundreachtradeoff. Neitherimplemented/deployed. Independentproposal
+reviewAPPROVE forpresentationonly inT019-network-proposal-reviewer.md; userREQ9
+requiresapprovalbeforearchitecture/securitychanges. No daemon/firewall/oldnetwork/
+nativeOllamachanges proposed. Next: userselectlayout, narrowimplementation with
+R/V, freshadmission/newrun, remainingT019regressions. LiveQwenwaitsT022/T023.
 Untracked docs/architecture-diagram.html is userwork;preserve/do notstage.
-
-T019 build preparation2026-11-09T06:55Z: fresh31sample admission PASS (minimum
-24,430,489,600 bytes); pinnedGo/Debian/Python buildbases pulled sequentially by
-locked manifest digest, no retagging of homelab images. artifacts/admission/t019/
-base-images.json records exact IDs. Post-pull ownedDB and19baseline checks PASS.
-No application image build or new container startup yet. T019 source worker live;
-root-approved contract-preserving timing/redaction seam fixes in its context pack.
-
-T019 frozena85d9f9 independently R APPROVE/VcachedPASS (Go,91Python,static
-Compose). All5 admitted serial builds PASS with CPU1/memory2GiB/swap2GiB.
-ImageIDs and source/scenario/build commands recorded in candidate-images.json.
-Root prepared private evaluator templates and exactimage launchconfigs, no secret
-values logged. Fresh prestart-01 resourcegate session45389 running before live
-scriptedfullstack; no Qwen inference. Full task runtimeacceptance still UNRUN.
-
-2026-11-09T16:10Z: old gate45389 missing/terminal; its completedPASS evidence was
-9hours old. New prestart-02 gate PASS31samples,minimum26,936,246,272bytes,
-swapstreak0;19baseline unchanged. Actual smoke-01 then FAILED before evaluator
-startup: Docker local logdriver compression default incompatible max-file=1.
-Runrun-f8d24db3e979c8d8a67c49ed quarantined; no Python/SQL/model execution.
-Exactowned124b7fdae845 had created/notrunning/Pid0/zeroStartedAt; image/mounts/
-network verified and preserved before exact-CID removal, no volumes/DB touched.
-Ignored smoke-01-process.json and smoke-01-never-started-cleanup.json retain proof.
-Narrow source repair assigned launcher/transport.py+test_run.py(+README only if
-needed): explicit per-container compress=false retains1file/1MiB cap. Independent
-R/V required before newattempt; no daemon/nativeOllama/homelab changes.

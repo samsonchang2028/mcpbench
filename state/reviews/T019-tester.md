@@ -57,3 +57,22 @@ Pid0/zeroStartedAt, retained all receipts/quarantine and removed only this inert
 owned container without volume flags. No reset/reuse of the failed run.
 Full runtime gate **FAIL/BLOCKED pending source repair**; prior cached checks
 remain PASS within scope. artifacts/admission/t019/smoke-01-* records actualproof.
+
+## Logging repair and second runtime attempt
+
+Fixedc97f44e:rootindependent `python -m unittest launcher.test_run` completed
+session53504exit0,10testsPASS2.217sec. FocusedindependentRAPPROVE in
+T019-logging-reviewer.md. Patchonlyhostlauncher/tests; existingGo/evaluator
+imagebytesunchanged. Priorfailure retained ratherthan overwritten.
+
+Freshprestart-03 passed; smoke-02 startedreal evaluatorprepare (typedresult/exit
+retained) andMCP. Actualin-containerhealthPASS. However effectivepublishedport
+8080/tcp:null despite requested127.0.0.1:18081;hostcurl refused. Source internal-only
+layout lacksdefaultgateway required forDockerpublication. RootcontrolledSIGINT
+stoppedexactlauncher,thenstoppedonlyexactownedMCPgracefullyexit0. Containerschema/
+volume/quarantineevidence retained;noreset,reuse,agent,verifieror nativeinference.
+Final19unrelatedbaselineunchanged. Actualsmoke02exit1;fullT019gateBLOCKED onuser
+architecture/securityapproval,notPASS. Ignoredsmoke-02-* recordsproof.
+
+Neither proposedgatewaynorMCPextra-network option was deployed. Approvednetwork
+change must retainloopbackendpoint,controlplaneisolation andfreshR/V/runtimegates.

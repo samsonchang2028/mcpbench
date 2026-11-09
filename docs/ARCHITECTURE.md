@@ -244,3 +244,61 @@ and preserves evidence. Cancellation may not release native model memory promptl
 observe rather than force unloading. Existing services, drivers, volumes and
 native Ollama configuration remain untouched. No runtime implementation is
 approved by completing these documents.
+
+## Pending decision: MCP host access on an internal-only Docker network
+
+Status: **PROPOSED; neither option is approved or deployed.** T019 is blocked at
+this architecture/security gate. Existing network, daemon and native Ollama
+configuration remain unchanged. Research scope and strategy fairness are unchanged.
+
+Observed2026-11-09: reviewed launcher c97f44e completed real evaluator prepare.
+MCP container6ecae489dbdb is healthy using its internal `/app/billing-mcp health`
+command. HostConfig requests127.0.0.1:18081→8080, but NetworkSettings.Ports is
+8080/tcp:null; docker port reports nothing and host curl is refused. The only
+attached network is owned mcpbench_db with Internal=true. No benchmark agent
+or model invocation has started. Retain the failed attempt and its registered
+schema; never retry/reset uncertain state to make a test pass.
+
+Docker/Moby explains that publication uses a default-gateway network, which an
+internal-only container lacks:
+https://github.com/moby/moby/discussions/53256
+This source agrees with actual Node1 inspection; a configured binding alone
+cannot establish a reachable or loopback-only effective publication.
+
+| Proposed option | Concrete layout | Security/resource tradeoff |
+| --- | --- | --- |
+| A: small gateway (recommended for retaining MCP outbound isolation) | Add an owned normal bridge mcpbench_front and one restricted HTTP forwarding container connected to front+db. Publish only gateway127.0.0.1:18081. MCP, PostgreSQL and evaluator stay on internaldb only. Agent keeps its frozen localhost endpoint. | One extra process, estimated64MiB RAM/0.1CPU (validate rather than assume). Only gateway gains outbound routing; it holds no DB/reset credentials. Fixed upstream/path/body/timeout checks; no arbitrary destination, shell or model tool. |
+| B: attach MCP directly to front | Add the same owned normal bridge mcpbench_front and attach only MCP to both front+db. Publish MCP127.0.0.1:18081. DB/evaluator stay internal. | Smallest runtime change, no extra process. MCP gains outbound routing; existing application checks are not OS egress confinement. This widens its network trust boundary and needs explicit acceptance. |
+
+A reuses the locked Go builder/runtime and standard library; no new external
+image/dependency is proposed. Gateway has non-root UID, read-only root, cap-drop
+ALL, no-new-privileges, bounded PIDs/temp/logs and no Docker socket. Mount no
+agent auth, evaluator control, DB credentials or oracle. Preserve incoming MCP
+Host/Origin/auth headers without logging secrets; forward only to the trusted MCP
+service. No new JSONL source/schema is needed; the existing client duration
+includes the fixed hop equally for every strategy. Report that infrastructure
+cost rather than attributing it to retrieval. Proxy image/version belongs in the
+immutable run configuration. Expected resource figures are hypotheses only.
+
+For either option: admit resources, verify new name/subnet nonoverlap before
+creating anything, use project-owned labels, reserve paths exclusively, then
+freeze and independently review/test code/config. Never alter shared networks,
+firewall/daemon settings, existing services, DB volume or native Ollama. Do not
+remove/recreate mcpbench_db to obtain publication. Do not expose DB publicly.
+
+Acceptance after approval: inspect exact image/CID/network identities and actual
+NetworkSettings.Ports; require only127.0.0.1:18081 and no0.0.0.0/IPv6-public binding;
+verify host health and official SDK discovery, denied caller/no-write behavior,
+unchanged credential mounts and19-service baseline. Under A prove MCP retains
+internal-only attachment and proxy has no credential mounts. Then run a fresh
+registered smoke attempt, replay/conflict, wrong-write, lost-response and
+concurrent duplicate assertions with durable fences/snapshots/reset proof. Preserve
+prior failures and original quarantined runs. No live Qwen until T022/T023.
+
+Proposal review: state/reviews/T019-network-proposal-reviewer.md approves
+presentation only and recommends A. Implementation must preserve actual pinned
+SDK negotiation/content types/Host/Origin/auth/cancellation and absolute budgets;
+allow only fixed paths/methods/upstream, no redirects or proxy retries for writes.
+Test effective scoped reachability rather than configuration labels alone. Gateway
+handles transient authorization headers even without credential mounts; never log
+them. Probe only MCPBench endpoints, and keep one frozen topology across strategies.
