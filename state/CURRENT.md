@@ -1,6 +1,6 @@
-# Current state — network architecture approval required
+# Current state — option A approved; goal paused
 
-2026-11-09T16:19Z:19/40 DONE (T001–T018,T040). T019 BLOCKED;20 laternodes WAITING.
+2026-11-09T16:19Z:19/40 DONE (T001–T018,T040). T019 READY for source work on resume;20 laternodes WAITING.
 Task graph remains authoritative. Fullv1 incomplete; no newnative inference.
 
 T019 core source a85d9f9 frozen in.worktrees/T019, independently sourceRapproved
@@ -38,3 +38,8 @@ Untracked docs/architecture-diagram.html is userwork;preserve/do notstage.
 Goal-level blocked audit: same pending network-layout approval across three goal
 turns; no eligible independent node. Goal BLOCKED awaiting user A/B decision.
 No further runtime retries or architecture changes before that decision.
+
+User selected option A (small gateway). Architecture approval gate resolved; goal
+remains PAUSED under the preceding explicit pause request. No implementation,
+agent dispatch, build, network creation or runtime operation authorized by this
+decision recording alone. On resume use approved A plus fresh gates and R/V.

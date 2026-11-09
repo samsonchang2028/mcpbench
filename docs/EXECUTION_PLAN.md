@@ -2,7 +2,7 @@
 
 Current milestone: T001–T018 and T040 are DONE (19 tasks). T018 passed renewed
 resource admission, independent real PostgreSQL tests and production-backend
-lifecycle. T019 is BLOCKED pending user review of the internal-only network publication incompatibility in the proposed ARCHITECTURE.md decision. Existing owned
+lifecycle. User approved option A gateway in ARCHITECTURE.md; T019 is READY for source work when the paused goal resumes. Existing owned
 PostgreSQL is healthy; all19 unrelated services matched their saved baseline.
 
 This document schedules [TASK_GRAPH.md](TASK_GRAPH.md), which owns IDs, edges,

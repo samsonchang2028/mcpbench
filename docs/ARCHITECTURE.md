@@ -245,11 +245,14 @@ observe rather than force unloading. Existing services, drivers, volumes and
 native Ollama configuration remain untouched. No runtime implementation is
 approved by completing these documents.
 
-## Pending decision: MCP host access on an internal-only Docker network
+## Approved decision: gateway for MCP host access
 
-Status: **PROPOSED; neither option is approved or deployed.** T019 is blocked at
-this architecture/security gate. Existing network, daemon and native Ollama
-configuration remain unchanged. Research scope and strategy fairness are unchanged.
+Status: **Option A approved by the user (reply: "A"). Not yet implemented or deployed.**
+The goal remains paused at the user’s request; selecting the layout does not
+resume implementation. On resume, implement the small gateway while retaining
+MCP/PostgreSQL/evaluator internal-only attachments and loopback-only publication.
+Resource admission and independent implementation review/testing remain required.
+Research scope and strategy fairness are unchanged.
 
 Observed2026-11-09: reviewed launcher c97f44e completed real evaluator prepare.
 MCP container6ecae489dbdb is healthy using its internal `/app/billing-mcp health`
