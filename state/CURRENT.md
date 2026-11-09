@@ -1,6 +1,6 @@
-# Current state — option A approved; goal paused
+# Current state — resumed approved gateway implementation
 
-2026-11-09T16:19Z:19/40 DONE (T001–T018,T040). T019 READY for source work on resume;20 laternodes WAITING.
+2026-11-09T16:19Z:19/40 DONE (T001–T018,T040). T019 IMPLEMENTING gateway source;20 laternodes WAITING.
 Task graph remains authoritative. Fullv1 incomplete; no newnative inference.
 
 T019 core source a85d9f9 frozen in.worktrees/T019, independently sourceRapproved
@@ -43,3 +43,7 @@ User selected option A (small gateway). Architecture approval gate resolved; goa
 remains PAUSED under the preceding explicit pause request. No implementation,
 agent dispatch, build, network creation or runtime operation authorized by this
 decision recording alone. On resume use approved A plus fresh gates and R/V.
+
+Latest authority: user explicitly requested "resume goal" after approving A.
+Prior pause/approval blockers are superseded; gateway source work dispatched
+under existing contracts. No runtime or acceptance gate is waived.
