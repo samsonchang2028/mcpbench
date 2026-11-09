@@ -20,3 +20,10 @@ join, trusted launcher transport and genuine DB/JSONL wiring, deterministic repl
 concurrency/timeout tests. Fresh admission before costly operations; live Qwen
 workflow waitsT022/T023. No Go/MCP/live-model workflow success claimed byT018.
 Untracked docs/architecture-diagram.html is userwork;preserve/do notstage.
+
+T019 build preparation2026-11-09T06:55Z: fresh31sample admission PASS (minimum
+24,430,489,600 bytes); pinnedGo/Debian/Python buildbases pulled sequentially by
+locked manifest digest, no retagging of homelab images. artifacts/admission/t019/
+base-images.json records exact IDs. Post-pull ownedDB and19baseline checks PASS.
+No application image build or new container startup yet. T019 source worker live;
+root-approved contract-preserving timing/redaction seam fixes in its context pack.
