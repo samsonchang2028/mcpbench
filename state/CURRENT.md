@@ -1,6 +1,6 @@
 # Current state — source integration; runtime RAM gate
 UTC:2026-11-09T06:15:12.317310+00:00
-DONE T001–T012,T014,T015,T016,T017,T040 (17 tasks). T013 IMPLEMENTING.
+DONE T001–T017,T040 (18 tasks). T013 source accepted at 4badae1.
 T018 BLOCKED on final independent RAM gate (<20GiB);21 WAITING.
 T0120fe5bc62 integrated05487cf;T0149724247 integrated91824bb;
 T01606ccb00 integrated9d56836. Each has independent R APPROVE and root V
@@ -26,7 +26,7 @@ inthatblockedlane. Keep20GiBthreshold,do not roundup or clearotherworkloads.
 Records artifacts/admission/t018/;state/reviews/T018*.md. No model/MCPworkflow
 success claimed. No global cleanup or volume deletion authorized.
 
-T013 worker owns .worktrees/T013;realSDKloopbacktests thenfreeze/RV pending.
+T013 frozen aaeefdd independently reviewed and tested; integrated4badae1.
 Root owns Docker/liveDB/metadata. Untracked docs/architecture-diagram.html is
 unrelated/userwork;preserve,do not stage. Goalactive andfullv1incomplete.
 
@@ -38,3 +38,5 @@ T018 source repairf2c4dc9 has independent R APPROVE and41offline tests PASS;
 root real lifecycle test-v2 passed prepare/reset/bothfences/oracle/cleanup. Final
 independent runtime gate remains BLOCKED. Earlier empty-service failure retained.
 Workspace agent credit failure was transient;focused re-review completed later.
+
+T013 gate closed: R APPROVE, independent V actual SDK/parity tests PASS; no live DB/model claim. T019 still WAITING on T018. Latest one-shot RAM20.0236GiB is not a 60-second admission pass.

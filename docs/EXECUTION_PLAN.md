@@ -1,9 +1,9 @@
 # MCPBench execution plan
 
-Current milestone: T010 independent oracle/reset, T011 SQL/seed and T015 static
-Compose configuration are integrated with independent review/testing. T017 logging
-is also approved for library scope. T012/T014/T016 are implementing;T018 is READY
-for admitted ownedDB validation;runtime gates remain binding.
+Current milestone: T001–T017 and T040 are DONE (18 tasks). T013 source
+passed independent review and SDK loopback testing. T018 final independent runtime
+validation is BLOCKED by fresh RAM admission; T019 waits on T018. Existing owned
+PostgreSQL is healthy; earlier real SQL evidence remains valid within its scope.
 
 This document schedules [TASK_GRAPH.md](TASK_GRAPH.md), which owns IDs, edges,
 priorities, statuses and acceptance criteria. The user approved documentation-only T003–T005 execution. Application
@@ -22,20 +22,19 @@ DAG prerequisites and all relevant admission gates under the active goal. DAG wa
 | M5: controlled campaign | T033,T039,T034 | Validated 10/100/1000 catalogs, admitted pilot, frozen repeat counts/order; all planned attempts recorded with state and config hashes |
 | M6: reliability and report | T035–T038 | Scoped fault/concurrency experiments, reproducible analysis, independent reproduction and report tied to immutable evidence |
 
-M0 is incomplete: actual model-storage verification is blocked and machine
-contracts/full admission/live probe are unfinished. Git initialization and commit
-now work; T003–T005 completed their independently reviewed/tested refresh.
-No runtime probe is authorized. M1/M2 are deliberately separate so fake-model
-success cannot be presented as live Qwen success. No later milestone can waive a
-failed earlier gate. T035 may proceed alongside the campaign after M4; M6 joins it.
+M0 is complete, including verified model storage and the approved T040 probe.
+M1 remains incomplete at T018's fresh runtime gate. M1/M2 remain separate so
+scripted-model success cannot be presented as live Qwen workflow success. No later
+milestone waives a failed earlier gate. T035 may proceed alongside the campaign
+after M4; M6 joins it.
 
 ## Waves and joins
 
 | Wave | Eligible work after dependencies | Parallelism / join |
 | --- | --- | --- |
-| W0 | T001, T002, T003, T004, T005 | T002–T005 DONE; Git works, model-store audit T001 remains blocked. O owns host evidence and graph updates. |
+| W0 | T001, T002, T003, T004, T005 | T001–T005 DONE; Git and model-store audit verified. O owns host evidence and graph updates. |
 | W1 | T006 after design tasks; T009 after T006 | Freeze interfaces before implementation; fixtures can be authored while waiting for host access. |
-| W2 | T007, then T040, then T008 | The early probe needs separate runtime approval after admission; resolve pinned dependencies only after probe success; T009 fixture work does not require runtime access. |
+| W2 | T007, then T040, then T008 | T007/T040/T008 DONE; future runtime work requires fresh admission; T009 fixture work does not require runtime access. |
 | W3 | T010, T011, T015, T017 | Oracle/fixtures, DB migrations, infrastructure and telemetry have disjoint files; cap at available worker slots. Tests authored before billing code. |
 | W4 | T012 and T016 after T010; T014 after T010; T018 after its four parents | Domain, evaluator and agent can develop separately against frozen contracts. Actual builds/integration are serialized by O on Node 1. |
 | W5 | T013 after T012; then T019 | MCP adapter completes before integration. O alone wires commands, config and telemetry across packages at the join. |
