@@ -46,3 +46,14 @@ Observed toolchains: Go `go1.26.8 linux/amd64`, pinned Python `3.14.4`. Candidat
 | Replay, concurrent duplicates, committed-response timeout | Existing source checks PASS; opt-in SDK checks require explicit admission and correctly skip by default. README requires independent row/ledger/line counts and reset. | Real verifier same-key replay/changed-payload conflict with unchanged state, concurrent duplicate exactly one invoice/ledger/line, and lost committed reply retry retaining original invoice: UNRUN. |
 
 No observed P0/P1 source-test failure was found in this scope. Coverage limitations above are explicit; they are not evidence that the unrun behavior works. Root owns refreshed resource admission, independent review, live scenarios, durable runtime artifacts and the task-status decision. Scripted tests establish neither real PostgreSQL settlement nor Qwen tool support.
+
+## Root independent runtime attempt2026-11-09
+
+Actual fresh admission prestart-02 PASS; smoke-01 exit1 in0.315sec. Docker-created
+evaluator never started: local logging driver reports compression cannot be
+enabled with max file count1. No evaluator SQL, MCP, agent or inference executed.
+Root inspected exact returned CID/image/mounts/network, recorded created/nonrunning/
+Pid0/zeroStartedAt, retained all receipts/quarantine and removed only this inert
+owned container without volume flags. No reset/reuse of the failed run.
+Full runtime gate **FAIL/BLOCKED pending source repair**; prior cached checks
+remain PASS within scope. artifacts/admission/t019/smoke-01-* records actualproof.

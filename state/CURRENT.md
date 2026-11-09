@@ -34,3 +34,15 @@ ImageIDs and source/scenario/build commands recorded in candidate-images.json.
 Root prepared private evaluator templates and exactimage launchconfigs, no secret
 values logged. Fresh prestart-01 resourcegate session45389 running before live
 scriptedfullstack; no Qwen inference. Full task runtimeacceptance still UNRUN.
+
+2026-11-09T16:10Z: old gate45389 missing/terminal; its completedPASS evidence was
+9hours old. New prestart-02 gate PASS31samples,minimum26,936,246,272bytes,
+swapstreak0;19baseline unchanged. Actual smoke-01 then FAILED before evaluator
+startup: Docker local logdriver compression default incompatible max-file=1.
+Runrun-f8d24db3e979c8d8a67c49ed quarantined; no Python/SQL/model execution.
+Exactowned124b7fdae845 had created/notrunning/Pid0/zeroStartedAt; image/mounts/
+network verified and preserved before exact-CID removal, no volumes/DB touched.
+Ignored smoke-01-process.json and smoke-01-never-started-cleanup.json retain proof.
+Narrow source repair assigned launcher/transport.py+test_run.py(+README only if
+needed): explicit per-container compress=false retains1file/1MiB cap. Independent
+R/V required before newattempt; no daemon/nativeOllama/homelab changes.
