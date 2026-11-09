@@ -4,7 +4,9 @@ from datetime import timedelta
 import os
 from pathlib import Path
 import tempfile
+import time
 import unittest
+from unittest.mock import patch
 
 from contracts.validate import canonical_bytes, load_bytes, validate
 from eval.runner import Artifacts, Evaluator, Budget
@@ -12,6 +14,34 @@ from eval.runner.test_lifecycle import ScriptedBackend, NOW, example
 from eval.runner import test_lifecycle as fixtures
 from launcher.run import Launcher
 from launcher.transport import DockerTransport, Outcome
+
+
+class DockerLoggingTests(unittest.TestCase):
+    def setUp(self):
+        self.driver=DockerTransport({'agent':'sha256:'+'a'*64,'evaluator':'sha256:'+'b'*64,
+                                     'mcp':'sha256:'+'c'*64},'/nonexistent/service.pgpass')
+        root=Path('/nonexistent/mcpbench-test')
+        self.paths={name:root/name for name in ('control','evaluator','mcp-control','mcp-output',
+                    'agent-input','agent-output','verifier-input','verifier-output')}
+
+    def assert_bounded_local_logs(self, command):
+        self.assertEqual(command[command.index('--log-driver')+1],'local')
+        self.assertEqual([command[i+1] for i,arg in enumerate(command) if arg=='--log-opt'],
+                         ['max-size=1m','max-file=1','compress=false'])
+
+    def test_child_phase_commands_disable_compression_with_one_log_file(self):
+        for child,phase in [('agent','run'),('verifier','verify'),('evaluator','prepare'),
+                            ('evaluator','settle-grade'),('evaluator','finalize')]:
+            with self.subTest(child=child,phase=phase):
+                self.assert_bounded_local_logs(self.driver.command(child,phase,self.paths))
+
+    def test_mcp_start_command_disables_compression_with_one_log_file(self):
+        # Stop at the subprocess boundary: no Docker, files or health calls occur.
+        with patch('launcher.transport.subprocess.run',side_effect=RuntimeError('captured_command')) as run:
+            with self.assertRaisesRegex(RuntimeError,'captured_command'):
+                self.driver.start_mcp(self.paths,time.monotonic()+1,lambda:None)
+        run.assert_called_once()
+        self.assert_bounded_local_logs(run.call_args.args[0])
 
 
 class Clock:

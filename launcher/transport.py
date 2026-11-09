@@ -40,7 +40,7 @@ class DockerTransport:
               '--cap-drop','ALL','--security-opt','no-new-privileges:true','--read-only',
               '--memory','256m','--memory-swap','256m','--cpus','0.5','--pids-limit','128',
               '--tmpfs','/tmp:rw,noexec,nosuid,nodev,size=16777216,mode=1777',
-              '--log-driver','local','--log-opt','max-size=1m','--log-opt','max-file=1',
+              '--log-driver','local','--log-opt','max-size=1m','--log-opt','max-file=1','--log-opt','compress=false',
               '--network','mcpbench_db','--publish','127.0.0.1:18081:8080']
         args+=self.mount(self.service_passfile,'/run/secrets/service.pgpass')
         args+=self.mount(paths['mcp-control'],'/run/mcpbench/trace')
@@ -105,7 +105,7 @@ class DockerTransport:
                  '--security-opt','no-new-privileges:true','--read-only',
                  '--memory','512m','--memory-swap','512m','--cpus','1' if is_agent else '0.5',
                  '--pids-limit','128','--tmpfs','/tmp:rw,noexec,nosuid,nodev,size=16777216,mode=1777',
-                 '--log-driver','local','--log-opt','max-size=1m','--log-opt','max-file=1',
+                 '--log-driver','local','--log-opt','max-size=1m','--log-opt','max-file=1','--log-opt','compress=false',
                  '--network','host' if is_agent else 'mcpbench_db']
         if is_agent:
             for name,target in [('request.json','/run/mcpbench/request.json'),('auth.json','/run/secrets/auth.json')]:
