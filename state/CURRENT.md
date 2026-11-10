@@ -1,39 +1,30 @@
-# Current state — approved gateway proven; runtime repairs underway
+# Current state — deterministic vertical slice accepted
 
-User approved option A then explicitly resumed.19/40 DONE (T001–T018,T040).
-T019 IMPLEMENTING;20 downstream nodes WAITING. Fullv1 incomplete. Controller
-API still reported paused on resume; no API supports changing that user flag,
-but explicit resume authorizes current work. Automatic continuations use UIActive.
+Goal active (user resumed; controller flag now active).20/40 DONE:T001–T019,T040.
+T020/T021 READY;18 further nodes WAITING. M1 still waits security/metrics; fullv1
+and actualQwen workflow incomplete. No inference since T040 harmless probe.
 
-Gateway candidate53c62bd +checker compatibilityfix5c3dd4a frozen in.worktrees/T019.
-Independent sourceR APPROVE andV Go/98Python/3checker/staticCompose PASS; original
-emptyIPAM checkerfailure retained. Gateway image6ee4a033 built1CPU/2GiB. Newowned
-front network9a3f9a21/mcpbench_front172.20.0.0/24 createdafterfreshadmission and
-nonoverlap checks. Existing DBnetwork/volumes/services unchanged.
+T019 source127e06a integrated through ecd5d89, application bytes identical.
+Source R/V cleared all findings including real quota P1; full offline Go and190
+Python plus96 affected/actual100MiB checks passed. Runtime independent auditPASS:
+three actual CLI scenarios smoke/wrong-write/lost-reply, two direct SDK concurrency/
+timeout-after-commit regressions, positive state assertions/expected failures,
+replay unchanged, exact seed resets, five cleaned registries and revoked tokens.
+Root checked all6 full manifests/57 raw logs tool-side without secret display.
+Reports and scope limitations in state/handoffs/T019.md and state/reviews/T019*.
 
-Actual gateway-smoke-01 run-e19ac6733790474c4062544d: gatewayalone published
-127.0.0.1:18081; hosthealthPASS,unauthMCP401. MCPinternalonly; gatewayfront+DB,
-nomounts,64MiB/.1CPU caps. Sampled gateway1.992MiB/MCP17.79MiB (not peakproof).
-RealPythonpreparePASS, three MCPtools/DBcompletion logs; scriptedagentthenfailed
-contextguard before4thmodelturn. No native inference. Settlementquarantined.
-Rootread-onlyregistryphaseagent_sealed/gen1/tokenrevoked; this isnotpositiveACK
-receipt orauthoritytograde/reset. Both failedservices gracefullystoppedexit0,
-retainedwithschema/volumes/quarantine. All19unrelatedbaselineunchanged.
+New owned front9a3f9a21/mcpbench_front172.20.0.0/24; gateway image6ee4a033,
+updated MCPfd0db733/evaluator58d942dd/three scripted IDs in repairs-images.json.
+Gateway alone published12718081, no mounts,64MiB/.1CPU; sampled1.992MiB notpeak.
+All success services removed by exactCID after logs/fences/reset; owned DB86a17f3d5a78
+healthy. Old quarantined MCP6ecae489 plusfailedMCPaecc219b/gatewaybe3f8233 stopped
+and retained with schemas/volumes. No reset/reuse/deletion of quarantines.
+Final19 baseline unchanged; nativeOllama/GPUdrivers untouched.
 
-Diagnoses: model4request3779bytes+512reserve4291>4096. Removingonly redundant
-successmodel-message envelope preservesallbusinessdata andfits3564+512=4076;
-actualRunnerofflineoverlay completes4model/3tool/0retries withbudgetsunchanged.
-ScriptedCLIalso discarded validfailedresult. Separately,floatreceipt/eventms
-reject integercanonicalserialization afterseal andcontaminatefallbackstate;
-launcher skippedfailed evaluatorProcessExit journaling. Reports T019-context-
-diagnosis.md andT019-settlement-diagnosis.md holdactualoffline reproevidence.
-
-Two exclusive repair worktrees from5c3dd4a: T019-context-fix (Goagent+scriptedCLI)
-andT019-settlement-fix (DB/Pythoneval/launcher). Cachedtests only; no furtheractual
-runtimeuntil combinedfrozenR/V,newimagebuilds,freshgates. No canonical/hashschema,
-modelsettings,4096/512 budgets ormoney changes. Sourceownership inT019context.
-Rootactualproofs ignored artifacts/admission/t019/gateway-*; allfailedruninputs
-remain underartifacts/t019-gateway-runs/ andoldert019-runs/. DB86a17f3d5a78 healthy;
-oldMCP6ecae489 stopped/retained. NewfailedMCPaecc219b andgatewaybe3f8233 retained
-stopped. Neverreset/reusequarantine orremovevolumes to obtainpassingresults.
-Untracked docs/architecture-diagram.html is userwork;preserve/do notstage.
+Audit read of private journal/mcp-execution andmcp-verification exposed already-
+revoked synthetic capabilities to auditor context. No values in report; no DBpw/
+productionAPIkey opened. Treat those files as private and exclude future reads.
+Current-state verification proves all five completed scopes cleaned/revoked.
+User edits docs/architecture-diagram.html deletion, WORKFLOW.md/assets are unrelated;
+preserve, never stage them. Next source work uses disjoint tests/security and
+telemetry lanes; root retains all shared code/runtime/status ownership.

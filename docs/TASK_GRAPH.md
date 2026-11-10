@@ -1,10 +1,12 @@
 <!-- Current access refresh supersedes historical snapshot/status prose below. -->
 # MCPBench task graph
 
-Current status:19 tasks DONE (T001–T018 and T040). T018 passed renewed
-60-second admission and independent real PostgreSQL/production-backend lifecycle
-validation; adapter integrated6996d07. Option A gateway is approved and the user resumed; T019 is IMPLEMENTING. Native inference and later
-runtime work still require their own fresh gates. Prior failures remain preserved.
+Current status:20 tasks DONE (T001–T019 and T040). T019 deterministic real
+PostgreSQL/MCP/scripted-agent/Python evaluation passed, including expected failure,
+replay, concurrency, timeout retry and exact reset. Source127e06a integrated
+through ecd5d89 with independent R/V and runtime audit. T020/T021 are READY.
+Native inference and later runtime work still require their own fresh gates.
+Prior failures and quarantines remain preserved.
 The older access observations below are historical.
 
 Snapshot: 2026-11-07. Planning only; no implementation dispatched. This graph
@@ -92,9 +94,9 @@ claims that workers are currently running.
 | T016 | Python lifecycle and artifacts / E | T010 | P0 | DONE | eval/runner runs reset-check-execute-snapshot-grade-save-reset; failed reset blocks execution and records failure; per-run DB/schema isolation with scoped cleanup, persisted artifacts outside reset scope; scripted agent process contract tests pass. Corrected06ccb00 integrated9d56836;R APPROVE/V49testsPASS;realbackend/CLItransport remains T018/T019. |
 | T017 | Structured JSONL instrumentation / I | T008,T006 | P1 | DONE | observability/ library/adapters define correlated JSONL events with run/call IDs for retrieval/model/MCP/DB, redaction, monotonic durations and durable local artifacts, trace-size cap; logging failure preserves summary where possible and marks artifacts incomplete; no OpenTelemetry, Jaeger or collector in v1. Candidated443fee integratedad6833f;independentR APPROVE/V PASS inT017-reviewer.md/T017-tester.md. Go full-validatorcallback required;runtimewiring/fulltrace/aggregatecaps T019/T021 UNRUN. |
 | T018 | Build/start owned test stack and validate DB/oracle / O,V | T007,T010,T011,T015 | P0 | DONE | Sequential bounded build/start of owned test DB only; actual seed/migration/reset/grader adversarial tests pass against PostgreSQL; existing-service health unchanged, ports/limits checked; record results, preserve unrelated volumes. OwnedDB created healthy without host publication;9realPGtests+grant correction+productionbackend lifecycle passed, renewed independent retry3 admission and10realPGtests+productionbackend lifecycle PASS. R APPROVE/T018-backend-reviewer-v2.md,V PASS/T018-tester.md;source047c030+f2c4dc9 integrated0cfdc37+6996d07. Earlier RAM failures retained. |
-| T019 | Deterministic full-stack integration / O,V | T013,T014,T016,T017,T018 | P0 | IMPLEMENTING | Integrate telemetry, run real MCP with scripted model and Python harness; exact 25,000-cent draft graded, wrong writes fail, reset restores seed hash, replay/concurrent duplicate create one row; timeout-after-commit retry safe. |
-| T020 | Runtime security negative tests / V | T019 | P0 | WAITING | tests/security prove agent cannot access grader secrets/admin APIs, rejected caller/tenant/unauthorized calls cause zero writes, no model-controlled network/shell tools; host-network broad reach explicitly documented and local services unpublished. |
-| T021 | Baseline observability/metrics verification / V | T019 | P0 | WAITING | tests/telemetry use known synthetic durations/counts to verify metric attribution, null unavailable tokens/energy, cost denominator and failure records; one complete correlated trace/summary per attempt; tracing failure is visible. |
+| T019 | Deterministic full-stack integration / O,V | T013,T014,T016,T017,T018 | P0 | DONE | Integrate telemetry, run real MCP with scripted model and Python harness; exact 25,000-cent draft graded, wrong writes fail, reset restores seed hash, replay/concurrent duplicate create one row; timeout-after-commit retry safe. Candidate127e06a integratedecd5d89; independent scoped sourceR/V and T019-runtime-tester.md PASS. Three real CLI scenarios plus two SDK regressions, all five cleaned/revoked; root full manifest/redaction/baseline checks PASS. Native inference remains UNRUN. |
+| T020 | Runtime security negative tests / V | T019 | P0 | READY | tests/security prove agent cannot access grader secrets/admin APIs, rejected caller/tenant/unauthorized calls cause zero writes, no model-controlled network/shell tools; host-network broad reach explicitly documented and local services unpublished. |
+| T021 | Baseline observability/metrics verification / V | T019 | P0 | READY | tests/telemetry use known synthetic durations/counts to verify metric attribution, null unavailable tokens/energy, cost denominator and failure records; one complete correlated trace/summary per attempt; tracing failure is visible. |
 | T022 | Live-call readiness review / O,R,V | T020,T021 | P0 | WAITING | Fresh T007 evidence, exact model digest/capability and residency rechecked, deterministic checks pass, no open P0/P1, candidate review complete, one-call monitoring/abort controls ready. |
 | T023 | One live Qwen draft / O,V | T022 | P1 | WAITING | Real installed Qwen emits MCP tool calls and persisted invoice matches oracle; replay stable, before/during/after host measurements and trace saved; timeout/unsupported tool use fails honestly rather than substituting scripted success. |
 | T024 | Extend to ten executable tools / D,M | T023 | P1 | WAITING | Add seven specified read-only tools from catalog below, project/timesheet migrations/seeds and authorization checks; all ten execute real seeded queries; three-tool invoice unchanged and every tool has success/invalid/denied tests. |

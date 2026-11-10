@@ -1,9 +1,10 @@
 # MCPBench execution plan
 
-Current milestone: T001–T018 and T040 are DONE (19 tasks). T018 passed renewed
-resource admission, independent real PostgreSQL tests and production-backend
-lifecycle. User approved option A gateway and resumed; T019 gateway publication/isolation is proven; agent-context and settlement runtime defects are being repaired in disjoint worktrees. Existing owned
-PostgreSQL is healthy; all19 unrelated services matched their saved baseline.
+Current milestone: T001–T019 and T040 are DONE (20 tasks). T019 source and
+real deterministic workflow passed independent review/testing. T020 security and
+T021 metric verification are READY in disjoint test lanes; native readiness T022
+waits for both. Existing homelab services, failed-run schemas and volumes remain
+preserved. The approved gateway is the only loopback publisher.
 
 This document schedules [TASK_GRAPH.md](TASK_GRAPH.md), which owns IDs, edges,
 priorities, statuses and acceptance criteria. The user approved documentation-only T003–T005 execution. Application
