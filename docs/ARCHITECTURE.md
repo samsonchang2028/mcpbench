@@ -247,7 +247,7 @@ approved by completing these documents.
 
 ## Approved decision: gateway for MCP host access
 
-Status: **Option A approved by the user (reply: "A"). Not yet implemented or deployed.**
+Status: **Option A approved, implemented and validated at T019.**
 Approval was recorded during the pause; the user subsequently requested resume.
 Gateway source implementation is now underway, retaining
 MCP/PostgreSQL/evaluator internal-only attachments and loopback-only publication.
@@ -313,3 +313,7 @@ memory1.992MiB (not a measured peak). The first actual attempt remains failed/
 quarantined due independent agent-context and artifact-settlement defects; no
 complete invoice evaluation, comparison or native-Qwen workflow success is claimed.
 Exact images/CI receipts and snapshots retained in artifacts/admission/t019/.
+
+T019 acceptance closed: actual scripted invoice/oracle/replay/reset and SDK
+concurrency/timeout checks pass with independent R/V. See state/handoffs/T019.md.
+No native-Qwen success or strategy-comparison claim follows from scripted proof.

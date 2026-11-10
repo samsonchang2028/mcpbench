@@ -1,7 +1,7 @@
 # Current state — deterministic vertical slice accepted
 
 Goal active (user resumed; controller flag now active).20/40 DONE:T001–T019,T040.
-T020/T021 READY;18 further nodes WAITING. M1 still waits security/metrics; fullv1
+T020/T021 IMPLEMENTING independent tests;18 further nodes WAITING. M1 still waits security/metrics; fullv1
 and actualQwen workflow incomplete. No inference since T040 harmless probe.
 
 T019 source127e06a integrated through ecd5d89, application bytes identical.
