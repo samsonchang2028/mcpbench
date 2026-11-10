@@ -130,7 +130,7 @@ Docker operations, dependency installation or live Ollama call.
 | M: T013 | cmd/billing-mcp/, internal/mcp/ | R checks MCP lifecycle/schema/security; V real MCP protocol tests |
 | A: T014,T027,T029–T031 | cmd/agent/, internal/agent/, internal/ollama/; internal/retrieval/ | R checks model transcript/budgets; V scripted and fairness checks |
 | O: T008,T018,T019,T022,T023,T034,T036 | Shared go.mod/go.sum, Python manifests/locks, root commands, integration wiring and tests/integration/; task/state/plan files | R reviews joined candidate; V runs admitted integration/live checks |
-| V: T020,T021,T032 | tests/security/, tests/telemetry/, tests/fairness/ | Independent R reviews test validity; O records pass/fail and integrates |
+| V: T020,T021,T032 | tests/security/, tests/telemetry/, tests/fairness/; T021 gap repair uses a separate E/O helper in eval/runner/ plus narrow agent event wiring, explicitly reserved in its context | Independent R reviews test validity and repairs; O records pass/fail and integrates |
 
 For T029–T031, divide A into separate semantic/hybrid/hierarchical workers owning
 `internal/retrieval/semantic/`, `internal/retrieval/hybrid/`, and
